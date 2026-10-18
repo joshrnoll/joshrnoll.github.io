@@ -77,29 +77,29 @@ talos: {
   mini1: {
     label: "Mini PC 1 — Bare-Metal Talos\nControl-plane · schedulable\netcd member · 8th/9th-gen i5/i7 · 16–40 GB DDR4"
     shape: rectangle
-    style: { fill: "#dcfce7"; border-radius: 8 }
+    style: { fill: "#dcfce7"; font-color: "#111827"; border-radius: 8 }
   }
   mini2: {
     label: "Mini PC 2 — Bare-Metal Talos\nControl-plane · schedulable\netcd member · 8th/9th-gen i5/i7 · 16–40 GB DDR4"
     shape: rectangle
-    style: { fill: "#dcfce7"; border-radius: 8 }
+    style: { fill: "#dcfce7"; font-color: "#111827"; border-radius: 8 }
   }
   mini3: {
     label: "Mini PC 3 — Bare-Metal Talos\nControl-plane · schedulable\netcd member · 8th/9th-gen i5/i7 · 16–40 GB DDR4"
     shape: rectangle
-    style: { fill: "#dcfce7"; border-radius: 8 }
+    style: { fill: "#dcfce7"; font-color: "#111827"; border-radius: 8 }
   }
 
   etcd: {
     label: "etcd quorum: 3 members — survives 1 host loss\nallowSchedulingOnControlPlanes: true\nLocal disk only — NEVER on NFS"
     shape: rectangle
-    style: { fill: "#fef3c7"; border-radius: 8 }
+    style: { fill: "#fef3c7"; font-color: "#111827"; border-radius: 8 }
   }
 
   gpu_worker: {
     label: "Talos Worker VM — GPU node\nRuns on Gaming PC Proxmox (see below)\nRTX 2080 Super passthrough · tainted GPU-only"
     shape: rectangle
-    style: { fill: "#dbeafe"; border-radius: 8; stroke-dash: 5 }
+    style: { fill: "#dbeafe"; font-color: "#111827"; border-radius: 8; stroke-dash: 5 }
   }
 
   vip -> mini1
@@ -123,28 +123,28 @@ proxmox: {
 
   laptop: {
     label: "Old Laptop — Proxmox (standalone)\n8th/9th-gen i5/i7 · 16–40 GB DDR4\nBattery = built-in UPS"
-    style: { fill: "#ffedd5"; border-radius: 10 }
+    style: { fill: "#ffedd5"; font-color: "#111827"; border-radius: 10 }
 
     ha_vm: {
       label: "Home Assistant VM (HAOS)\nVLAN 20 — IoT\nLocal storage only · USB passthrough\nfor Zigbee / Z-Wave coordinators"
       shape: rectangle
-      style: { fill: "#f3e8ff"; border-radius: 8; bold: true }
+      style: { fill: "#f3e8ff"; font-color: "#111827"; border-radius: 8; bold: true }
     }
   }
 
   gaming: {
     label: "Gaming PC — Proxmox (standalone)\n9th-gen i7 · 32 GB DDR4 · RTX 2080 Super\nReplaces Arch Linux install"
-    style: { fill: "#ffedd5"; border-radius: 10 }
+    style: { fill: "#ffedd5"; font-color: "#111827"; border-radius: 10 }
 
     gpu_vm_ref: {
       label: "→ Talos Worker VM lives here\nGPU passthrough — joins Talos cluster\non VLAN 30 (see Talos box above)"
       shape: rectangle
-      style: { fill: "#dbeafe"; border-radius: 8 }
+      style: { fill: "#dbeafe"; font-color: "#111827"; border-radius: 8 }
     }
     spare_vms: {
       label: "Spare capacity for\nnon-Kubernetes VMs"
       shape: rectangle
-      style: { fill: "#ffffff"; border-radius: 8 }
+      style: { fill: "#ffffff"; font-color: "#111827"; border-radius: 8 }
     }
   }
 
@@ -175,29 +175,29 @@ storage: {
   synology: {
     label: "Synology DS420slim *\n4× 2.5in bays · 3× 4 TB SSD · RAID 5\n~8 TB usable · 1 bay free"
     shape: cylinder
-    style: { fill: "#bfdbfe"; border-radius: 8 }
+    style: { fill: "#bfdbfe"; font-color: "#111827"; border-radius: 8 }
 
     fast: {
       label: "FAST TIER — NFS\nDefault StorageClass for the cluster\nDatabases · app data · latency-sensitive PVs"
       shape: rectangle
-      style: { fill: "#eff6ff"; border-radius: 8; bold: true }
+      style: { fill: "#eff6ff"; font-color: "#111827"; border-radius: 8; bold: true }
     }
   }
 
   truenas: {
     label: "NAS — TrueNAS Scale (stays TrueNAS)\n5–6× 12 TB HDD · 2× 128 GB SSD boot · ZFS"
     shape: cylinder
-    style: { fill: "#fed7aa"; border-radius: 8 }
+    style: { fill: "#fed7aa"; font-color: "#111827"; border-radius: 8 }
 
     bulk: {
       label: "BULK TIER — NFS\nMedia · ISOs / templates · bulk data"
       shape: rectangle
-      style: { fill: "#fff7ed"; border-radius: 8 }
+      style: { fill: "#fff7ed"; font-color: "#111827"; border-radius: 8 }
     }
     backups: {
       label: "BACKUP TARGET\nProxmox backups from both nodes\n+ cluster backups"
       shape: rectangle
-      style: { fill: "#fff7ed"; border-radius: 8 }
+      style: { fill: "#fff7ed"; font-color: "#111827"; border-radius: 8 }
     }
   }
 
@@ -234,13 +234,13 @@ standalone: {
   macmini: {
     label: "M1 Mac Mini — 16 GB · macOS (reinstall)\nREMOTE DEV MACHINE — VLAN 30\nSSH · Claude Code · Codex · T3 · Hermes · OpenClaw\nOnly legal macOS host → Xcode / xcodebuild\nfor Mac & iOS apps (cannot be done from Linux)\nTailscale · no sleep · auto-start after power loss\nNote: Talos does NOT boot on Apple Silicon"
     shape: rectangle
-    style: { fill: "#e9d5ff"; border-radius: 8 }
+    style: { fill: "#e9d5ff"; font-color: "#111827"; border-radius: 8 }
   }
 
   rpi4: {
     label: "Raspberry Pi 4 — 8 GB\nDNS — Pi-hole / AdGuard · VLAN 30\nServes ALL VLANs (allow UDP/TCP 53 → Pi)\nMust NOT depend on the cluster:\nif the cluster is down, DNS still works"
     shape: rectangle
-    style: { fill: "#ddd6fe"; border-radius: 8; bold: true }
+    style: { fill: "#ddd6fe"; font-color: "#111827"; border-radius: 8; bold: true }
   }
 }
 
@@ -257,13 +257,13 @@ cold: {
   supermicro: {
     label: "Supermicro Tower — POWERED OFF\n2012 Xeon · 32 GB DDR3 · 4× 4 TB + SSD boot\n~100 W idle, approx 10-15 USD/mo — not worth 24/7\nFuture: reuse chassis / backplane with\nmodern low-power board as 24/7 backup NAS\nFor now: cold-spare backup target, or retire"
     shape: rectangle
-    style: { fill: "#d1d5db"; border-radius: 8 }
+    style: { fill: "#d1d5db"; font-color: "#111827"; border-radius: 8 }
   }
 
   zero: {
     label: "Raspberry Pi Zero 2 W\nSpare / toy — nothing planned around it"
     shape: rectangle
-    style: { fill: "#d1d5db"; border-radius: 8 }
+    style: { fill: "#d1d5db"; font-color: "#111827"; border-radius: 8 }
   }
 }
 
@@ -284,23 +284,27 @@ standalone.rpi4 -> network: "DNS port 53 for every VLAN" {
 legend: {
   label: "KEY RULES"
   shape: rectangle
-  style: { fill: "#fefce8"; border-radius: 10 }
+  style: { fill: "#fefce8"; font-color: "#111827"; border-radius: 10 }
 
   r1: "1. etcd + HA VM data: local disk only, never NFS" {
     shape: text
+    style: { font-color: "#111827" }
   }
   r2: "2. Talos VIP must be on VLAN 30 - same L2 as the 3 minis" {
     shape: text
+    style: { font-color: "#111827" }
   }
   r3: "3. Proxmox bridges are VLAN-aware so NFS rides VLAN 30 directly, no router hairpin" {
     shape: text
+    style: { font-color: "#111827" }
   }
   r4: "4. No Longhorn / Ceph needed - Synology SSD NFS is the fast tier" {
     shape: text
+    style: { font-color: "#111827" }
   }
   r5: "5. First next action: install the switch back into the server rack" {
     shape: text
-    style: { bold: true }
+    style: { bold: true; font-color: "#111827" }
   }
 }
 
