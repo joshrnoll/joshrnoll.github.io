@@ -4,7 +4,7 @@ This file provides guidance to AI agents when working with code in this reposito
 
 ## Project Overview
 
-Cloud resume project originally built for the [Cloud Resume Challenge](https://cloudresumechallenge.dev/). The live resume is deployed to Azure Blob Storage and accessible at https://resume.joshrnoll.com.
+Cloud resume project originally built for the [Cloud Resume Challenge](https://cloudresumechallenge.dev/). The live resume is deployed to Azure Blob Storage and accessible at https://joshrnoll.com/resume/.
 
 ## Architecture
 

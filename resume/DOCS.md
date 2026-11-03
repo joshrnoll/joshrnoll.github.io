@@ -1,6 +1,6 @@
 # My Cloud Resume
 
-This project implements a cloud-hosted resume website, originally started as part of the [Cloud Resume Challenge](https://cloudresumechallenge.dev/). The resume is deployed to Azure Blob Storage and accessible at https://resume.joshrnoll.com.
+This project implements a cloud-hosted resume website, originally started as part of the [Cloud Resume Challenge](https://cloudresumechallenge.dev/). The resume is deployed to Azure Blob Storage and accessible at https://joshrnoll.com/resume/.
 
 ## How It Works
 

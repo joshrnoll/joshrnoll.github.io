@@ -1,6 +1,6 @@
 # My Cloud Resume
 
-View the live version at https://resume.joshrnoll.com
+View the live version at https://joshrnoll.com/resume/
 
 [Read the docs](DOCS.md)
 
