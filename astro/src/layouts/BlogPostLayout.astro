@@ -1,0 +1,87 @@
+---
+// astro/src/layouts/BlogPostLayout.astro
+import BaseLayout from './BaseLayout.astro';
+import TagBadge from '../components/TagBadge.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import type { MarkdownHeading } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import '../styles/prose.css';
+
+interface Props {
+  post: CollectionEntry<'blog'> | CollectionEntry<'notes'>;
+  headings: MarkdownHeading[];
+}
+const { post, headings } = Astro.props;
+const { title, date, tags, description } = post.data;
+const toc = 'toc' in post.data ? post.data.toc : false;
+
+const slug = post.collection === 'blog'
+  ? ((post.data as { slug?: string }).slug ?? post.id.replace(/\.mdx?$/, ''))
+  : post.id.replace(/\.mdx?$/, '');
+const ogImage = `/og/${post.collection}/${slug}.png`;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric', month: 'long', day: 'numeric',
+});
+---
+<BaseLayout title={title} description={description} ogImage={ogImage} ogType="article">
+  <div class:list={['post-layout', 'container', { 'has-toc': toc && headings.length > 0 }]}>
+    {toc && headings.length > 0 && (
+      <aside class="post-toc">
+        <TableOfContents headings={headings} />
+      </aside>
+    )}
+    <article class="post-content">
+      <header class="post-header">
+        <!-- NOTE: image field intentionally NOT rendered here (by design) -->
+        <h1 class="post-title">{title}</h1>
+        <div class="post-meta">
+          <time datetime={date.toISOString()} class="post-date">{formattedDate}</time>
+          {tags.length > 0 && (
+            <div class="post-tags">
+              {tags.map(tag => <TagBadge tag={tag} />)}
+            </div>
+          )}
+        </div>
+      </header>
+      <div class="prose">
+        <slot />
+      </div>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+.post-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+.post-toc { display: none; }
+.post-content { min-width: 0; }
+@media (min-width: 1280px) {
+  .post-layout.has-toc {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+  .post-toc { display: block; order: -1; }
+}
+.post-header { margin-bottom: 2rem; }
+.post-title {
+  color: var(--fg);
+  font-size: 1.75rem;
+  line-height: 1.25;
+  margin-bottom: 0.75rem;
+}
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  color: var(--comment);
+  font-size: 0.85rem;
+}
+.post-date { color: var(--comment); }
+.post-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+</style>

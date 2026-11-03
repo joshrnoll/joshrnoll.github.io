@@ -1,0 +1,253 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/prose.css';
+---
+<BaseLayout title="Homelab Hardware" description="The hardware powering Josh Noll's homelab — servers, networking, and storage.">
+  <div class="container post-layout">
+    <article class="post-content">
+      <header class="post-header">
+        <h1 class="post-title">Homelab Hardware</h1>
+      </header>
+      <div class="prose">
+        <p>
+          <a href="/homelab/architecture/"><strong>HOMELAB ARCHITECTURE &gt;&gt;</strong></a>
+          &nbsp;&nbsp;
+          <a href="/homelab/"><strong>&lt;&lt; BACK</strong></a>
+        </p>
+
+        <h2 id="the-rack">The Rack</h2>
+        <p>
+          The bulk of my homelab lives in a 42U server rack in my garage. If you're a curious person looking to start a homelab, please don't be intimidated by this. <strong>My homelab is completely overkill.</strong> Just about everything I'm running could be accomplished on a single PC running Proxmox.
+        </p>
+        <img src="/homelab-hardware/server-rack1.jpeg" height="500" alt="42U server rack front view" />
+        <br /><br />
+
+        <h2 id="the-environment">The Environment</h2>
+        <p>I know what you're thinking — <em><strong>His garage must be climate controlled, right?</strong></em></p>
+        <p>Nope. And neither is the server rack.</p>
+        <p>
+          I know this sounds reckless... And if you spend any time searching this topic on <a href="https://www.reddit.com/r/homelab/">r/homelab</a>, you'll find comment after comment of homelabbers warning of a computer's fragility when it comes to humidity and temperature. But, here's what I noticed about these comments... <strong>Most aren't backed by any real experience.</strong> They're not personal accounts of data loss or hardware failure on account of the elements. They're just educated guesses on what they believe is likely to happen if you ran a homelab out of your garage.
+        </p>
+        <p>
+          Then I found <a href="https://blog.networkprofile.org/unconditioned-garage-lab-1-year-later/"><strong>this</strong></a> blog post and <a href="https://www.reddit.com/r/homelab/comments/jey52d/unconditioned_texas_garage_lab_1_year_later_its/"><strong>this</strong></a> corresponding reddit post, which <em>was</em> backed by some personal experience. So, I decided to risk it and run my homelab in the garage.
+        </p>
+
+        <h4 id="thought-experiment">A quick thought experiment...</h4>
+        <p>
+          Think about the last time you got an oil change. Out in the mechanic's unconditioned bay was likely a decade-old dell optiplex ratchet strapped to one of those rolly carts with a monitor so old that it's still rocking 4:3 aspect ratio. It was probably running Windows 7, or even XP, and he uses it to run the software that controls some piece of industrial equipment that checks the PH level of your car's flux capacitor. It's covered in grease stains. It has a big crack in the chassis. And it's running just fine.
+        </p>
+        <p>
+          So... Is a garage the ideal place for a bunch of computers? Absolutely not. Is it possible I'll experience some kind of hardware failure caused by temperature or humidity? For sure.
+        </p>
+        <p>
+          But, I've found in my experience running a homelab for several years now (in less than ideal environments)... that computers are remarkably resilient. And, at the end of the day... it's not production. <em>It's just a homelab.</em> And the biggest part of the adventure is fixing things and learning along the way.
+        </p>
+
+        <h2 id="the-hardware">The Hardware</h2>
+        <img src="/homelab-hardware/server-rack2.jpeg" height="500" alt="Server rack front view with hardware" />
+        <img src="/homelab-hardware/server-rack3.jpeg" height="500" alt="Server rack back view" />
+        <figcaption>Click on the corresponding link in the table below to jump to the details</figcaption>
+
+        <table>
+          <tr>
+            <th>Front</th>
+            <th>Back</th>
+          </tr>
+          <tr>
+            <td style="vertical-align:top">
+              <ol>
+                <li><a href="#1-intel-nuc">Intel NUC</a></li>
+                <li><a href="#2-mac-mini">Mac Mini</a></li>
+                <li><a href="#3-synology">Synology</a></li>
+                <li><a href="#4-dell-optiplexes">Dell Optiplexes</a></li>
+                <li><a href="#5-coolermaster-n400">Coolermaster N400</a></li>
+                <li><a href="#6-supermicro-tower">Supermicro Tower</a></li>
+                <li><a href="#7-dell-r610">Dell R610</a></li>
+              </ol>
+            </td>
+            <td style="vertical-align:top">
+              <ol start="8">
+                <li><a href="#8-unifi-switch-24">Unifi Switch 24</a></li>
+                <li><a href="#9-old-cisco-gear">Old Cisco Gear</a></li>
+                <li><a href="#10-ups">UPS</a></li>
+              </ol>
+            </td>
+          </tr>
+        </table>
+
+        <h3 id="1-intel-nuc">1. Intel NUC</h3>
+        <p>
+          I just installed Ubuntu on this little guy and when I get around to it, he'll be running my <a href="https://www.home-assistant.io/">Home Assistant</a> and <a href="https://frigate.video">Frigate</a> servers.
+        </p>
+        <h4>Specs:</h4>
+        <ul>
+          <li><strong>Model</strong>:</li>
+          <li><strong>CPU</strong>: Intel i7-7567U</li>
+          <li><strong>Memory</strong>: 16GB DDR4</li>
+          <li><strong>Storage</strong>: 120GB SanDisk SSD</li>
+          <li><strong>Operating System</strong>: Ubuntu</li>
+        </ul>
+
+        <h3 id="2-mac-mini">2. Mac Mini</h3>
+        <p>
+          This Mac is running <a href="https://asahilinux.org">Asahi linux</a> and it runs a ton of Docker containers for me. I've had no issues with compatibility. Any container that has an ARM64 image has worked flawlessly.
+        </p>
+        <h4>Specs:</h4>
+        <ul>
+          <li><strong>Model</strong>: The one from 2020</li>
+          <li><strong>CPU</strong>: M1</li>
+          <li><strong>Memory</strong>: 16GB</li>
+          <li><strong>Storage</strong>: 256GB</li>
+          <li><strong>Operating System</strong>: <a href="https://asahilinux.org">Asahi Linux</a></li>
+        </ul>
+
+        <h3 id="3-synology">3. Synology</h3>
+        <p>
+          Because this synology has significantly less storage space than my TrueNAS servers, I use this as part of my backup strategy. Critical data like Docker container backups and Photos are backed up to this Synology, but it doesn't host any network shares.
+        </p>
+        <h4>Specs:</h4>
+        <ul>
+          <li><strong>Model</strong>: DS620 Slim</li>
+          <li><strong>CPU</strong>: Intel Celeron J3355</li>
+          <li><strong>Memory</strong>: 16GB</li>
+          <li><strong>Storage</strong>: 3x 2TB WD Red SSDs (RAID 5)</li>
+          <li><strong>Operating System</strong>: Synology</li>
+        </ul>
+
+        <h3 id="4-dell-optiplexes">4. Dell Optiplexes</h3>
+        <p>
+          This Proxmox cluster hosts a handful of VMs for me, including my Nextcloud server, PiHole server and an additional Docker host. It's also the perfect playground for setting up lab environments because I can spin VMs up quickly using templates and cloud-init.
+        </p>
+        <h4>Specs:</h4>
+        <ul>
+          <li><strong>Model</strong>: Dell Optiplex 7040</li>
+          <li><strong>CPU</strong>: Intel i7-6700</li>
+          <li><strong>Memory</strong>: 32GB DDR4</li>
+          <li><strong>Storage</strong>: 1x 128GB NVMe boot drive, 1x 3TB HDD</li>
+        </ul>
+        <ul>
+          <li><strong>Model</strong>: Dell Optiplex 7040</li>
+          <li><strong>CPU</strong>: Intel i7-6700</li>
+          <li><strong>Memory</strong>: 32GB DDR4</li>
+          <li><strong>Storage</strong>: 1x 128GB NVMe boot drive, 1x 2TB HDD</li>
+        </ul>
+        <ul>
+          <li><strong>Model</strong>: Dell Optiplex 7050</li>
+          <li><strong>CPU</strong>: Intel i7-6700</li>
+          <li><strong>Memory</strong>: 32GB DDR4</li>
+          <li><strong>Storage</strong>: 1x 128GB NVMe boot drive, 1x 6TB HDD</li>
+          <li><strong>Operating System</strong>: Proxmox</li>
+        </ul>
+
+        <h3 id="5-coolermaster-n400">5. Custom Built NAS</h3>
+        <p>
+          I recently built this to replace the Supermicro tower as my primary NAS. I'll link to a dedicated post with more detail when I get around to writing it.
+        </p>
+        <h4>Specs:</h4>
+        <ul>
+          <li><strong>Model</strong>: Custom build</li>
+          <li><strong>CPU</strong>: Intel i5-8500T</li>
+          <li><strong>Memory</strong>: 32GB DDR4</li>
+          <li><strong>Storage</strong>: 2x 128GB SATA SSD (boot drives), 5x 12TB HDDs (Storage Pool - Raidz2)</li>
+          <li><strong>Operating System</strong>: TrueNAS Scale</li>
+        </ul>
+
+        <h3 id="6-supermicro-tower">6. Supermicro Tower</h3>
+        <p>
+          This tower has now become a second backup NAS. Due to the space limitations, I was never able to back up my Jellyfin media to the Synology. This tower now serves as a place to replicate that media to.
+        </p>
+        <h4>Specs:</h4>
+        <ul>
+          <li><strong>Model</strong>:</li>
+          <li><strong>CPU</strong>: Intel i5-8500T</li>
+          <li><strong>Memory</strong>: 32GB DDR4</li>
+          <li><strong>Storage</strong>: 1x 240GB SATA SSD (boot drive), 4x 4TB HDDs (Storage Pool - Raidz1)</li>
+          <li><strong>Operating System</strong>: TrueNAS Scale</li>
+        </ul>
+
+        <h3 id="7-dell-r610">7. Dell R610</h3>
+        <p>Not worth the electricity. It's a shelf. Holds up both TrueNAS servers.</p>
+        <h4>Specs:</h4>
+        <ul>
+          <li><strong>Model</strong>: Dell R610</li>
+          <li><strong>CPU</strong>: Idk, some kind of Xeon.</li>
+          <li><strong>Memory</strong>: Idk, a bunch. DDR3</li>
+          <li><strong>Storage</strong>: None</li>
+          <li><strong>Operating System</strong>: Shelf</li>
+        </ul>
+
+        <h2 id="back">Back</h2>
+
+        <h3 id="8-unifi-switch-24">8. Unifi Switch 24</h3>
+        <p>
+          A buddy of mine hooked me up with this switch for free several years ago. It doesn't do much beyond gigabit switching, but it gets the job done.
+        </p>
+        <h4>Specs:</h4>
+        <p>
+          I don't have the exact specs, but it's an older version of Unifi's current <a href="https://store.ui.com/us/en/category/all-switching/products/usw-24"><strong>Standard 24</strong></a> switch.
+        </p>
+
+        <h3 id="9-old-cisco-gear">9. Old Cisco Gear</h3>
+        <p>
+          The gentleman that sold me the rack included an old FastEthernet cisco switch (not pictured) and three ancient cisco routers (only one pictured). The only purpose any of these serve is to be a shelf, just like the R610.
+        </p>
+        <p>
+          If you look closely, you'll notice that the one pictured is actually supporting the R610. Since the R610 doesn't have rails, it's resting on some support braces which were designed for a different model server. This meant that it would tip backward easily. So, I supported it with one of those cisco routers. I'm supporting a shelf with another shelf.
+        </p>
+
+        <h3 id="10-ups">10. UPS</h3>
+        <p>
+          Just a simple APC battery backup that could be bought at BestBuy. It's similar to <a href="https://www.amazon.com/APC-Battery-Protector-Back-UPS-BE600M1/dp/B01FWAZEIU/ref=sr_1_4?sr=8-4"><strong>this one</strong></a>. I would like to upgrade to a rack mountable one at some point.
+        </p>
+
+        <h2 id="network-closet">Network Closet</h2>
+
+        <h3 id="unifi-dream-router">Unifi Dream Router</h3>
+        <img src="/homelab-hardware/network-closet.jpeg" height="300" alt="Network closet with Unifi Dream Router" style="float:left;margin-right:25px;margin-bottom:25px;" />
+
+        <p>
+          I'm running my home network off of a Unifi Dream router at the moment. This runs the Unifi controller which allows me to control the Unifi switch in my server rack, as well as additional access points when I have them deployed.
+        </p>
+        <p>
+          <em>Why is it in a closet?</em> — I hear you ask... Well, I recently switched from Spectrum and my new ISP runs fiber to the house and connects the ONT on the outside of the house to the internal Cat5e wiring. This means they would normally use an existing network drop in the house to connect to the WAN port of your router. Since I was already using all the network drops throughout the house, the best place for the router was in the wiring closet using an additional Cat5e run that was originally used for an old intercom system.
+        </p>
+        <p>
+          This wouldn't be an issue if the router didn't also have a built-in wireless access point. I do have an additional access point that I could install somewhere else in the house... and I keep telling myself that I'll get around to doing that... but if it ain't broke don't fix it.
+        </p>
+        <h4>Specs:</h4>
+        <ul>
+          <li><strong>Model</strong>: Unifi Dream Router</li>
+          <li><strong>CPU</strong>: Dual-core Arm® Cortex® A53 at 1.35 GHz</li>
+          <li><strong>Memory</strong>: 2 GB</li>
+          <li><strong>Storage</strong>: Expandable with micro-sd</li>
+          <li><strong>Operating System</strong>: Unifi OS</li>
+        </ul>
+
+        <div style="clear:both;"></div>
+
+        <p>
+          <a href="/homelab/architecture/"><strong>HOMELAB ARCHITECTURE &gt;&gt;</strong></a>
+          &nbsp;&nbsp;
+          <a href="/homelab/"><strong>&lt;&lt; BACK</strong></a>
+        </p>
+      </div>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+.post-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+.post-header { margin-bottom: 2rem; }
+.post-title {
+  color: var(--fg);
+  font-size: 1.75rem;
+  line-height: 1.25;
+  margin-bottom: 0.75rem;
+}
+</style>

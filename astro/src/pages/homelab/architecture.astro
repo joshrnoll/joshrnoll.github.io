@@ -1,0 +1,148 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/prose.css';
+---
+<BaseLayout title="Homelab Architecture" description="The logical architecture of Josh Noll's homelab — automation, networking, storage, backups, and services.">
+  <div class="container post-layout">
+    <article class="post-content">
+      <header class="post-header">
+        <h1 class="post-title">Homelab Architecture</h1>
+      </header>
+      <div class="prose">
+        <p><a href="/homelab/hardware/"><strong>&lt;&lt; BACK</strong></a></p>
+
+        <h2 id="diagram">Diagram</h2>
+        <img src="/homelab-diagram.svg" alt="Homelab architecture diagram" style="max-width:100%;" />
+        <h4><a href="/homelab-diagram.html">Click to Expand</a></h4>
+
+        <h2 id="automation">Automation</h2>
+        <p>
+          I'm slowly attempting to automate everything in my homelab. I have a massive <a href="https://github.com/joshrnoll/ansible-playbook-homelab"><strong>Ansible playbook</strong></a> that baselines all of my servers, manages config files, cifs mounts, cron jobs, and deploys containers. You've heard of infrastructure-as-code? Well, this is homelab-as-code.
+        </p>
+        <p>
+          The playbook uses a bunch of <a href="https://galaxy.ansible.com/ui/repo/published/joshrnoll/homelab/"><strong>custom roles</strong></a> that I have written and published to Ansible galaxy.
+        </p>
+
+        <h2 id="user-experience">The User Experience</h2>
+
+        <h3 id="tailscale">Getting up on Tailscale</h3>
+        <p>
+          Nothing in my homelab is exposed to the internet. It's all protected by Tailscale, which I describe in <a href="https://github.com/joshrnoll/tailscale-info"><strong>this GitHub repo</strong></a>.
+        </p>
+        <p>
+          If I were to share my homelab with you, I would ask you to make a Tailscale account (if you don't have one already) and I would share a single node with you.
+        </p>
+        <p>
+          That node is Traefik, a proxy server that forwards requests to the container or server providing the service. Public DNS records will point you to the Tailscale IP of Traefik, which forwards your requests on to the corresponding service based on information in the HTTP headers. You won't have direct access to any servers other than Traefik, and if I ever decided to cut you off completely, I would simply unshare Traefik with you via Tailscale.
+        </p>
+        <p>Here's a pretty picture for the visual learners like myself:</p>
+        <img src="/homelab-architecture/tailscale-public-dns.png" alt="Tailscale and public DNS diagram" style="max-width:100%;margin:1.5rem 0;" />
+
+        <h3 id="authentik">Creating an Account in Authentik</h3>
+        <p>
+          Now, just because you have access to Traefik and can touch all of my homelab services from a network perspective, does not mean you can access any of them yet.
+        </p>
+        <p>
+          I use <a href="https://goauthentik.io">Authentik</a> for Single Sign-On (SSO) and Identity and Access Management (IAM). So, the second thing I'll ask you to do, if I'm sharing my homelab with you, is to go to the root of my internal homelab domain. Let's call it https://joshrnoll.homelab
+        </p>
+        <p>You'll be presented with a login page that looks like this:</p>
+        <img src="/homelab-architecture/login.png" height="500" alt="Authentik login page" style="margin:1.5rem 0;" />
+        <p>From here, you can click on 'Sign Up' and create an account with basic access to most of my homelab services.</p>
+
+        <h3 id="accessing-services">Accessing Services</h3>
+        <p>
+          Reloading https://joshrnoll.homelab will bring you to the Heimdall dashboard which looks something like this:
+        </p>
+        <img src="/homelab-architecture/dashboard.png" alt="Heimdall dashboard" style="max-width:100%;margin:1.5rem 0;" />
+        <p>
+          I have a wiki page to answer questions about how to use things like Calibre Web and Mealie. You'll notice there is a link to 'Admin Apps' where I keep the links to things like Portainer and Gitea. But you won't be able to log in to those unless I give you access to them via Authentik.
+        </p>
+
+        <h2 id="storage">Storage</h2>
+        <p>
+          Each node in my Proxmox cluster has a greater-than 2TB HDD to store the VM's hard disks. For the most part, data is stored directly on the VM hard disk and backed up to my TrueNAS server with Nautical Backup (see below). Some things, however, such as my Jellyfin media, are stored directly on TrueNAS and containers access them via SMB/CIFS.
+        </p>
+        <p>Overall, I have around 64TB of usable storage throughout my homelab now.</p>
+        <p>Most of that is severely under-utilized... but it's fun to say it like that.</p>
+
+        <h2 id="backups">Backups</h2>
+
+        <h3 id="containers">Containers</h3>
+        <p>
+          I use <a href="https://github.com/Minituff/nautical-backup"><strong>Nautical-Backup</strong></a>, a container that automatically syncs Docker container volumes to an SMB share on TrueNAS via rsync. It's pretty nifty. Essentially any container that is deployed into my environment with the docker label
+        </p>
+        <pre><code>nautical-backup.enable="true"</code></pre>
+        <p>
+          Will have its data synced to TrueNAS. The catch is that all of its data needs to be nested inside of a directory with the same name as the container. But I don't worry about that because I automate it with Ansible.
+        </p>
+        <p>Another picture for the visual learners:</p>
+        <img src="/homelab-architecture/nautical-backups.png" alt="Nautical Backup diagram" style="max-width:100%;margin:1.5rem 0;" />
+        <p>
+          Now, since two is one and one is none, I also sync my container backups between TrueNAS and my Synology through an Rsync task that runs every night.
+        </p>
+
+        <h3 id="photos">Photos</h3>
+        <p>
+          Apple still has me in their clutches for now and I do have my photos synced to iCloud. But, I also use Synology's photo backup app which works perfectly over tailscale. The only downside is that it does not appear to run in the background, so I do have to open the app occasionally to ensure that backups happen. I could probably automate this through iOS shortcuts somehow...
+        </p>
+        <p>
+          I have attempted to sync my Photo backups between Synology and TrueNAS just like the container backups, however the Rsync task fails every time it is run. I believe it's a permissions issue that I still need to figure out. It's been on my to-do list for forever. I'll get to it eventually and hopefully write a post about it.
+        </p>
+
+        <h3 id="jellyfin-media">Jellyfin Media</h3>
+        <p>
+          Since I have more media than my Synology has the space to support, none of it has ever been backed up. (Which is why I still keep my DVDs around in case I ever need to RIP them again). However, since I recently built a new TrueNAS server, I can now replicate my media to my old TrueNAS and allow it to live on as a dedicated media backup server.
+        </p>
+
+        <h2 id="services">List of All Services (with links)</h2>
+
+        <h3>Infrastructure Services</h3>
+        <ul>
+          <li><a href="https://goauthentik.io">Authentik</a></li>
+          <li><a href="https://traefik.io">Traefik</a></li>
+          <li><a href="https://minituff.github.io/nautical-backup/">Nautical Backup</a></li>
+        </ul>
+
+        <h3>Management Services</h3>
+        <ul>
+          <li><a href="https://portainer.io">Portainer</a></li>
+          <li><a href="https://code.visualstudio.com/docs/remote/vscode-server">Code Server</a></li>
+          <li><a href="https://gitea.com">Gitea</a></li>
+        </ul>
+
+        <h3>User-Facing Services</h3>
+        <ul>
+          <li><a href="https://heimdall.site/">Heimdall</a></li>
+          <li><a href="https://js.wiki">WikiJS</a></li>
+          <li><a href="https://jellyfin.org">Jellyfin</a></li>
+          <li><a href="https://github.com/crocodilestick/Calibre-Web-Automated">Calibre-Web Automated</a></li>
+          <li><a href="https://linkwarden.app/">Linkwarden</a></li>
+          <li><a href="https://freshrss.org">FreshRSS</a></li>
+          <li><a href="https://mealie.io">Mealie</a></li>
+          <li><a href="https://ollama.com">Ollama</a></li>
+          <li><a href="https://openwebui.com">OpenWebUI</a></li>
+          <li><a href="https://searxng.org">SearXNG</a></li>
+        </ul>
+
+        <p><a href="/homelab/hardware/"><strong>&lt;&lt; BACK</strong></a></p>
+      </div>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+.post-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+.post-header { margin-bottom: 2rem; }
+.post-title {
+  color: var(--fg);
+  font-size: 1.75rem;
+  line-height: 1.25;
+  margin-bottom: 0.75rem;
+}
+</style>

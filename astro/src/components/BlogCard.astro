@@ -1,0 +1,64 @@
+---
+// astro/src/components/BlogCard.astro
+import TagBadge from './TagBadge.astro';
+
+interface Props {
+  title: string;
+  slug: string;
+  date: Date;
+  description?: string;
+  tags: string[];
+}
+const { title, slug, date, description, tags } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric', month: 'short', day: 'numeric',
+});
+---
+<article class="blog-card" data-tags={tags.map(t => t.toLowerCase()).join(',')}>
+  <div class="card-ln" aria-hidden="true">~</div>
+  <div class="card-body">
+    <h2 class="card-title">
+      <a href={`/${slug}/`}>{title}</a>
+    </h2>
+    {description && <p class="card-desc">{description}</p>}
+    <div class="card-footer">
+      <time class="card-date">{formattedDate}</time>
+      <div class="card-tags">
+        {tags.map(tag => <TagBadge tag={tag} />)}
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+.blog-card[hidden] { display: none; }
+.blog-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--comment);
+  border-radius: 6px;
+  background: var(--bg-dark);
+  transition: border-color 0.15s;
+}
+.blog-card:hover { border-color: var(--blue); }
+.card-ln {
+  color: var(--comment);
+  font-size: 1.25rem;
+  padding-top: 2px;
+  flex-shrink: 0;
+}
+.card-title { font-size: 1.05rem; margin-bottom: 0.35rem; }
+.card-title a { color: var(--fg); }
+.card-title a:hover { color: var(--blue); text-decoration: none; }
+.card-desc { color: var(--comment); font-size: 0.875rem; margin-bottom: 0.5rem; }
+.card-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.card-date { color: var(--comment); font-size: 0.8rem; }
+.card-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+</style>

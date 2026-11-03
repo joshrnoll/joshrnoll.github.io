@@ -1,0 +1,30 @@
+# Tool configs
+**/.goose/
+**/.superpowers/
+**/superpowers/
+**/.mcp.json
+
+# Astro
+astro/dist/
+astro/.astro/
+astro/node_modules/
+
+# Hugo (archived)
+hugo-archive/public/
+hugo-archive/resources/
+.hugo_build.lock
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*~

@@ -1,0 +1,19 @@
+---
+// astro/src/pages/[slug].astro
+import { getCollection, render } from 'astro:content';
+import BlogPostLayout from '../layouts/BlogPostLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => {
+    const slug = post.data.slug ?? post.id.replace(/\.mdx?$/, '');
+    return { params: { slug }, props: { post } };
+  });
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+---
+<BlogPostLayout post={post} headings={headings}>
+  <Content />
+</BlogPostLayout>

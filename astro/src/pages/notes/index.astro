@@ -1,0 +1,59 @@
+---
+// astro/src/pages/notes/index.astro
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import TagFilter from '../../components/TagFilter.astro';
+import SearchBar from '../../components/SearchBar.astro';
+import { getAllTags } from '../../utils/tags';
+
+const allNotes = await getCollection('notes', ({ data }) => !data.draft);
+const sorted = allNotes.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const allTags = getAllTags(allNotes.map(p => ({ tags: p.data.tags })));
+
+const noteData = sorted.map(p => ({
+  title: p.data.title,
+  slug: `notes/${p.id.replace(/\.mdx?$/, '')}`,
+  date: p.data.date,
+  description: p.data.description,
+  tags: p.data.tags,
+}));
+---
+<BaseLayout title="Notes">
+  <div class="container" style="padding-top:2rem; padding-bottom:4rem;">
+    <h1 class="page-title">Notes</h1>
+    <p class="page-subtitle">{sorted.length} notes</p>
+
+    <SearchBar src="/notes-search-index.json" basePath="notes" placeholder="search notes..." />
+    <p class="search-hint">Press <kbd>/</kbd> to search, <kbd>Esc</kbd> to clear</p>
+
+    <TagFilter tags={allTags} />
+
+    <div class="post-list" id="post-list">
+      {noteData.map(p => (
+        <BlogCard
+          title={p.title}
+          slug={p.slug}
+          date={p.date}
+          description={p.description}
+          tags={p.tags}
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+.page-title { color: var(--fg); font-size: 1.75rem; line-height: 1.25; margin-bottom: 0.25rem; }
+.page-subtitle { color: var(--comment); font-size: 0.875rem; margin-bottom: 2rem; }
+.post-list { display: flex; flex-direction: column; gap: 1rem; }
+.search-hint { color: var(--comment); font-size: 0.75rem; margin-bottom: 1rem; }
+kbd {
+  background: var(--bg-dark);
+  border: 1px solid var(--comment);
+  border-radius: 3px;
+  padding: 0.05em 0.35em;
+  font-size: 0.75rem;
+}
+</style>

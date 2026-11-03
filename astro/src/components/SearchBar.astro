@@ -1,0 +1,167 @@
+---
+// astro/src/components/SearchBar.astro
+
+interface Props {
+  src?: string;
+  basePath?: string;
+  placeholder?: string;
+}
+
+const { src = '/search-index.json', basePath = '', placeholder = 'search posts...' } = Astro.props;
+---
+<div class="search-bar" id="search-bar" data-search-src={src} data-base-path={basePath}>
+  <label class="search-prompt" for="search-input">:</label>
+  <input
+    id="search-input"
+    type="text"
+    placeholder={placeholder}
+    autocomplete="off"
+    spellcheck="false"
+    class="search-input"
+  />
+</div>
+<div class="search-results" id="search-results" hidden></div>
+
+<script>
+  import Fuse from 'fuse.js';
+
+  const searchBar = document.getElementById('search-bar')!;
+  const src = (searchBar as HTMLElement).dataset.searchSrc ?? '/search-index.json';
+  const basePath = (searchBar as HTMLElement).dataset.basePath ?? '';
+
+  type PostEntry = {
+    slug: string;
+    title: string;
+    description: string;
+    tags: string[];
+    date: string;
+  };
+
+  let fuse: Fuse<PostEntry> | null = null;
+  let allPosts: PostEntry[] = [];
+
+  async function initFuse() {
+    if (fuse) return;
+    const res = await fetch(src);
+    allPosts = await res.json();
+    fuse = new Fuse(allPosts, {
+      keys: [
+        { name: 'title', weight: 2 },
+        { name: 'tags', weight: 1.5 },
+        { name: 'description', weight: 1 },
+      ],
+      threshold: 0.35,
+      includeScore: true,
+    });
+  }
+
+  function renderResults(posts: PostEntry[]) {
+    const container = document.getElementById('search-results')!;
+    if (posts.length === 0) {
+      container.innerHTML = '<p class="no-results">No results.</p>';
+    } else {
+      container.innerHTML = posts.map(p => `
+        <a href="/${basePath ? basePath + '/' : ''}${p.slug}/" class="search-result-item">
+          <span class="sr-title">${p.title}</span>
+          <span class="sr-tags">${p.tags.map(t => `[${t}]`).join(' ')}</span>
+        </a>
+      `).join('');
+    }
+    container.hidden = false;
+  }
+
+  function hideResults() {
+    const container = document.getElementById('search-results')!;
+    container.hidden = true;
+    container.innerHTML = '';
+  }
+
+  function toggleBlogCards(show: boolean) {
+    const postList = document.getElementById('post-list');
+    if (postList) postList.style.display = show ? 'flex' : 'none';
+  }
+
+  const input = document.getElementById('search-input') as HTMLInputElement;
+
+  input.addEventListener('focus', initFuse);
+
+  input.addEventListener('input', async () => {
+    const query = input.value.trim();
+    if (!query) {
+      hideResults();
+      toggleBlogCards(true);
+      return;
+    }
+    await initFuse();
+    const results = fuse!.search(query).map(r => r.item);
+    toggleBlogCards(false);
+    renderResults(results);
+  });
+
+  // Keyboard shortcut: '/' to focus search (like Vim)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== input) {
+      e.preventDefault();
+      input.focus();
+    }
+    if (e.key === 'Escape' && document.activeElement === input) {
+      input.value = '';
+      hideResults();
+      toggleBlogCards(true);
+      input.blur();
+    }
+  });
+</script>
+
+<style>
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--comment);
+  border-radius: 4px;
+  background: var(--bg-dark);
+  padding: 0.4rem 0.75rem;
+  transition: border-color 0.15s;
+}
+.search-bar:focus-within { border-color: var(--blue); }
+.search-prompt {
+  color: var(--blue);
+  font-size: 1.1rem;
+  user-select: none;
+  flex-shrink: 0;
+}
+.search-input {
+  background: transparent;
+  border: none;
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  outline: none;
+  width: 100%;
+}
+.search-input::placeholder { color: var(--comment); }
+
+.search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.search-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--comment);
+  border-radius: 4px;
+  background: var(--bg-dark);
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+.search-result-item:hover { border-color: var(--blue); }
+.sr-title { color: var(--fg); font-size: 0.95rem; }
+.sr-tags { color: var(--comment); font-size: 0.8rem; }
+.no-results { color: var(--comment); font-size: 0.875rem; padding: 0.5rem 0; }
+</style>

@@ -1,0 +1,76 @@
+---
+// astro/src/components/TableOfContents.astro
+import type { MarkdownHeading } from 'astro';
+
+interface Props { headings: MarkdownHeading[]; }
+const { headings } = Astro.props;
+
+// Only show h2 and h3
+const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
+---
+{tocHeadings.length > 0 && (
+  <nav class="toc" aria-label="Table of contents" id="toc">
+    <p class="toc-title">// contents</p>
+    <ul>
+      {tocHeadings.map(h => (
+        <li class:list={['toc-item', `depth-${h.depth}`]}>
+          <a href={`#${h.slug}`} class="toc-link" data-heading={h.slug}>
+            {h.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<script>
+  // Highlight active heading as user scrolls
+  const links = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
+  if (links.length > 0) {
+    const headingEls = Array.from(links).map(link => {
+      const id = link.dataset.heading;
+      return id ? document.getElementById(id) : null;
+    }).filter(Boolean) as HTMLElement[];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          const id = entry.target.id;
+          const link = document.querySelector<HTMLElement>(`.toc-link[data-heading="${id}"]`);
+          if (entry.isIntersecting) {
+            document.querySelectorAll('.toc-link.active').forEach(l => l.classList.remove('active'));
+            link?.classList.add('active');
+          }
+        });
+      },
+      { rootMargin: '0px 0px -70% 0px' }
+    );
+    headingEls.forEach(el => observer.observe(el));
+  }
+</script>
+
+<style>
+.toc {
+  background: var(--bg-dark);
+  border: 1px solid var(--comment);
+  border-radius: 4px;
+  padding: 1rem;
+  font-size: 0.85rem;
+  position: sticky;
+  top: 4rem;
+}
+.toc-title {
+  color: var(--comment);
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+}
+.toc ul { list-style: none; }
+.toc-item.depth-3 { padding-left: 1rem; }
+.toc-link {
+  color: var(--comment);
+  display: block;
+  padding: 0.15rem 0;
+  transition: color 0.15s;
+}
+.toc-link:hover, .toc-link.active { color: var(--blue); text-decoration: none; }
+</style>

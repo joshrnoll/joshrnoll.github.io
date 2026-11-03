@@ -1,0 +1,34 @@
+---
+// astro/src/components/TagBadge.astro
+interface Props {
+  tag: string;
+  href?: string;      // if set, renders as a link
+  active?: boolean;   // for tag filter active state
+}
+const { tag, href, active = false } = Astro.props;
+---
+{href ? (
+  <a href={href} class:list={['tag-badge', { active }]}>[{tag}]</a>
+) : (
+  <span class:list={['tag-badge', { active }]}>[{tag}]</span>
+)}
+
+<style>
+.tag-badge {
+  display: inline-block;
+  color: var(--comment);
+  font-size: 0.8rem;
+  padding: 0.1em 0.1em;
+  border-radius: 2px;
+  cursor: default;
+  transition: color 0.15s;
+}
+a.tag-badge {
+  cursor: pointer;
+  text-decoration: none;
+}
+a.tag-badge:hover, .tag-badge.active {
+  color: var(--blue);
+  text-decoration: none;
+}
+</style>

@@ -1,0 +1,31 @@
+---
+// astro/src/pages/404.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="404 — Not Found">
+  <div class="container" style="padding-top:4rem; text-align:center;">
+    <pre class="error-block">
+E404: File not found
+  -- path: {Astro.url.pathname}
+
+Press <a href="/">gg</a> to return home
+or   <a href="/blog/">:b blog&lt;CR&gt;</a> to browse posts
+    </pre>
+  </div>
+</BaseLayout>
+
+<style>
+.error-block {
+  display: inline-block;
+  background: var(--bg-dark);
+  border: 1px solid var(--red);
+  border-radius: 6px;
+  padding: 2rem;
+  text-align: left;
+  color: var(--red);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+.error-block a { color: var(--blue); }
+.error-block a:hover { color: var(--cyan); }
+</style>

@@ -1,0 +1,120 @@
+---
+// astro/src/pages/index.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TypingAnimation from '../components/TypingAnimation.astro';
+---
+<BaseLayout title="Home">
+  <div class="container home">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-animation-wrap">
+          <TypingAnimation />
+        </div>
+        <div class="gravatar-wrap">
+          <img
+            src="https://www.gravatar.com/avatar/d5377efce60675699a15b47511b8b451?s=400&d=mp"
+            alt="Josh"
+            class="gravatar-photo"
+            onerror="this.style.display='none'"
+          />
+        </div>
+      </div>
+      <div class="hero-links">
+        <a href="https://resume.joshrnoll.com" class="hero-cta hero-cta--resume" target="_blank">curl https://resume.joshrnoll.com</a>
+        <a href="/blog/" class="hero-cta">cd ~/blog →</a>
+        <a href="/notes/" class="hero-cta">cd ~/notes →</a>
+        <a href="/projects/" class="hero-cta">cd ~/projects →</a>
+        <a href="/homelab/" class="hero-cta">cd ~/homelab →</a>
+      </div>
+    </section>
+
+    <section class="about">
+      <h2 class="section-heading">// About Me</h2>
+      <p>
+        I'm a former infantryman turned systems engineer turned software developer who likes to build cool things with cool people and solve hard problems.
+        <br></br>
+        I'm a girl dad, a coffee connoisseur, an open source enthusiast and a star wars fanboy.
+      </p>
+      <p>
+        Read <a href="/my-story/">my story</a> for the full picture.
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+.home { padding-top: 3rem; padding-bottom: 5rem; }
+.hero { margin-bottom: 3rem; }
+.hero-inner {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+.hero-animation-wrap {
+  flex: 0 0 580px;
+}
+.gravatar-wrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.gravatar-photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 2px solid var(--blue);
+  box-shadow: 0 0 20px rgba(122, 162, 247, 0.45), 0 0 50px rgba(122, 162, 247, 0.15);
+  flex-shrink: 0;
+  object-fit: cover;
+}
+.hero-links { margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.hero-cta {
+  display: inline-block;
+  color: var(--green);
+  border: 1px solid var(--green);
+  padding: 0.4em 1em;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+}
+.hero-cta:hover {
+  background: color-mix(in srgb, var(--green) 15%, transparent);
+  text-decoration: none;
+  color: var(--green);
+}
+.hero-cta--resume {
+  color: var(--blue);
+  border-color: var(--blue);
+}
+.hero-cta--resume:hover {
+  background: color-mix(in srgb, var(--blue) 15%, transparent);
+  color: var(--blue);
+}
+.about { max-width: 60ch; }
+.section-heading {
+  color: var(--comment);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+.about p { margin-bottom: 0.75rem; color: var(--fg); }
+
+@media (max-width: 768px) {
+  .hero-inner {
+    flex-direction: column;
+    align-items: center;
+  }
+  .hero-animation-wrap {
+    flex: none;
+    width: 100%;
+    max-width: 580px;
+  }
+  .gravatar-wrap {
+    flex: none;
+  }
+  .gravatar-photo {
+    width: 125px;
+    height: 125px;
+  }
+}
+</style>
