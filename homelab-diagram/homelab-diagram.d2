@@ -1,0 +1,186 @@
+# Homelab topology
+# Render: d2 --layout elk --theme 200 homelab-diagram.d2 assets/homelab-diagram.svg
+
+direction: down
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+    theme-id: 200
+  }
+}
+
+network: {
+  label: "Network · UniFi Dream Router"
+  grid-rows: 1
+  grid-gap: 20
+  style: {
+    fill: "#1a2332"
+    font-color: "#ffffff"
+    border-radius: 12
+  }
+
+  vlan7: "VLAN 7\nManagement" {
+    style: { fill: "#f59e0b"; font-color: "#111827"; border-radius: 8 }
+  }
+  vlan10: "VLAN 10\nHome" {
+    style: { fill: "#3b82f6"; font-color: "#ffffff"; border-radius: 8 }
+  }
+  vlan20: "VLAN 20\nIoT" {
+    style: { fill: "#a855f7"; font-color: "#ffffff"; border-radius: 8 }
+  }
+  vlan30: "VLAN 30\nServers" {
+    style: { fill: "#22c55e"; font-color: "#111827"; border-radius: 8 }
+  }
+  vlan100: "VLAN 100\nGuest · isolated" {
+    style: { fill: "#6b7280"; font-color: "#ffffff"; border-radius: 8 }
+  }
+}
+
+talos: {
+  label: "Talos Kubernetes · VLAN 30"
+  style: {
+    fill: "#0f2a1d"
+    font-color: "#ffffff"
+    border-radius: 12
+    stroke: "#22c55e"
+    stroke-width: 2
+  }
+
+  vip: "Kubernetes API\nVirtual IP" {
+    style: { fill: "#22c55e"; font-color: "#111827"; border-radius: 8; bold: true }
+  }
+
+  mini1: "Mini PC 1\nControl plane · worker\netcd · local storage" {
+    style: { fill: "#dcfce7"; font-color: "#111827"; border-radius: 8 }
+  }
+  mini2: "Mini PC 2\nControl plane · worker\netcd · local storage" {
+    style: { fill: "#dcfce7"; font-color: "#111827"; border-radius: 8 }
+  }
+  mini3: "Mini PC 3\nControl plane · worker\netcd · local storage" {
+    style: { fill: "#dcfce7"; font-color: "#111827"; border-radius: 8 }
+  }
+
+  vip -> mini1
+  vip -> mini2
+  vip -> mini3
+}
+
+proxmox: {
+  label: "Proxmox · Standalone hosts\nManagement VLAN 7 · VLAN-aware bridges"
+  style: {
+    fill: "#2a1a0f"
+    font-color: "#ffffff"
+    border-radius: 12
+    stroke: "#f59e0b"
+    stroke-width: 2
+  }
+
+  laptop: "Laptop · Proxmox" {
+    style: { fill: "#ffedd5"; font-color: "#111827"; border-radius: 10 }
+
+    ha_vm: "Home Assistant OS\nVLAN 20 · local storage\nZigbee / Z-Wave USB passthrough" {
+      style: { fill: "#f3e8ff"; font-color: "#111827"; border-radius: 8 }
+    }
+  }
+
+  gaming: "Gaming PC · Proxmox\nCore i7 · 32 GB RAM" {
+    style: { fill: "#ffedd5"; font-color: "#111827"; border-radius: 10 }
+
+    gpu_worker: "Talos GPU worker VM\nVLAN 30 · GPU workloads\nRTX 2080 Super passthrough" {
+      style: { fill: "#dbeafe"; font-color: "#111827"; border-radius: 8 }
+    }
+  }
+}
+
+storage: {
+  label: "Storage · VLAN 30"
+  style: {
+    fill: "#111827"
+    font-color: "#ffffff"
+    border-radius: 12
+  }
+
+  synology: "Synology NAS\n3 × 4 TB SSD · RAID 5\n~8 TB usable" {
+    shape: cylinder
+    style: { fill: "#bfdbfe"; font-color: "#111827"; border-radius: 8 }
+
+    fast: "SSD tier · NFS\nDefault StorageClass\nDatabases · application data" {
+      style: { fill: "#eff6ff"; font-color: "#111827"; border-radius: 8 }
+    }
+  }
+
+  truenas: "TrueNAS SCALE\nHDD storage · ZFS" {
+    shape: cylinder
+    style: { fill: "#fed7aa"; font-color: "#111827"; border-radius: 8 }
+
+    bulk: "Bulk tier · NFS\nMedia · ISOs · templates" {
+      style: { fill: "#fff7ed"; font-color: "#111827"; border-radius: 8 }
+    }
+    backups: "Backups\nProxmox · Kubernetes" {
+      style: { fill: "#fff7ed"; font-color: "#111827"; border-radius: 8 }
+    }
+  }
+}
+
+standalone: {
+  label: "Independent services · VLAN 30"
+  style: {
+    fill: "#1e1b2e"
+    font-color: "#ffffff"
+    border-radius: 12
+    stroke: "#a855f7"
+  }
+
+  macmini: "Mac mini M1 · 16 GB\nmacOS · development / Xcode\nSSH · Tailscale" {
+    style: { fill: "#e9d5ff"; font-color: "#111827"; border-radius: 8 }
+  }
+  rpi4: "Raspberry Pi 4 · 8 GB\nDNS server\nUDP/TCP 53 · all VLANs" {
+    style: { fill: "#ddd6fe"; font-color: "#111827"; border-radius: 8 }
+  }
+}
+
+cold: {
+  label: "Spare hardware"
+  near: bottom-right
+  style: {
+    fill: "#374151"
+    font-color: "#ffffff"
+    border-radius: 12
+    stroke-dash: 6
+  }
+
+  supermicro: "Supermicro tower\nXeon · 32 GB DDR3\nCold spare · powered off" {
+    style: { fill: "#d1d5db"; font-color: "#111827"; border-radius: 8 }
+  }
+  zero: "Raspberry Pi Zero 2 W\nSpare" {
+    style: { fill: "#d1d5db"; font-color: "#111827"; border-radius: 8 }
+  }
+}
+
+# Network connections
+network -> talos
+network -> storage
+network -> standalone
+network -> proxmox: VLAN 7 management
+network -> proxmox.laptop.ha_vm: VLAN 20
+network -> proxmox.laptop.ha_vm: "VLAN 10 · TCP 8123 / mDNS" {
+  style: { stroke-dash: 4 }
+}
+
+# Cluster membership and storage
+proxmox.gaming.gpu_worker -> talos: Kubernetes worker {
+  style: { stroke-dash: 5; stroke: "#3b82f6"; stroke-width: 2 }
+}
+storage.synology.fast -> talos: Persistent volumes {
+  style: { stroke: "#3b82f6"; stroke-width: 2 }
+}
+storage.truenas.bulk -> proxmox: ISOs / templates {
+  style: { stroke: "#f59e0b" }
+}
+storage.truenas.backups -- proxmox: VM backups {
+  style: { stroke-dash: 4; stroke: "#f59e0b" }
+}
+storage.truenas.backups -- talos: Cluster backups {
+  style: { stroke-dash: 4; stroke: "#3b82f6" }
+}
