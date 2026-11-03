@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/prose.css';
+---
+<BaseLayout title="Homelab diagram (previous version)" description="Homelab diagram (previous version)">
+  <div class="container post-layout">
+    <article class="post-content">
+      <header class="post-header"><h1 class="post-title">Homelab diagram (previous version)</h1></header>
+      <div class="prose">
+        <img src="/homelab-diagram.svg" alt="Previous homelab architecture diagram" style="max-width:100%;" />
+        <h4><a href="/homelab-diagram.html">Click to Expand</a></h4>
+      </div>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+.post-layout { display: grid; grid-template-columns: 1fr; gap: 2rem; padding-top: 2rem; padding-bottom: 4rem; }
+.post-header { margin-bottom: 2rem; }
+.post-title { color: var(--fg); font-size: 1.75rem; line-height: 1.25; margin-bottom: 0.75rem; }
+</style>
