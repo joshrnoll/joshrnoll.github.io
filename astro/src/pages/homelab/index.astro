@@ -2,25 +2,16 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/prose.css';
 ---
-<BaseLayout title="My Homelab" description="An overview of Josh Noll's homelab — hardware, architecture, and philosophy.">
+<BaseLayout title="My Homelab" description="Josh Noll's homelab diagram, and why he has a homelab.">
   <div class="container post-layout">
     <article class="post-content">
       <header class="post-header">
         <h1 class="post-title">My Homelab</h1>
       </header>
       <div class="prose">
-        <h2 id="tour">Tour My Homelab</h2>
-        <p>
-          Click <a href="/homelab/hardware/">here</a> for the hardware.
-        </p>
-        <p>
-          Click <a href="/homelab/architecture/">here</a> for the logical architecture.
-        </p>
-
         <h2 id="diagram">Diagram</h2>
         <iframe src="/homelab-diagram/viewer.html" title="Homelab topology diagram" loading="lazy" style="width:100%;height:70vh;min-height:420px;border:1px solid var(--comment);border-radius:8px;"></iframe>
         <p><a href="/homelab-diagram/viewer.html">Open the diagram full screen</a> · <a href="/homelab-diagram/homelab-diagram.svg">Raw SVG</a></p>
-        <p>See the <a href="/archives/">Archives</a> for the older diagram.</p>
 
         <img src="/garage-homelab.png" alt="42U server rack in Josh's garage" style="max-width:100%;margin:1.5rem 0;" />
 
@@ -63,10 +54,10 @@ import '../../styles/prose.css';
           Start with some virtual machines on your laptop. Build a Linux VM. Learn Linux. Learn Docker. Experiment with Kubernetes. Learn to Code. Write your own webserver. The possibilities are endless.
         </p>
         <p>
-          As with any hobby, of course, it expands and grows over time. And some weirdos grow an affinity for unnecessary expansion (yes I'm talking about myself again). What starts as nothing more than a virtual machine running on your laptop, can quickly expand to a 42U rack full of hardware running in your garage. And that's where the tour of my homelab begins.
+          As with any hobby, of course, it expands and grows over time. And some weirdos grow an affinity for unnecessary expansion (yes I'm talking about myself again). What starts as nothing more than a virtual machine running on your laptop, can quickly expand to a 42U rack full of hardware running in your garage. And that's where <a href="/archives/homelab/">the tour of my homelab</a> begins.
         </p>
 
-        <p><a href="#tour"><strong>^BACK TO THE TOUR^</strong></a></p>
+        <p>Older homelab content (the hardware and architecture tour and the previous diagram) lives in the <a href="/archives/">Archives</a>.</p>
       </div>
     </article>
   </div>
