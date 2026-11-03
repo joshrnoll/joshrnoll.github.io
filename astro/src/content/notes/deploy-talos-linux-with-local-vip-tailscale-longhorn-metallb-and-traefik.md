@@ -265,7 +265,7 @@ stringData:
 ```
 or from cli:
 ```
-kubectl create secret generic tailscale-auth --from-literal=TS_AUTHKEY='REDACTED'
+kubectl create secret generic tailscale-auth --from-literal=TS_AUTHKEY='tskey-auth-authkey-goes-here'
 ```
 7. Create a tailscale-rbac.yml file with the following contents:
 ```
