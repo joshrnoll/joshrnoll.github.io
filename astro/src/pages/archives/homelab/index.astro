@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import '../../../styles/prose.css';
+---
+<BaseLayout title="Homelab Tour (archived)" description="The previous homelab tour, kept for reference.">
+  <div class="container post-layout">
+    <article class="post-content">
+      <header class="post-header"><h1 class="post-title">Homelab Tour (archived)</h1></header>
+      <div class="prose">
+        <p>This is the previous homelab tour, kept for reference. Visit the <a href="/homelab/">current homelab page</a>.</p>
+        <h2 id="tour">Tour My Homelab</h2>
+        <p>
+          Click <a href="/archives/homelab/hardware/">here</a> for the hardware.
+        </p>
+        <p>
+          Click <a href="/archives/homelab/architecture/">here</a> for the logical architecture.
+        </p>
+
+        <p><a href="/archives/homelab-diagram/">Previous homelab diagram</a></p>
+      </div>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+.post-layout { display: grid; grid-template-columns: 1fr; gap: 2rem; padding-top: 2rem; padding-bottom: 4rem; }
+.post-header { margin-bottom: 2rem; }
+.post-title { color: var(--fg); font-size: 1.75rem; line-height: 1.25; margin-bottom: 0.75rem; }
+</style>

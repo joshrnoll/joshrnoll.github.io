@@ -1,6 +1,6 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import '../../styles/prose.css';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import '../../../styles/prose.css';
 ---
 <BaseLayout title="Homelab Architecture" description="The logical architecture of Josh Noll's homelab — automation, networking, storage, backups, and services.">
   <div class="container post-layout">
@@ -9,9 +9,11 @@ import '../../styles/prose.css';
         <h1 class="post-title">Homelab Architecture</h1>
       </header>
       <div class="prose">
-        <p><a href="/homelab/hardware/"><strong>&lt;&lt; BACK</strong></a></p>
+        <p><a href="/archives/homelab/hardware/"><strong>&lt;&lt; BACK</strong></a></p>
 
-        <p>See the <a href="/homelab/">current diagram</a> and the <a href="/archives/homelab-diagram/">previous diagram</a>.</p>
+        <h2 id="diagram">Diagram</h2>
+        <img src="/homelab-diagram.svg" alt="Homelab architecture diagram" style="max-width:100%;" />
+        <h4><a href="/homelab-diagram.html">Click to Expand</a></h4>
 
         <h2 id="automation">Automation</h2>
         <p>
@@ -122,7 +124,7 @@ import '../../styles/prose.css';
           <li><a href="https://searxng.org">SearXNG</a></li>
         </ul>
 
-        <p><a href="/homelab/hardware/"><strong>&lt;&lt; BACK</strong></a></p>
+        <p><a href="/archives/homelab/hardware/"><strong>&lt;&lt; BACK</strong></a></p>
       </div>
     </article>
   </div>
