@@ -261,7 +261,7 @@ kind: Secret
 metadata:
   name: tailscale-auth
 stringData:
-  TS_AUTHKEY: REDACTED
+  TS_AUTHKEY: tskey-auth-REDACTED
 ```
 or from cli:
 ```
