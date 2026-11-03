@@ -28,3 +28,6 @@ Thumbs.db
 .vscode/
 *.swp
 *~
+
+/astro/public/homelab-diagram/
+/resume/.venv/

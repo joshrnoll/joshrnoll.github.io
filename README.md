@@ -1,27 +1,7 @@
-# Josh Noll's Website
+# Josh Noll's website
 
-Personal site built with [Astro](https://astro.build). The application and its package scripts live in [`astro/`](astro/).
+The Astro website lives in `astro/` at the repository root; `resume/` contains the resume and `homelab-diagram/` contains the current diagram and viewer.
 
-## Local development
+Build the complete site with `bash scripts/build-site.sh`. Set `SKIP_RESUME_BUILD=1` to use the committed resume output for a quick build. The output is in `astro/dist/`.
 
-```bash
-cd astro
-npm ci
-npm run dev
-```
-
-Run the production checks with:
-
-```bash
-cd astro
-npm run test
-npm run build
-```
-
-## Deployment
-
-GitHub Actions builds the Astro site and syncs it to Azure Blob Storage. Set the repository secret `endpoint_sas_url` to a static-site container SAS URL in this form:
-
-```
-https://<storage-account>.blob.core.windows.net/%24web?<sas-token>
-```
+GitHub Pages deploys from `main` using `.github/workflows/pages.yml`.
