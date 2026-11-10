@@ -15,23 +15,16 @@ The project uses a hybrid resume generation system with `resume.yaml` as the sin
 
 The generated resume website includes action buttons for LinkedIn, GitHub, personal website, and PDF download.
 
-## AI Assisted Resume Tailoring
+## AI assisted resume updates
 
-The project also includes a [Goose recipe](https://block.github.io/goose/docs/guides/recipes/) for AI assisted resume tailoring. To use the recipe:
+Resume updates are handled by the `update-resume` agent skill at [`.agents/skills/update-resume/SKILL.md`](../.agents/skills/update-resume/SKILL.md). It has two modes:
 
-1. Ensure that you have the [Goose CLI](https://block.github.io/goose/docs/quickstart#install-goose) installed and configured with your preferred provider.
+- **Tailor** the resume to one job posting. Each job gets its own branch. The tailored PDF is written with `python make.py --output tailored/<job-slug>` to `tailored/<job-slug>/resume.pdf`, which is gitignored. That command leaves the live `src/index.html` and `src/resume.pdf` unchanged, and those live files are not committed. Do not merge a tailoring branch: the site build regenerates the live resume from `resume.yaml`.
+- **General update** of the main resume, such as a new role, accomplishment, or skill. This edits `resume.yaml`, rebuilds the live files with `python make.py`, and commits them on a branch for review. It does not push straight to `main`.
 
-2. Ensure that you have added the Developer and Todo extensions using `goose configure`
+Both modes edit only the `cv` section of `resume.yaml`, and they use only material already in `resume.yaml` or `ILM.md`, or that Josh explicitly provides.
 
-3. Run the following command:
-
-```bash
-goose run --recipe recipe.yaml <job-posting-url-or-job-title>
-```
-
-You can pass either the url to a specific job posting, or provide a generic job title such as "Software Engineer"
-
-Goose will checkout a new branch named after the job title, tailor `resume.yaml` and run `make.py` to generate the HTML and PDF files.
+The default `python make.py` still regenerates `src/index.html` and `src/resume.pdf`.
 
 ## Setting up a developer environment
 

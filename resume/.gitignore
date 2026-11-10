@@ -1,1 +1,3 @@
 venv
+# Tailored PDFs from `python make.py --output`. Never commit these.
+tailored/
