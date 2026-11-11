@@ -66,7 +66,7 @@ const content = {
 </div>
 
 <script>
-  import { INTRO_TYPING } from '../../../resume/src/intro-typing.js';
+  import { INTRO_BEATS, INTRO_TYPING } from '../../../resume/src/intro-typing.js';
 
   const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
 
@@ -93,52 +93,45 @@ const content = {
     const animLinks: Array<{ label: string; href: string; external?: boolean }>
       = JSON.parse(container.dataset.links!);
 
-    await sleep(600);
+    await sleep(INTRO_BEATS.startMs);
 
     // gg — go to top
     setActive('l1');
-    await showKeys('gg', 500);
-    await sleep(200);
+    await showKeys('gg', INTRO_BEATS.keyMs);
+    await sleep(INTRO_BEATS.afterGgMs);
 
     // G — go to bottom
-    await showKeys('G', 500);
+    await showKeys('G', INTRO_BEATS.keyMs);
     setActive('l7');
-    await sleep(300);
+    await sleep(INTRO_BEATS.afterGMs);
 
-    // Navigate to heading line
+    // ciw — change the heading, same beat as the resume's heading line
     setActive('l3');
-    await sleep(250);
-
-    // ciw — change inner word
-    await showKeys('ciw', 500);
+    await sleep(INTRO_BEATS.beforeTypeMs);
+    await showKeys('ciw', INTRO_BEATS.ciwMs);
     const l3c = document.getElementById('l3c')!;
     l3c.textContent = '## ';
     await typeText(l3c, animName, INTRO_TYPING.headingMs);
-    await sleep(200);
+    await sleep(INTRO_BEATS.afterTypeMs);
 
-    // Esc
-    await sleep(400);
-
-    // Move to tagline line, enter insert mode
+    // tagline
     setActive('l5');
-    await sleep(200);
-    await showKeys('i', 300);
+    await sleep(INTRO_BEATS.beforeTypeMs);
+    await showKeys('i', INTRO_BEATS.insertMs);
     const l5c = document.getElementById('l5c')!;
     await typeText(l5c, animTagline, INTRO_TYPING.bodyMs);
-    await sleep(200);
+    await sleep(INTRO_BEATS.afterTypeMs);
 
-    // Esc
-    await sleep(350);
-
-    // Move to links line
+    // links
     setActive('l7');
-    await sleep(150);
-    await showKeys('i', 200);
+    await sleep(INTRO_BEATS.beforeTypeMs);
+    await showKeys('i', INTRO_BEATS.insertMs);
     const l7c = document.getElementById('l7c')!;
     const linkText = animLinks.map(l => `[${l.label}]`).join('  ');
     await typeText(l7c, linkText, INTRO_TYPING.bodyMs);
+    await sleep(INTRO_BEATS.afterTypeMs);
 
-    // Esc — final state
+    // Esc — final state, then the same return-to-top and reveal as the resume
     setActive('l1');
 
     // Replace link text with actual anchor tags
@@ -149,15 +142,15 @@ const content = {
       })
       .join('  ');
 
-    // Pause where :Preview used to sit on the editor statusline
-    await sleep(800);
-    await sleep(700);
+    await showKeys('gg', INTRO_BEATS.keyMs);
+    await sleep(INTRO_BEATS.afterEndGgMs);
+    await sleep(INTRO_BEATS.previewMs);
 
     // Fade out editor, fade in preview
     const frame   = document.getElementById('nvim-frame')!;
     const preview = document.getElementById('md-preview')!;
     frame.classList.add('fading-out');
-    await sleep(400);
+    await sleep(INTRO_BEATS.fadeMs);
     frame.style.display = 'none';
     preview.classList.add('visible');
     preview.removeAttribute('aria-hidden');
@@ -178,7 +171,7 @@ const content = {
   max-width: 580px;
   font-family: var(--font-mono);
   font-size: 0.95rem;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.25s ease;
 }
 .nvim-frame.fading-out { opacity: 0; }
 

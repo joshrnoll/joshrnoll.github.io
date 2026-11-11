@@ -1,4 +1,4 @@
-import { INTRO_TYPING } from "./intro-typing.js";
+import { INTRO_BEATS, INTRO_TYPING } from "./intro-typing.js";
 
 // Download PDF function
 function downloadPDF() {
@@ -89,34 +89,34 @@ function downloadPDF() {
   }
 
   async function run() {
-    await sleep(200);
+    await sleep(INTRO_BEATS.startMs);
     if (done) return;
 
     // gg / G, like the landing page
     setActive(lines[0]);
-    await showKeys("gg", 200);
-    await sleep(60);
-    await showKeys("G", 200);
+    await showKeys("gg", INTRO_BEATS.keyMs);
+    await sleep(INTRO_BEATS.afterGgMs);
+    await showKeys("G", INTRO_BEATS.keyMs);
     setActive(header[header.length - 1]);
-    await sleep(100);
+    await sleep(INTRO_BEATS.afterGMs);
 
     for (const line of typed) {
       if (done) return;
       setActive(line);
-      await sleep(80);
-      await showKeys(line.type, line.type === "ciw" ? 200 : 120);
+      await sleep(INTRO_BEATS.beforeTypeMs);
+      await showKeys(line.type, line.type === "ciw" ? INTRO_BEATS.ciwMs : INTRO_BEATS.insertMs);
       await typeText(
         line.lc,
         line.text,
         line.kind === "h1" ? INTRO_TYPING.headingMs : INTRO_TYPING.bodyMs,
       );
-      await sleep(160);
+      await sleep(INTRO_BEATS.afterTypeMs);
     }
     if (done) return;
 
     // `p` in NORMAL mode: paste the rest of the resume source from the
     // register below the cursor line in one go, like a real Neovim paste.
-    await showKeys("p", 200);
+    await showKeys("p", INTRO_BEATS.keyMs);
     if (done) return;
     const rest = lines.slice(header.length);
     const frag = document.createDocumentFragment();
@@ -127,20 +127,20 @@ function downloadPDF() {
     content.appendChild(frag);
     // cursor lands on the first pasted line
     setActive(rest[0]);
-    await sleep(600);
+    await sleep(INTRO_BEATS.afterPasteMs);
     if (done) return;
 
     // gg, then the pause that used to show :Preview
     content.scrollTop = 0;
     setActive(lines[0]);
-    await showKeys("gg", 200);
-    await sleep(120);
+    await showKeys("gg", INTRO_BEATS.keyMs);
+    await sleep(INTRO_BEATS.afterEndGgMs);
     if (done) return;
-    await sleep(400);
+    await sleep(INTRO_BEATS.previewMs);
 
     // Fade out editor, fade in rendered resume
     wrap.classList.add("fading-out");
-    await sleep(250);
+    await sleep(INTRO_BEATS.fadeMs);
     finish();
   }
 
