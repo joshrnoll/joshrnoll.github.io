@@ -20,11 +20,11 @@ import TypingAnimation from '../components/TypingAnimation.astro';
         </div>
       </div>
       <div class="hero-links">
-        <a href="/resume/" class="hero-cta hero-cta--resume">cd ~/resume →</a>
         <a href="/blog/" class="hero-cta">cd ~/blog →</a>
         <a href="/notes/" class="hero-cta">cd ~/notes →</a>
         <a href="/projects/" class="hero-cta">cd ~/projects →</a>
         <a href="/homelab/" class="hero-cta">cd ~/homelab →</a>
+        <a href="/resume/" class="hero-cta" data-astro-reload>cd ~/resume →</a>
       </div>
     </section>
 
@@ -82,14 +82,6 @@ import TypingAnimation from '../components/TypingAnimation.astro';
   background: color-mix(in srgb, var(--green) 15%, transparent);
   text-decoration: none;
   color: var(--green);
-}
-.hero-cta--resume {
-  color: var(--blue);
-  border-color: var(--blue);
-}
-.hero-cta--resume:hover {
-  background: color-mix(in srgb, var(--blue) 15%, transparent);
-  color: var(--blue);
 }
 .about { max-width: 60ch; }
 .section-heading {

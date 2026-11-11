@@ -24,9 +24,9 @@ function downloadPDF() {
 
   let done = false;
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-  const modeEl = document.getElementById("nvim-mode");
-  const posEl = document.getElementById("nvim-pos");
-  const keysEl = document.getElementById("nvim-keys");
+  // The editor used to draw its own statusline. Those nodes are gone so the
+  // site footer is the only Neovim statusline. The pauses stay so the
+  // typing rhythm is unchanged.
 
   // Build the buffer: one line per <div> in the template, with line numbers.
   const src = Array.from(tpl.content.querySelectorAll("div")).map((d) => ({
@@ -58,27 +58,14 @@ function downloadPDF() {
     content.querySelectorAll(".nvim-line.active").forEach((e) => e.classList.remove("active"));
     if (!line) return;
     line.el.classList.add("active");
-    posEl.textContent = `${lines.indexOf(line) + 1}:1`;
     // keep the cursor line in view inside the buffer
     const pad = parseFloat(getComputedStyle(content).paddingBottom) || 0;
     const top = line.el.offsetTop + line.el.offsetHeight + pad - content.clientHeight;
     if (top > content.scrollTop) content.scrollTop = top;
   }
 
-  function setMode(mode) {
-    if (mode === "INSERT") {
-      modeEl.textContent = "-- INSERT --";
-      modeEl.classList.add("insert");
-    } else {
-      modeEl.textContent = "NORMAL";
-      modeEl.classList.remove("insert");
-    }
-  }
-
-  async function showKeys(keys, duration = 700) {
-    keysEl.textContent = keys;
+  async function showKeys(_keys, duration = 700) {
     await sleep(duration);
-    keysEl.textContent = "";
   }
 
   async function typeText(el, text, speed) {
@@ -116,11 +103,8 @@ function downloadPDF() {
       setActive(line);
       await sleep(80);
       await showKeys(line.type, line.type === "ciw" ? 200 : 120);
-      setMode("INSERT");
       await typeText(line.lc, line.text, line.kind === "h1" ? 25 : 14);
-      await sleep(60);
-      setMode("NORMAL");
-      await sleep(100);
+      await sleep(160);
     }
     if (done) return;
 
@@ -135,24 +119,18 @@ function downloadPDF() {
       frag.appendChild(line.el);
     });
     content.appendChild(frag);
-    // cursor lands on the first pasted line; Neovim reports the line count
+    // cursor lands on the first pasted line
     setActive(rest[0]);
-    keysEl.classList.add("msg");
-    keysEl.textContent = `${rest.length} more lines`;
     await sleep(600);
-    keysEl.textContent = "";
-    keysEl.classList.remove("msg");
     if (done) return;
 
-    // gg, then :Preview
+    // gg, then the pause that used to show :Preview
     content.scrollTop = 0;
     setActive(lines[0]);
     await showKeys("gg", 200);
     await sleep(120);
     if (done) return;
-    keysEl.textContent = ":Preview";
     await sleep(400);
-    keysEl.textContent = "";
 
     // Fade out editor, fade in rendered resume
     wrap.classList.add("fading-out");
@@ -165,17 +143,3 @@ function downloadPDF() {
   document.getElementById("nvim-skip").addEventListener("click", finish);
   run();
 })();
-
-// Status bar path + scroll percentage (mirrors joshrnoll.com's StatusBar)
-const pathEl = document.getElementById("sb-path");
-if (pathEl) pathEl.textContent = window.location.pathname;
-const scrollEl = document.getElementById("sb-scroll");
-function updateScroll() {
-  if (!scrollEl) return;
-  const total = document.documentElement.scrollHeight - window.innerHeight;
-  const pct = total > 0 ? Math.round((window.scrollY / total) * 100) : 100;
-  scrollEl.textContent = `${pct}%`;
-}
-window.addEventListener("scroll", updateScroll, { passive: true });
-window.addEventListener("resize", updateScroll);
-updateScroll();

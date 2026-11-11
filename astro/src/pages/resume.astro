@@ -1,0 +1,40 @@
+---
+// astro/src/pages/resume.astro
+// The resume body is generated from resume/templates/resume.html.jinja into
+// resume/src/index.html. This page supplies the site navbar and status bar;
+// the generated document no longer includes its own copies of those.
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Resolved from astro/, which is the working directory for `npm run build`
+// and scripts/build-site.sh. import.meta.url is rewritten into the prerender
+// bundle, so a relative URL from this file does not survive the build.
+const resumeHtmlPath = join(process.cwd(), '../resume/src/index.html');
+if (!existsSync(resumeHtmlPath)) {
+  throw new Error(`Resume HTML not found at ${resumeHtmlPath}. Build from the astro/ directory.`);
+}
+const resumeHtml = readFileSync(resumeHtmlPath, 'utf8');
+const mainMatch = resumeHtml.match(/<main\b[^>]*>([\s\S]*)<\/main>/i);
+if (!mainMatch) {
+  throw new Error(`No <main> in ${resumeHtmlPath}`);
+}
+const resumeBody = mainMatch[1];
+if (resumeBody.includes('id="statusbar"')) {
+  throw new Error('Resume body still includes the page status bar');
+}
+---
+<BaseLayout title="Resume" description="Josh Noll's resume.">
+  <link slot="head" rel="stylesheet" href="/resume/styles.css" />
+  <script slot="head" is:inline>
+    // Same gate as the generated resume document: play the intro only when
+    // motion is allowed. The class has to be set before first paint.
+    try {
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('nvim-intro');
+      }
+    } catch (e) {}
+  </script>
+  <script slot="head" is:inline defer src="/resume/scripts.js"></script>
+  <div class="container resume" set:html={resumeBody} />
+</BaseLayout>

@@ -24,6 +24,7 @@ const links = [
             class:list={['nav-link', { active: !link.external && isActive(link.href) }]}
             target={link.external ? '_blank' : undefined}
             rel={link.external ? 'noopener noreferrer' : undefined}
+            data-astro-reload={link.href === '/resume/' ? true : undefined}
           >
             {link.label}
           </a>

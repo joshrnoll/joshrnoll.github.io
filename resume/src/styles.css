@@ -426,30 +426,6 @@ html.nvim-intro .nvim-wrap {
 .lc.k-h3 { color: var(--magenta); }
 .lc.k-links { color: var(--cyan); }
 
-.nvim-statusbar {
-  background: color-mix(in srgb, var(--comment) 30%, var(--bg-dark));
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.2rem 0.75rem;
-  font-size: 0.8rem;
-}
-
-.nvim-mode {
-  background: var(--yellow);
-  color: var(--bg-dark);
-  font-weight: 700;
-  padding: 0 6px;
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-}
-
-.nvim-mode.insert { background: var(--green); }
-.nvim-file { color: var(--fg); }
-.nvim-pos { color: var(--comment); margin-left: auto; }
-.nvim-keys { color: var(--orange); font-weight: 700; min-width: 3em; text-align: right; }
-.nvim-keys.msg { color: var(--fg); font-weight: 400; }
-
 .nvim-skip {
   margin-top: 0.75rem;
   background: none;
@@ -486,7 +462,6 @@ html.nvim-intro .md-preview {
 @media (max-width: 600px) {
   .nvim-frame { font-size: 0.8rem; }
   .nvim-content { height: calc(20 * 1.7em + 1rem); }
-  .nvim-statusbar { gap: 0.6rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

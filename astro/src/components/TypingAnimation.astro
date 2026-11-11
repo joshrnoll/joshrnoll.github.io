@@ -47,12 +47,6 @@ const content = {
         <span class="ln">7</span><span class="lc" id="l7c"></span>
       </div>
     </div>
-    <div class="nvim-statusbar">
-      <span class="nvim-mode" id="nvim-mode">NORMAL</span>
-      <span class="nvim-file">about.md</span>
-      <span class="nvim-pos" id="nvim-pos">1:1</span>
-      <span class="nvim-keys" id="nvim-keys"></span>
-    </div>
   </div>
 
   <!-- Markdown preview — rendered from same content object, shown after animation -->
@@ -82,28 +76,13 @@ const content = {
     }
   }
 
-  async function showKeys(keys: string, duration = 700) {
-    const el = document.getElementById('nvim-keys')!;
-    el.textContent = keys;
+  async function showKeys(_keys: string, duration = 700) {
     await sleep(duration);
-    el.textContent = '';
   }
 
   function setActive(lineId: string) {
     document.querySelectorAll('.nvim-line.active').forEach(e => e.classList.remove('active'));
     document.getElementById(lineId)?.classList.add('active');
-    document.getElementById('nvim-pos')!.textContent = `${lineId.slice(1)}:1`;
-  }
-
-  function setMode(mode: 'NORMAL' | 'INSERT') {
-    const el = document.getElementById('nvim-mode')!;
-    if (mode === 'INSERT') {
-      el.textContent = '-- INSERT --';
-      el.classList.add('insert');
-    } else {
-      el.textContent = 'NORMAL';
-      el.classList.remove('insert');
-    }
   }
 
   async function runAnimation() {
@@ -131,40 +110,34 @@ const content = {
 
     // ciw — change inner word
     await showKeys('ciw', 500);
-    setMode('INSERT');
     const l3c = document.getElementById('l3c')!;
     l3c.textContent = '## ';
     await typeText(l3c, animName, 100);
     await sleep(200);
 
     // Esc
-    setMode('NORMAL');
     await sleep(400);
 
     // Move to tagline line, enter insert mode
     setActive('l5');
     await sleep(200);
     await showKeys('i', 300);
-    setMode('INSERT');
     const l5c = document.getElementById('l5c')!;
     await typeText(l5c, animTagline, 50);
     await sleep(200);
 
     // Esc
-    setMode('NORMAL');
     await sleep(350);
 
     // Move to links line
     setActive('l7');
     await sleep(150);
     await showKeys('i', 200);
-    setMode('INSERT');
     const l7c = document.getElementById('l7c')!;
     const linkText = animLinks.map(l => `[${l.label}]`).join('  ');
     await typeText(l7c, linkText, 45);
 
     // Esc — final state
-    setMode('NORMAL');
     setActive('l1');
 
     // Replace link text with actual anchor tags
@@ -175,12 +148,9 @@ const content = {
       })
       .join('  ');
 
-    // Brief pause, then show :Preview in status bar
+    // Pause where :Preview used to sit on the editor statusline
     await sleep(800);
-    const keysEl = document.getElementById('nvim-keys')!;
-    keysEl.textContent = ':Preview';
     await sleep(700);
-    keysEl.textContent = '';
 
     // Fade out editor, fade in preview
     const frame   = document.getElementById('nvim-frame')!;
@@ -236,27 +206,6 @@ const content = {
 .lc.dim { color: var(--comment); }
 .lc a { color: var(--blue); }
 .lc a:hover { color: var(--cyan); }
-
-.nvim-statusbar {
-  background: color-mix(in srgb, var(--comment) 30%, var(--bg-dark));
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.2rem 0.75rem;
-  font-size: 0.8rem;
-}
-.nvim-mode {
-  background: var(--yellow);
-  color: var(--bg-dark);
-  font-weight: 700;
-  padding: 0 6px;
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-}
-.nvim-mode.insert { background: var(--green); }
-.nvim-file { color: var(--fg); }
-.nvim-pos { color: var(--comment); margin-left: auto; }
-.nvim-keys { color: var(--orange); font-weight: bold; min-width: 3em; text-align: right; }
 
 @keyframes blink {
   0%, 100% { opacity: 1; }
