@@ -35,6 +35,6 @@ if (resumeBody.includes('id="statusbar"')) {
       }
     } catch (e) {}
   </script>
-  <script slot="head" is:inline defer src="/resume/scripts.js"></script>
+  <script slot="head" is:inline type="module" src="/resume/scripts.js"></script>
   <div class="container resume" set:html={resumeBody} />
 </BaseLayout>

@@ -1,3 +1,5 @@
+import { INTRO_TYPING } from "./intro-typing.js";
+
 // Download PDF function
 function downloadPDF() {
   window.open("resume.pdf", "_blank");
@@ -72,7 +74,7 @@ function downloadPDF() {
     for (const ch of text) {
       if (done) return;
       el.textContent += ch;
-      await sleep(speed + Math.random() * 10);
+      await sleep(speed + Math.random() * INTRO_TYPING.jitterMs);
     }
   }
 
@@ -103,7 +105,11 @@ function downloadPDF() {
       setActive(line);
       await sleep(80);
       await showKeys(line.type, line.type === "ciw" ? 200 : 120);
-      await typeText(line.lc, line.text, line.kind === "h1" ? 25 : 14);
+      await typeText(
+        line.lc,
+        line.text,
+        line.kind === "h1" ? INTRO_TYPING.headingMs : INTRO_TYPING.bodyMs,
+      );
       await sleep(160);
     }
     if (done) return;

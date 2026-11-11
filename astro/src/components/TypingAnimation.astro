@@ -66,12 +66,14 @@ const content = {
 </div>
 
 <script>
+  import { INTRO_TYPING } from '../../../resume/src/intro-typing.js';
+
   const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
 
-  async function typeText(el: HTMLElement, text: string, speed = 80) {
+  async function typeText(el: HTMLElement, text: string, speed: number) {
     for (const ch of text) {
       el.textContent = (el.textContent ?? '') + ch;
-      await sleep(speed + Math.random() * 30);
+      await sleep(speed + Math.random() * INTRO_TYPING.jitterMs);
     }
   }
 
@@ -111,7 +113,7 @@ const content = {
     await showKeys('ciw', 500);
     const l3c = document.getElementById('l3c')!;
     l3c.textContent = '## ';
-    await typeText(l3c, animName, 100);
+    await typeText(l3c, animName, INTRO_TYPING.headingMs);
     await sleep(200);
 
     // Esc
@@ -122,7 +124,7 @@ const content = {
     await sleep(200);
     await showKeys('i', 300);
     const l5c = document.getElementById('l5c')!;
-    await typeText(l5c, animTagline, 50);
+    await typeText(l5c, animTagline, INTRO_TYPING.bodyMs);
     await sleep(200);
 
     // Esc
@@ -134,7 +136,7 @@ const content = {
     await showKeys('i', 200);
     const l7c = document.getElementById('l7c')!;
     const linkText = animLinks.map(l => `[${l.label}]`).join('  ');
-    await typeText(l7c, linkText, 45);
+    await typeText(l7c, linkText, INTRO_TYPING.bodyMs);
 
     // Esc — final state
     setActive('l1');
