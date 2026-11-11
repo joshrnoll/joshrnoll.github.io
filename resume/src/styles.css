@@ -127,7 +127,9 @@ a:hover {
 
 /* Page layout */
 
-.resume {
+/* Beat .container's padding shorthand (same specificity, and the site
+   stylesheet can load later). Homepage content uses the same 3rem gap. */
+.container.resume {
   padding-top: 3rem;
   padding-bottom: 4rem;
 }
