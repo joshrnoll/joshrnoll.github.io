@@ -7,16 +7,6 @@
   <link rel="preload" href="./fonts/jetbrains-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./print.css" media="print">
-  <script>
-    // Play the Neovim intro only when JS runs and the visitor hasn't asked for reduced motion.
-    // Without JS (or with reduced motion) the rendered resume shows immediately.
-    try {
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.documentElement.classList.add('nvim-intro');
-      }
-    } catch (e) {}
-  </script>
-  <script type="module" src="scripts.js"></script>
   <title>Josh Noll's Resume</title>
 </head>
 <body>
