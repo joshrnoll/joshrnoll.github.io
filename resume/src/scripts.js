@@ -165,17 +165,3 @@ function downloadPDF() {
   document.getElementById("nvim-skip").addEventListener("click", finish);
   run();
 })();
-
-// Status bar path + scroll percentage (mirrors joshrnoll.com's StatusBar)
-const pathEl = document.getElementById("sb-path");
-if (pathEl) pathEl.textContent = window.location.pathname;
-const scrollEl = document.getElementById("sb-scroll");
-function updateScroll() {
-  if (!scrollEl) return;
-  const total = document.documentElement.scrollHeight - window.innerHeight;
-  const pct = total > 0 ? Math.round((window.scrollY / total) * 100) : 100;
-  scrollEl.textContent = `${pct}%`;
-}
-window.addEventListener("scroll", updateScroll, { passive: true });
-window.addEventListener("resize", updateScroll);
-updateScroll();

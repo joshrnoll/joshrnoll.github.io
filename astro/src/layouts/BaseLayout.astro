@@ -47,6 +47,7 @@ const ogImageUrl = new URL(ogImage, Astro.site).href;
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
   <link rel="manifest" href="/favicon/site.webmanifest" />
   <ClientRouter />
+  <slot name="head" />
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-F7TJ7588Z6"></script>
