@@ -66,99 +66,53 @@ const content = {
 </div>
 
 <script>
-  const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
+  import { playNvimIntro } from '../lib/nvim-intro';
 
-  async function typeText(el: HTMLElement, text: string, speed = 80) {
-    for (const ch of text) {
-      el.textContent = (el.textContent ?? '') + ch;
-      await sleep(speed + Math.random() * 30);
-    }
-  }
+  function runAnimation() {
+    const container = document.getElementById('hero-animation');
+    const frame = document.getElementById('nvim-frame');
+    const content = frame?.querySelector('.nvim-content');
+    const top = document.getElementById('l1');
+    const bottom = document.getElementById('l7');
+    const l3 = document.getElementById('l3');
+    const l5 = document.getElementById('l5');
+    const l7 = document.getElementById('l7');
+    const l3c = document.getElementById('l3c');
+    const l5c = document.getElementById('l5c');
+    const l7c = document.getElementById('l7c');
+    const preview = document.getElementById('md-preview');
+    if (!container || !frame || !(content instanceof HTMLElement) || !top || !bottom || !l3 || !l5 || !l7 || !l3c || !l5c || !l7c || !preview) return;
 
-  async function showKeys(_keys: string, duration = 700) {
-    await sleep(duration);
-  }
-
-  function setActive(lineId: string) {
-    document.querySelectorAll('.nvim-line.active').forEach(e => e.classList.remove('active'));
-    document.getElementById(lineId)?.classList.add('active');
-  }
-
-  async function runAnimation() {
-    const container = document.getElementById('hero-animation')!;
-    const animName    = container.dataset.name!;
-    const animTagline = container.dataset.tagline!;
+    const animName = container.dataset.name ?? '';
+    const animTagline = container.dataset.tagline ?? '';
     const animLinks: Array<{ label: string; href: string; external?: boolean }>
-      = JSON.parse(container.dataset.links!);
+      = JSON.parse(container.dataset.links ?? '[]');
+    const linkText = animLinks.map((l) => `[${l.label}]`).join('  ');
 
-    await sleep(600);
-
-    // gg — go to top
-    setActive('l1');
-    await showKeys('gg', 500);
-    await sleep(200);
-
-    // G — go to bottom
-    await showKeys('G', 500);
-    setActive('l7');
-    await sleep(300);
-
-    // Navigate to heading line
-    setActive('l3');
-    await sleep(250);
-
-    // ciw — change inner word
-    await showKeys('ciw', 500);
-    const l3c = document.getElementById('l3c')!;
-    l3c.textContent = '## ';
-    await typeText(l3c, animName, 100);
-    await sleep(200);
-
-    // Esc
-    await sleep(400);
-
-    // Move to tagline line, enter insert mode
-    setActive('l5');
-    await sleep(200);
-    await showKeys('i', 300);
-    const l5c = document.getElementById('l5c')!;
-    await typeText(l5c, animTagline, 50);
-    await sleep(200);
-
-    // Esc
-    await sleep(350);
-
-    // Move to links line
-    setActive('l7');
-    await sleep(150);
-    await showKeys('i', 200);
-    const l7c = document.getElementById('l7c')!;
-    const linkText = animLinks.map(l => `[${l.label}]`).join('  ');
-    await typeText(l7c, linkText, 45);
-
-    // Esc — final state
-    setActive('l1');
-
-    // Replace link text with actual anchor tags
-    l7c.innerHTML = animLinks
-      .map(l => {
-        const attrs = l.external ? ' target="_blank" rel="noopener"' : '';
-        return `<a href="${l.href}"${attrs}>[${l.label}]</a>`;
-      })
-      .join('  ');
-
-    // Pause where :Preview used to sit on the editor statusline
-    await sleep(800);
-    await sleep(700);
-
-    // Fade out editor, fade in preview
-    const frame   = document.getElementById('nvim-frame')!;
-    const preview = document.getElementById('md-preview')!;
-    frame.classList.add('fading-out');
-    await sleep(400);
-    frame.style.display = 'none';
-    preview.classList.add('visible');
-    preview.removeAttribute('aria-hidden');
+    playNvimIntro({
+      content,
+      top,
+      bottom,
+      cues: [
+        { row: l3, text: l3c, value: animName, motion: 'change-word', pace: 'heading', prefix: '## ' },
+        { row: l5, text: l5c, value: animTagline, motion: 'insert', pace: 'body' },
+        { row: l7, text: l7c, value: linkText, motion: 'insert', pace: 'body' },
+      ],
+      fade: frame,
+      beforeReturn: () => {
+        l7c.innerHTML = animLinks
+          .map((l) => {
+            const attrs = l.external ? ' target="_blank" rel="noopener"' : '';
+            return `<a href="${l.href}"${attrs}>[${l.label}]</a>`;
+          })
+          .join('  ');
+      },
+      reveal: () => {
+        frame.style.display = 'none';
+        preview.classList.add('visible');
+        preview.removeAttribute('aria-hidden');
+      },
+    });
   }
 
   document.addEventListener('astro:page-load', () => {
@@ -176,7 +130,7 @@ const content = {
   max-width: 580px;
   font-family: var(--font-mono);
   font-size: 0.95rem;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.25s ease;
 }
 .nvim-frame.fading-out { opacity: 0; }
 
