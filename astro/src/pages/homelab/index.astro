@@ -6,11 +6,11 @@ import '../../styles/prose.css';
   <div class="container post-layout">
     <article class="post-content">
       <header class="post-header">
-        <h1 class="post-title">My Homelab</h1>
+        <h1 class="page-title">My Homelab</h1>
       </header>
       <div class="prose">
         <h2 id="diagram">Diagram</h2>
-        <iframe src="/homelab-diagram/viewer.html" title="Homelab topology diagram" loading="lazy" style="width:100%;height:70vh;min-height:420px;border:1px solid var(--comment);border-radius:8px;"></iframe>
+        <iframe src="/homelab-diagram/viewer.html" title="Homelab topology diagram" loading="lazy"></iframe>
         <p><a href="/homelab-diagram/viewer.html">Open the diagram full screen</a> · <a href="/homelab-diagram/homelab-diagram.svg">Raw SVG</a></p>
 
         <h2 id="what-is-a-homelab">What is a Homelab and Why do I Have One?</h2>
@@ -64,16 +64,18 @@ import '../../styles/prose.css';
 <style>
 .post-layout {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 2rem;
-  padding-top: 2rem;
-  padding-bottom: 4rem;
+  padding-block: clamp(2.4rem, 6vw, 5rem) 5rem;
 }
 .post-header { margin-bottom: 2rem; }
-.post-title {
-  color: var(--fg);
-  font-size: 1.75rem;
-  line-height: 1.25;
-  margin-bottom: 0.75rem;
+iframe {
+  width: 100%;
+  min-height: 420px;
+  height: 70vh;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
 }
+
+.prose :is(p, ol) { max-width: 72ch; }
 </style>

@@ -21,11 +21,11 @@ const noteData = sorted.map(p => ({
 }));
 ---
 <BaseLayout title="Notes">
-  <div class="container" style="padding-top:2rem; padding-bottom:4rem;">
+  <div class="container archive-list">
     <h1 class="page-title">Notes</h1>
     <p class="page-subtitle">{sorted.length} notes</p>
 
-    <SearchBar src="/notes-search-index.json" basePath="notes" placeholder="search notes..." />
+    <SearchBar src="/notes-search-index.json" basePath="notes" placeholder="Search notes" />
     <p class="search-hint">Press <kbd>/</kbd> to search, <kbd>Esc</kbd> to clear</p>
 
     <TagFilter tags={allTags} />
@@ -45,15 +45,21 @@ const noteData = sorted.map(p => ({
 </BaseLayout>
 
 <style>
-.page-title { color: var(--fg); font-size: 1.75rem; line-height: 1.25; margin-bottom: 0.25rem; }
-.page-subtitle { color: var(--comment); font-size: 0.875rem; margin-bottom: 2rem; }
-.post-list { display: flex; flex-direction: column; gap: 1rem; }
-.search-hint { color: var(--comment); font-size: 0.75rem; margin-bottom: 1rem; }
+.archive-list {
+  max-width: 64rem;
+  padding-block: clamp(2.4rem, 6vw, 5rem) 5rem;
+}
+
+.page-subtitle { color: var(--comment); font-size: 0.875rem; margin: 0.65rem 0 1.8rem; }
+.post-list { display: flex; flex-direction: column; gap: 0.85rem; }
+.post-list[hidden] { display: none; }
+.search-hint { color: var(--comment); font-size: 0.75rem; margin-bottom: 1.25rem; }
+
 kbd {
-  background: var(--bg-dark);
-  border: 1px solid var(--comment);
-  border-radius: 3px;
-  padding: 0.05em 0.35em;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.08em 0.35em;
   font-size: 0.75rem;
 }
 </style>

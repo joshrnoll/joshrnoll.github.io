@@ -1,72 +1,163 @@
 ---
-// astro/src/components/NavBar.astro
-const currentPath = Astro.url.pathname;
-const isActive = (path: string) =>
-  currentPath === path || currentPath.startsWith(path + '/');
+import ThemeToggle from './ThemeToggle.astro';
 
+const currentPath = Astro.url.pathname;
+const isActive = (path: string) => currentPath === path || (path !== '/' && currentPath.startsWith(path));
 const links = [
   { href: '/', label: 'Home' },
   { href: '/blog/', label: 'Blog' },
   { href: '/notes/', label: 'Notes' },
   { href: '/projects/', label: 'Projects' },
-  { href: '/resume/', label: 'Resume' },
   { href: '/homelab/', label: 'Homelab' },
+  { href: '/scrapyard/', label: 'Scrapyard' },
+  { href: '/resume/', label: 'Resume' },
 ];
 ---
-<nav class="navbar" aria-label="Primary navigation">
-  <div class="container navbar-inner">
-    <a href="/" class="brand">Josh Noll</a>
-    <ul class="nav-links">
+<nav class="site-nav" aria-label="Primary navigation">
+  <site-navigation class="container nav-inner">
+    <a href="/" class="site-brand">Josh Noll<span aria-hidden="true">.</span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-links" hidden>Menu</button>
+    <ul class="nav-links" id="primary-links">
       {links.map(link => (
         <li>
           <a
             href={link.href}
-            class:list={['nav-link', { active: !link.external && isActive(link.href) }]}
-            target={link.external ? '_blank' : undefined}
-            rel={link.external ? 'noopener noreferrer' : undefined}
+            class="nav-link"
+            aria-current={isActive(link.href) ? 'page' : undefined}
             data-astro-reload={link.href === '/resume/' ? true : undefined}
           >
             {link.label}
+            <svg class="chalk-stroke" aria-hidden="true" viewBox="0 0 72 8" preserveAspectRatio="none" fill="none">
+              <path d="M2 6 C14 2.8 32 3.7 46 2.5 Q61 1.4 70 2.8 M12 6.5 Q38 4.4 57 4.7" />
+            </svg>
           </a>
         </li>
       ))}
     </ul>
-  </div>
+    <ThemeToggle />
+  </site-navigation>
 </nav>
 
+<script>
+  class SiteNavigation extends HTMLElement {
+    connectedCallback() {
+      const button = this.querySelector<HTMLButtonElement>('.menu-toggle');
+      if (!button) return;
+      button.hidden = false;
+      button.onclick = () => {
+        button.setAttribute('aria-expanded', String(button.getAttribute('aria-expanded') !== 'true'));
+      };
+      this.onkeydown = event => {
+        if (event.key !== 'Escape' || button.getAttribute('aria-expanded') !== 'true') return;
+        button.setAttribute('aria-expanded', 'false');
+        button.focus();
+      };
+    }
+  }
+  if (!customElements.get('site-navigation')) customElements.define('site-navigation', SiteNavigation);
+</script>
+
 <style>
-.navbar {
-  background: var(--bg-dark);
-  border-bottom: 1px solid var(--comment);
+.site-nav {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 20;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 96%, transparent);
+  backdrop-filter: blur(8px);
+  font-family: var(--font-body);
 }
-.navbar-inner {
+
+.nav-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
+  gap: 1rem;
+  min-height: 4.35rem;
 }
-.brand {
-  color: var(--green);
-  font-weight: 700;
-  font-size: 1rem;
+
+.site-brand {
+  flex: 0 0 auto;
+  color: var(--fg);
+  font-size: 1.22rem;
+  font-weight: 800;
+  letter-spacing: -0.055em;
 }
-.brand:hover { color: var(--cyan); text-decoration: none; }
+
+.site-brand span { color: var(--blue); }
+.site-brand:hover { color: var(--blue); text-decoration: none; }
+
 .nav-links {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  margin-left: auto;
+  gap: 0 clamp(0.7rem, 2.1vw, 1.65rem);
   list-style: none;
 }
-.nav-link { color: var(--comment); font-size: 0.9rem; }
-.nav-link:hover { color: var(--fg); text-decoration: none; }
-.nav-link.active { color: var(--cyan); }
 
-@media (max-width: 600px) {
-  .nav-links { gap: 1rem; }
-  .brand { display: none; }
+.nav-link {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: 2.4rem;
+  color: var(--comment);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.nav-link:hover,
+.nav-link[aria-current] {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.nav-link svg {
+  position: absolute;
+  inset: auto -0.12em 0.21rem;
+  width: calc(100% + 0.24em);
+  height: 0.36rem;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.nav-link[aria-current] svg { visibility: visible; }
+
+.menu-toggle { display: none; }
+
+@media (max-width: 780px) {
+  .nav-inner { min-height: 3.85rem; gap: .65rem; }
+  .menu-toggle:not([hidden]) {
+    display: block;
+    margin-left: auto;
+    padding: .5rem .7rem;
+    min-height: 2.75rem;
+    border: 1px solid var(--line);
+    border-radius: .4rem;
+    background: var(--surface);
+    color: var(--fg);
+    font-size: .85rem;
+    font-weight: 650;
+    cursor: pointer;
+  }
+  .menu-toggle[aria-expanded="true"] { background: var(--selected); }
+  .menu-toggle:not([hidden]) + .nav-links {
+    display: none;
+    position: absolute;
+    top: calc(100% + .3rem);
+    right: var(--page-gutter);
+    min-width: 10.75rem;
+    padding: .5rem .85rem;
+    border: 1px solid var(--line);
+    border-radius: .55rem;
+    background: var(--bg-popup);
+    box-shadow: 0 10px 25px #131c1a30;
+  }
+  .menu-toggle[aria-expanded="true"] + .nav-links { display: grid; }
+  .nav-link { min-height: 2.75rem; }
+  .nav-link svg { width: min(4rem, 100%); }
 }
 </style>
