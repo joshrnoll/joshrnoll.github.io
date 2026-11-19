@@ -9,25 +9,35 @@
 @import '@fontsource/jetbrains-mono/latin-700.css';
 
 :root {
-  --bg: #f8f9f5;
-  --bg-dark: #eeefe9;
-  --bg-popup: #fff;
-  --surface: #fff;
-  --fg: #202a28;
-  --comment: #53615d;
-  --line: #d7ded7;
-  --blue: #2058a6;
-  --cyan: #184583;
-  --green: #23634c;
-  --yellow: #f5dc79;
-  --orange: #8b4c1c;
-  --red: #ad3e45;
-  --magenta: #765283;
+  color-scheme: light dark;
+  --bg: light-dark(#f8f9f5, #1a2422);
+  --bg-dark: light-dark(#eeefe9, #232f2c);
+  --bg-popup: light-dark(#fff, #26332f);
+  --surface: light-dark(#fff, #22302d);
+  --fg: light-dark(#202a28, #f1f0e5);
+  --comment: light-dark(#53615d, #bcc9c1);
+  --line: light-dark(#d7ded7, #485952);
+  --blue: light-dark(#2058a6, #a8cff5);
+  --cyan: light-dark(#184583, #cee6ff);
+  --green: light-dark(#23634c, #e8db9f);
+  --yellow: light-dark(#f5dc79, #f4e3a8);
+  --orange: light-dark(#8b4c1c, #f0c99c);
+  --red: light-dark(#ad3e45, #f3b0bc);
+  --magenta: light-dark(#765283, #dfbfeb);
+  --selected: color-mix(in srgb, var(--blue) 13%, var(--surface));
   --font-body: 'Inter', system-ui, sans-serif;
   --font-marker: 'Kalam', cursive;
   --font-mono: 'JetBrains Mono', monospace;
   --page-gutter: clamp(1rem, 4vw, 3rem);
 }
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; --chalk-stroke: url(#chalk-grain); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) { --chalk-stroke: url(#chalk-grain); }
+}
+
+.chalk-stroke { filter: var(--chalk-stroke, none); }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -43,7 +53,16 @@ html {
 
 body {
   min-height: 100vh;
-  padding-bottom: 2.6rem;
+  display: flex;
+  flex-direction: column;
+  background-image:
+    radial-gradient(ellipse at 24% 10rem, light-dark(transparent, #a2c6ae0c), transparent 42rem),
+    radial-gradient(ellipse at 76% 37rem, light-dark(transparent, #b5c8ad0b), transparent 31rem);
+}
+
+main {
+  flex: 1;
+  min-width: 0;
 }
 
 button, input { font: inherit; }
@@ -53,7 +72,7 @@ a { color: var(--blue); text-decoration: none; }
 a:hover { color: var(--cyan); text-decoration: underline; }
 :focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
 
-::selection { background: #dbe8ff; color: var(--fg); }
+::selection { background: var(--selected); color: var(--fg); }
 
 .sr-only {
   position: absolute;
@@ -81,7 +100,7 @@ a:hover { color: var(--cyan); text-decoration: underline; }
 }
 
 @media (max-width: 720px) {
-  html { scroll-padding-top: 7rem; }
+  html { scroll-padding-top: 4.75rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

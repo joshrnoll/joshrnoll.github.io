@@ -31,10 +31,17 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
 <BaseLayout title="Home">
   <div class="container wall">
     <header class="wall-intro">
-      <h1>The Whiteboard<br class="title-break" /> Wall<span class="title-dot">.</span></h1>
+      <h1>Josh Noll<span class="title-dot">.</span></h1>
       <div class="about">
         <p>I'm a former infantryman turned software engineer with a passion for solving hard problems with cool technology. Read my full story <a href="/my-story/">here</a>.</p>
-        <a class="resume-button" href="/resume/" data-astro-reload>cd ~/resume →</a>
+        <a class="resume-link" href="/resume/" data-astro-reload>
+          view my resume
+          <svg class="chalk-stroke" viewBox="0 0 70 26" aria-hidden="true">
+            <path pathLength="1" d="M3 17Q25 10 44 12T65 13" />
+            <path pathLength="1" d="M55 4Q60 6 66 13q-8 2-13 9" />
+            <path class="resume-echo" pathLength="1" d="M9 18q25-7 44-4" />
+          </svg>
+        </a>
       </div>
     </header>
 
@@ -42,7 +49,7 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
       <div class="rough-side">
         <p class="rough-heading" aria-hidden="true">
           <span>Working it out</span>
-          <svg viewBox="0 0 190 20" aria-hidden="true">
+          <svg class="chalk-stroke" viewBox="0 0 190 20" aria-hidden="true">
             <path pathLength="1" d="M3 13Q39 6 94 7t91 1M19 16Q91 8 158 12" />
           </svg>
         </p>
@@ -56,7 +63,7 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
             );
           })}
         </div>
-        <svg class="doodle" viewBox="0 0 280 115" aria-hidden="true">
+        <svg class="doodle chalk-stroke" viewBox="0 0 280 115" aria-hidden="true">
           <g class="doodle-blue">
             <path pathLength="1" d="M18 87q20 3 50 0l7-42q-24-4-49-2zM22 85l45 3m-36-35 31 2m-32 9 30 2m-31 8 29 2M70 64q18 7 38 0m-8-7 10 7-10 7" />
             <path pathLength="1" d="M116 77q-11-3-10-14 0-12 17-13 4-18 20-15 11 1 18 13 19-4 23 9 4 15-11 20-21 7-57 0zM183 67q16-2 36 5m-7-8 9 8-11 5" />
@@ -99,7 +106,7 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
           </ul>
         </section>
       </section>
-      <svg class="thread-arrows" aria-hidden="true">
+      <svg class="thread-arrows chalk-stroke" aria-hidden="true">
         {wallScraps.filter(scrap => scrap.target && destinations.has(scrap.target)).map(scrap => (
           <g data-arrow={scrap.target} class={`thread-${scrap.ink ?? 'black'}`}>
             <path class="arrow-line" pathLength="1" />
@@ -182,19 +189,23 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
 </script>
 
 <style>
+:global(main:has(.wall)) { display: flex; }
 .wall {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   max-width: 1320px;
-  padding-block: clamp(2.75rem, 5.5vw, 5rem) 5rem;
+  padding-block: clamp(2.15rem, 4.5vw, 4rem) clamp(1.4rem, 3.5vw, 2.8rem);
 }
 .wall-intro {
   display: grid;
   grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
-  align-items: end;
+  align-items: center;
   gap: clamp(2rem, 5.3vw, 5.3rem);
-  padding-bottom: clamp(2.5rem, 5vw, 4.5rem);
+  padding-bottom: clamp(2rem, 4vw, 3.2rem);
 }
 .wall-intro h1 {
-  font-size: clamp(3.35rem, 6.5vw, 6.75rem);
+  font-size: clamp(4rem, 9vw, 8.25rem);
   line-height: .9;
   letter-spacing: -.078em;
   font-weight: 800;
@@ -203,30 +214,44 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
 .about { max-width: 35ch; padding-bottom: .2rem; }
 .about p { color: var(--comment); font-size: 1.065rem; }
 .about p a { text-decoration: underline; text-underline-offset: .16em; }
-.resume-button {
-  display: inline-block;
-  margin-top: 1.15rem;
-  padding: .47rem .9rem;
-  border: 1px solid var(--green);
-  border-radius: 3px 6px 2px 5px;
+.resume-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .3em;
+  margin-top: .75rem;
+  padding: .1em .18em;
   color: var(--green);
-  background: #e8eee5;
-  font: 700 .83rem/1.45 var(--font-mono);
+  font: 700 1.35rem/1.2 var(--font-marker);
+  transform: rotate(-3deg);
 }
-.resume-button:hover { background: #dce7db; color: var(--green); text-decoration: none; }
+.resume-link:hover { color: var(--green); text-decoration: underline; text-underline-offset: .16em; }
+.resume-link svg {
+  width: 3.7rem;
+  height: 1.5rem;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+.resume-echo { stroke-width: 1.3; opacity: .55; }
 whiteboard-wall {
   position: relative;
+  flex: 1;
   display: grid;
+  align-content: start;
   grid-template-columns: minmax(0, 1.42fr) minmax(0, 1fr);
   gap: clamp(2.4rem, 6vw, 5.9rem);
   padding: 2rem clamp(1rem, 3vw, 2.8rem) 2.5rem;
-  background-color: #fdfefa;
+  background-color: light-dark(#fdfefa, #202d29);
   background-image:
-    radial-gradient(ellipse at 24% 47%, #b4c1b31c, transparent 31%),
-    radial-gradient(ellipse at 14% 79%, #bdd3d21e, transparent 24%);
-  border: 1px solid #d2d9d3;
-  border-top: 4px solid #d9e0da;
-  border-bottom: 5px solid #c1ccc5;
+    radial-gradient(ellipse at 24% 47%, light-dark(#b4c1b31c, #afc6b41a), transparent 31%),
+    radial-gradient(ellipse at 14% 79%, light-dark(#bdd3d21e, #bfc9ae14), transparent 24%),
+    radial-gradient(ellipse at 51% 20%, light-dark(transparent, #b3c1a915), transparent 25%),
+    repeating-linear-gradient(167deg, light-dark(transparent, #ebede803) 0 1px, transparent 1px 6px);
+  border: 1px solid light-dark(#d2d9d3, #52635a);
+  border-top: 4px solid light-dark(#d9e0da, #62716a);
+  border-bottom: 5px solid light-dark(#c1ccc5, #48584f);
   border-radius: 5px 4px 5px 3px;
   box-shadow: 0 10px 28px #31392e11, inset 0 1px 1px #61746824;
 }
@@ -291,13 +316,13 @@ whiteboard-wall {
 .group-heading a { font-size: .81rem; font-weight: 650; }
 .shipped ul { list-style: none; display: grid; gap: .48rem; }
 .shipped-card {
-  border: 1px solid #dce3db;
+  border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--surface, white);
   box-shadow: 0 2px 3px #28362108;
   scroll-margin-top: 7rem;
 }
-.shipped-card:target { border-color: var(--green); box-shadow: 0 0 0 3px #d8e8d8; }
+.shipped-card:target { border-color: var(--green); box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 24%, transparent); }
 .shipped-card a {
   position: relative;
   display: grid;
@@ -329,7 +354,10 @@ whiteboard-wall {
 .selected { stroke-width: 4; }
 @media (prefers-reduced-motion: no-preference) {
   .rough-heading span { animation: write-heading .55s steps(13) .06s both; }
-  .rough-heading path, .doodle path, .thread-arrows path { stroke-dasharray: 1; }
+  .rough-heading path, .doodle path, .thread-arrows path, .resume-link path { stroke-dasharray: 1; }
+  .resume-link path { animation: draw-line .5s ease-out .4s backwards; }
+  .resume-link path:nth-child(2) { animation-duration: .25s; animation-delay: .8s; }
+  .resume-link .resume-echo { animation-delay: .65s; }
   .rough-heading path { animation: draw-line .53s ease-out .54s backwards; }
   .doodle path { animation: draw-line 1.4s ease-out 1.15s backwards; }
   .doodle-blue path:nth-child(2) { animation-delay: 1.4s; }
@@ -352,8 +380,7 @@ whiteboard-wall {
 }
 @media (max-width: 760px) {
   .wall-intro { grid-template-columns: 1fr; align-items: start; }
-  .wall-intro h1 { font-size: clamp(3.25rem, 11.5vw, 5.4rem); }
-  .title-break { display: none; }
+  .wall-intro h1 { font-size: clamp(3.65rem, 13vw, 6rem); }
   .rough-side, .thread-arrows { display: none; }
   whiteboard-wall {
     display: block;

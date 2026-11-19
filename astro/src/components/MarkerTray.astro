@@ -12,13 +12,17 @@
 
 <style>
 .marker-tray {
-  position: fixed;
-  inset: auto 0 0;
-  z-index: 15;
-  height: 2.4rem;
+  min-height: 2.4rem;
   padding-bottom: env(safe-area-inset-bottom);
-  border-top: 1px solid #bac2bd;
-  background: linear-gradient(180deg, #c3ccc5, #eef0eb 30%, #e2e7e1 73%, #b2beb6 74%, #d9dfd9);
+  border-top: 1px solid light-dark(#bac2bd, #5e6960);
+  background: linear-gradient(
+    180deg,
+    light-dark(#c3ccc5, #303c37),
+    light-dark(#eef0eb, #4a544b) 30%,
+    light-dark(#e2e7e1, #414e44) 73%,
+    light-dark(#b2beb6, #111916) 74%,
+    light-dark(#d9dfd9, #222d26)
+  );
   box-shadow: 0 -4px 12px #202a2810;
   pointer-events: none;
 }
@@ -33,13 +37,15 @@
 .markers { display: flex; align-items: center; gap: clamp(0.45rem, 1.05vw, 1rem); }
 
 .marker {
-  --cap: #33403b;
+  --cap: light-dark(#33403b, #ede9d6);
+  --barrel: light-dark(#f6f7f0, #ede9d6);
   position: relative;
   display: block;
   width: clamp(2.8rem, 7.8vw, 5.3rem);
   height: 0.64rem;
   border-radius: 0.15rem 0.29rem 0.25rem 0.12rem;
-  background: linear-gradient(90deg, var(--cap) 0 11%, #f6f7f0 11% 72%, var(--cap) 72%);
+  background: repeating-linear-gradient(106deg, light-dark(transparent, #ffffff38) 0 1px, transparent 1px 4px),
+    linear-gradient(90deg, var(--cap) 0 11%, var(--barrel) 11% 72%, var(--cap) 72%);
   box-shadow: inset 0 -2px 2px #16252139, 0 2px 2px #26352c48;
 }
 
@@ -50,19 +56,19 @@
   height: 1px;
   top: 0.29rem;
   left: 26%;
-  background: var(--cap);
+  background: light-dark(var(--cap), #564b3a25);
   opacity: 0.6;
 }
 
-.marker-blue { --cap: #2058a6; transform: rotate(-2deg); }
-.marker-red { --cap: #ad3e45; transform: rotate(1deg); }
-.marker-green { --cap: #23634c; transform: rotate(-1deg); }
+.marker-blue { --cap: light-dark(#2058a6, #abccec); --barrel: light-dark(#f6f7f0, #abccec); transform: rotate(-2deg); }
+.marker-red { --cap: light-dark(#ad3e45, #f1b4c2); --barrel: light-dark(#f6f7f0, #f1b4c2); transform: rotate(1deg); }
+.marker-green { --cap: light-dark(#23634c, #e8db9f); --barrel: light-dark(#f6f7f0, #e8db9f); transform: rotate(-1deg); }
 
 .eraser {
   width: clamp(1.6rem, 4vw, 3.25rem);
   height: 0.93rem;
   border: 1px solid #172520;
-  border-bottom: 3px solid #818b83;
+  border-bottom: 3px solid light-dark(#818b83, #b3aaa1);
   border-radius: 0.25rem;
   background: repeating-linear-gradient(95deg, #26342f 0 2px, #2e3b35 2px 3px);
   box-shadow: 0 2px 3px #26352c5e;

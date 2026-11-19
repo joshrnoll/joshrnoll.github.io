@@ -33,13 +33,13 @@ let wordIndex = 0;
     ))}
   </span>
   {target && (
-    <svg class="scrap-mark ring" viewBox="0 0 240 112" preserveAspectRatio="none" aria-hidden="true">
+    <svg class="scrap-mark ring chalk-stroke" viewBox="0 0 240 112" preserveAspectRatio="none" aria-hidden="true">
       <path pathLength="1" d="M164 12C122 1 63 6 30 21 9 30 0 44 9 65c10 25 53 39 105 40 57 1 115-16 120-48 4-21-19-38-46-46-17-5-24-5-35-5" />
       <path class="dry-ink" pathLength="1" d="M149 9C78 2 20 20 12 44 2 78 60 103 126 102c49-1 100-20 105-44 6-24-24-39-73-47" />
     </svg>
   )}
   {scrap.crossedOut && (
-    <svg class="scrap-mark strike" viewBox="0 0 240 112" preserveAspectRatio="none" aria-hidden="true">
+    <svg class="scrap-mark strike chalk-stroke" viewBox="0 0 240 112" preserveAspectRatio="none" aria-hidden="true">
       <path pathLength="1" d="M17 61Q77 58 123 49T221 39" />
       <path class="dry-ink" pathLength="1" d="M29 69Q81 65 141 53T228 41" />
     </svg>
@@ -81,17 +81,21 @@ let wordIndex = 0;
   clip-path: polygon(1% 2%, 37% 1%, 71% 1.7%, 99.6% 0, 98.8% 30%, 100% 67%, 99.5% 96%, 62% 99%, 26% 98%, 0 99%, .6% 52%);
   background: var(--paper);
 }
-.paper-yellow { --paper: linear-gradient(165deg, #f7df80, #fff1aa 60%); }
-.paper-pink { --paper: linear-gradient(168deg, #f2b9c4, #ffd1d9 62%); }
-.paper-blue { --paper: linear-gradient(166deg, #a9cedf, #c9e6ee 54%); }
+.paper-yellow { --paper: linear-gradient(165deg, light-dark(#f7df80, #d2bb72), light-dark(#fff1aa, #ecdaa0) 60%); }
+.paper-pink { --paper: linear-gradient(168deg, light-dark(#f2b9c4, #d09fae), light-dark(#ffd1d9, #e0b8c2) 62%); }
+.paper-blue { --paper: linear-gradient(166deg, light-dark(#a9cedf, #97b4c2), light-dark(#c9e6ee, #b8d1d8) 54%); }
 .paper-ruled {
   --paper: linear-gradient(90deg, transparent 13%, #db84876b 13.3%, transparent 14%),
     repeating-linear-gradient(transparent 0 21px, #7c9ec355 21px 22px),
-    linear-gradient(152deg, #f3e9bd, #fffbdf);
+    linear-gradient(152deg, light-dark(#f3e9bd, #cfc6a0), light-dark(#fffbdf, #ebe2c3));
 }
 .ink-blue { --ink: var(--blue); }
 .ink-red { --ink: var(--red); }
 .ink-green { --ink: var(--green); }
+.scrap:not(.paper-ink) { --ink: #202a28; }
+.scrap:not(.paper-ink).ink-blue { --ink: #2058a6; }
+.scrap:not(.paper-ink).ink-red { --ink: #7e2733; }
+.scrap:not(.paper-ink).ink-green { --ink: #205745; }
 .scrap-line { display: block; }
 .scrap-line + .scrap-line { margin-top: .3em; }
 .ink-word { display: inline-block; }

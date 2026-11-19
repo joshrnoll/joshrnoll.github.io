@@ -1,4 +1,6 @@
 ---
+import ThemeToggle from './ThemeToggle.astro';
+
 const currentPath = Astro.url.pathname;
 const isActive = (path: string) => currentPath === path || (path !== '/' && currentPath.startsWith(path));
 const links = [
@@ -12,9 +14,10 @@ const links = [
 ];
 ---
 <nav class="site-nav" aria-label="Primary navigation">
-  <div class="container nav-inner">
+  <site-navigation class="container nav-inner">
     <a href="/" class="site-brand">Josh Noll<span aria-hidden="true">.</span></a>
-    <ul class="nav-links">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-links" hidden>Menu</button>
+    <ul class="nav-links" id="primary-links">
       {links.map(link => (
         <li>
           <a
@@ -24,15 +27,35 @@ const links = [
             data-astro-reload={link.href === '/resume/' ? true : undefined}
           >
             {link.label}
-            <svg aria-hidden="true" viewBox="0 0 72 8" preserveAspectRatio="none" fill="none">
+            <svg class="chalk-stroke" aria-hidden="true" viewBox="0 0 72 8" preserveAspectRatio="none" fill="none">
               <path d="M2 6 C14 2.8 32 3.7 46 2.5 Q61 1.4 70 2.8 M12 6.5 Q38 4.4 57 4.7" />
             </svg>
           </a>
         </li>
       ))}
     </ul>
-  </div>
+    <ThemeToggle />
+  </site-navigation>
 </nav>
+
+<script>
+  class SiteNavigation extends HTMLElement {
+    connectedCallback() {
+      const button = this.querySelector<HTMLButtonElement>('.menu-toggle');
+      if (!button) return;
+      button.hidden = false;
+      button.onclick = () => {
+        button.setAttribute('aria-expanded', String(button.getAttribute('aria-expanded') !== 'true'));
+      };
+      this.onkeydown = event => {
+        if (event.key !== 'Escape' || button.getAttribute('aria-expanded') !== 'true') return;
+        button.setAttribute('aria-expanded', 'false');
+        button.focus();
+      };
+    }
+  }
+  if (!customElements.get('site-navigation')) customElements.define('site-navigation', SiteNavigation);
+</script>
 
 <style>
 .site-nav {
@@ -40,10 +63,7 @@ const links = [
   top: 0;
   z-index: 20;
   border-bottom: 1px solid var(--line);
-  --nav-ink: #202a28;
-  --nav-muted: #53615d;
-  --nav-accent: #2058a6;
-  background: #f8f9f5f5;
+  background: color-mix(in srgb, var(--bg) 96%, transparent);
   backdrop-filter: blur(8px);
   font-family: var(--font-body);
 }
@@ -58,19 +78,20 @@ const links = [
 
 .site-brand {
   flex: 0 0 auto;
-  color: var(--nav-ink);
+  color: var(--fg);
   font-size: 1.22rem;
   font-weight: 800;
   letter-spacing: -0.055em;
 }
 
-.site-brand span { color: var(--nav-accent); }
-.site-brand:hover { color: var(--nav-accent); text-decoration: none; }
+.site-brand span { color: var(--blue); }
+.site-brand:hover { color: var(--blue); text-decoration: none; }
 
 .nav-links {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  margin-left: auto;
   gap: 0 clamp(0.7rem, 2.1vw, 1.65rem);
   list-style: none;
 }
@@ -80,14 +101,14 @@ const links = [
   display: grid;
   align-items: center;
   min-height: 2.4rem;
-  color: var(--nav-muted);
+  color: var(--comment);
   font-size: 0.85rem;
   font-weight: 600;
 }
 
 .nav-link:hover,
 .nav-link[aria-current] {
-  color: var(--nav-accent);
+  color: var(--blue);
   text-decoration: none;
 }
 
@@ -105,9 +126,38 @@ const links = [
 
 .nav-link[aria-current] svg { visibility: visible; }
 
-@media (max-width: 720px) {
-  .nav-inner { flex-direction: column; align-items: flex-start; gap: 0; padding-block: 0.55rem; }
-  .nav-links { gap: 0 0.55rem; }
-  .nav-link { min-height: 2rem; font-size: 0.775rem; }
+.menu-toggle { display: none; }
+
+@media (max-width: 780px) {
+  .nav-inner { min-height: 3.85rem; gap: .65rem; }
+  .menu-toggle:not([hidden]) {
+    display: block;
+    margin-left: auto;
+    padding: .5rem .7rem;
+    min-height: 2.75rem;
+    border: 1px solid var(--line);
+    border-radius: .4rem;
+    background: var(--surface);
+    color: var(--fg);
+    font-size: .85rem;
+    font-weight: 650;
+    cursor: pointer;
+  }
+  .menu-toggle[aria-expanded="true"] { background: var(--selected); }
+  .menu-toggle:not([hidden]) + .nav-links {
+    display: none;
+    position: absolute;
+    top: calc(100% + .3rem);
+    right: var(--page-gutter);
+    min-width: 10.75rem;
+    padding: .5rem .85rem;
+    border: 1px solid var(--line);
+    border-radius: .55rem;
+    background: var(--bg-popup);
+    box-shadow: 0 10px 25px #131c1a30;
+  }
+  .menu-toggle[aria-expanded="true"] + .nav-links { display: grid; }
+  .nav-link { min-height: 2.75rem; }
+  .nav-link svg { width: min(4rem, 100%); }
 }
 </style>
