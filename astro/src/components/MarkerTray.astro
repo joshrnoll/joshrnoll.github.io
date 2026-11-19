@@ -1,0 +1,71 @@
+<div class="marker-tray" aria-hidden="true">
+  <div class="container tray-inner">
+    <div class="markers">
+      <span class="marker marker-black"></span>
+      <span class="marker marker-blue"></span>
+      <span class="marker marker-red"></span>
+      <span class="marker marker-green"></span>
+    </div>
+    <span class="eraser"></span>
+  </div>
+</div>
+
+<style>
+.marker-tray {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 15;
+  height: 2.4rem;
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1px solid #bac2bd;
+  background: linear-gradient(180deg, #c3ccc5, #eef0eb 30%, #e2e7e1 73%, #b2beb6 74%, #d9dfd9);
+  box-shadow: 0 -4px 12px #202a2810;
+  pointer-events: none;
+}
+
+.tray-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 1.75rem;
+}
+
+.markers { display: flex; align-items: center; gap: clamp(0.45rem, 1.05vw, 1rem); }
+
+.marker {
+  --cap: #33403b;
+  position: relative;
+  display: block;
+  width: clamp(2.8rem, 7.8vw, 5.3rem);
+  height: 0.64rem;
+  border-radius: 0.15rem 0.29rem 0.25rem 0.12rem;
+  background: linear-gradient(90deg, var(--cap) 0 11%, #f6f7f0 11% 72%, var(--cap) 72%);
+  box-shadow: inset 0 -2px 2px #16252139, 0 2px 2px #26352c48;
+}
+
+.marker::after {
+  position: absolute;
+  content: '';
+  width: 24%;
+  height: 1px;
+  top: 0.29rem;
+  left: 26%;
+  background: var(--cap);
+  opacity: 0.6;
+}
+
+.marker-blue { --cap: #2058a6; transform: rotate(-2deg); }
+.marker-red { --cap: #ad3e45; transform: rotate(1deg); }
+.marker-green { --cap: #23634c; transform: rotate(-1deg); }
+
+.eraser {
+  width: clamp(1.6rem, 4vw, 3.25rem);
+  height: 0.93rem;
+  border: 1px solid #172520;
+  border-bottom: 3px solid #818b83;
+  border-radius: 0.25rem;
+  background: repeating-linear-gradient(95deg, #26342f 0 2px, #2e3b35 2px 3px);
+  box-shadow: 0 2px 3px #26352c5e;
+  transform: rotate(4deg);
+}
+</style>

@@ -1,0 +1,134 @@
+---
+import type { Scrap } from '../data/scraps';
+
+interface Props {
+  scrap: Scrap;
+  target?: { id: string; title: string };
+  delay?: number;
+}
+const { scrap, target, delay = 100 } = Astro.props;
+const Element = target ? 'a' : 'div';
+// Skip the client router so fragment navigation moves focus and emits hashchange.
+const link = target && {
+  href: `#${target.id}`,
+  'data-thread': target.id,
+  'data-astro-reload': true,
+  'aria-label': `${scrap.text} Follow the arrow to ${target.title}`,
+};
+const lines = scrap.text.split('\n');
+let wordIndex = 0;
+---
+<Element
+  class:list={['scrap', `paper-${scrap.paper}`, `ink-${scrap.ink ?? 'black'}`]}
+  {...link}
+  style={`--ink-delay: ${delay}ms`}
+>
+  <span class="scrap-text">
+    {lines.map(line => (
+      <span class="scrap-line">
+        {line.split(/\s+/).map((word, index) => (
+          <>{index > 0 && ' '}<span class="ink-word" style={`--word-delay: ${wordIndex++ * 48}ms`}>{word}</span></>
+        ))}
+      </span>
+    ))}
+  </span>
+  {target && (
+    <svg class="scrap-mark ring" viewBox="0 0 240 112" preserveAspectRatio="none" aria-hidden="true">
+      <path pathLength="1" d="M164 12C122 1 63 6 30 21 9 30 0 44 9 65c10 25 53 39 105 40 57 1 115-16 120-48 4-21-19-38-46-46-17-5-24-5-35-5" />
+      <path class="dry-ink" pathLength="1" d="M149 9C78 2 20 20 12 44 2 78 60 103 126 102c49-1 100-20 105-44 6-24-24-39-73-47" />
+    </svg>
+  )}
+  {scrap.crossedOut && (
+    <svg class="scrap-mark strike" viewBox="0 0 240 112" preserveAspectRatio="none" aria-hidden="true">
+      <path pathLength="1" d="M17 61Q77 58 123 49T221 39" />
+      <path class="dry-ink" pathLength="1" d="M29 69Q81 65 141 53T228 41" />
+    </svg>
+  )}
+</Element>
+
+<style>
+.scrap {
+  --ink: var(--fg);
+  --tilt: 0deg;
+  display: grid;
+  place-content: center;
+  position: relative;
+  isolation: isolate;
+  min-height: 7rem;
+  padding: 1.2rem 1.35rem;
+  text-align: center;
+  color: var(--ink);
+  font: 700 clamp(1.12rem, 1.8vw, 1.52rem)/1.19 var(--font-marker);
+  transform: rotate(var(--tilt));
+  transition: transform 180ms ease;
+}
+.scrap:hover, .scrap:focus-visible { color: var(--ink); text-decoration: none; }
+.scrap[data-thread] { padding-inline: 1.9rem; }
+.scrap:not(.paper-ink)::before, .scrap:not(.paper-ink)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.scrap:not(.paper-ink)::before {
+  inset: 3px 4px 0;
+  background: #41382a;
+  filter: blur(7px);
+  opacity: .22;
+  transform: translateY(5px) rotate(1.5deg);
+}
+.scrap:not(.paper-ink)::after {
+  clip-path: polygon(1% 2%, 37% 1%, 71% 1.7%, 99.6% 0, 98.8% 30%, 100% 67%, 99.5% 96%, 62% 99%, 26% 98%, 0 99%, .6% 52%);
+  background: var(--paper);
+}
+.paper-yellow { --paper: linear-gradient(165deg, #f7df80, #fff1aa 60%); }
+.paper-pink { --paper: linear-gradient(168deg, #f2b9c4, #ffd1d9 62%); }
+.paper-blue { --paper: linear-gradient(166deg, #a9cedf, #c9e6ee 54%); }
+.paper-ruled {
+  --paper: linear-gradient(90deg, transparent 13%, #db84876b 13.3%, transparent 14%),
+    repeating-linear-gradient(transparent 0 21px, #7c9ec355 21px 22px),
+    linear-gradient(152deg, #f3e9bd, #fffbdf);
+}
+.ink-blue { --ink: var(--blue); }
+.ink-red { --ink: var(--red); }
+.ink-green { --ink: var(--green); }
+.scrap-line { display: block; }
+.scrap-line + .scrap-line { margin-top: .3em; }
+.ink-word { display: inline-block; }
+.scrap-mark {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.scrap-mark path { vector-effect: non-scaling-stroke; }
+.dry-ink { opacity: .4; stroke-width: 1.25; }
+@media (prefers-reduced-motion: no-preference) {
+  .scrap[data-thread]:hover, .scrap[data-thread]:focus-visible,
+  .scrap:not(.paper-ink):hover { transform: translateY(-5px) rotate(calc(var(--tilt) * .45)); z-index: 1; }
+  .ink-word {
+    animation: write-word 220ms ease-out backwards;
+    animation-delay: calc(var(--ink-delay) + var(--word-delay));
+  }
+  .scrap-mark path {
+    stroke-dasharray: 1;
+    animation: draw-mark 660ms ease-out backwards;
+    animation-delay: calc(var(--ink-delay) + 430ms);
+  }
+  .scrap-mark .dry-ink { animation-delay: calc(var(--ink-delay) + 570ms); }
+}
+@keyframes write-word {
+  from { clip-path: inset(-.2em 100% -.2em 0); }
+  to { clip-path: inset(-.2em 0 -.2em 0); }
+}
+@keyframes draw-mark { from { stroke-dashoffset: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .scrap { transition: none; }
+}
+</style>

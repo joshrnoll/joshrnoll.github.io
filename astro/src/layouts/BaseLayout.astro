@@ -2,7 +2,7 @@
 // astro/src/layouts/BaseLayout.astro
 import { ClientRouter } from 'astro:transitions';
 import NavBar from '../components/NavBar.astro';
-import StatusBar from '../components/StatusBar.astro';
+import MarkerTray from '../components/MarkerTray.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -60,56 +60,77 @@ const ogImageUrl = new URL(ogImage, Astro.site).href;
   </script>
 </head>
 <body>
-  <NavBar transition:persist />
-  <main transition:name="main-content">
+  <a href="#main-content" class="skip-link">Skip to content</a>
+  <NavBar />
+  <main id="main-content" tabindex="-1">
     <slot />
   </main>
-  <StatusBar transition:persist />
+  <MarkerTray />
 </body>
 </html>
 
 <script>
+  function copyFromSelection(text: string): boolean {
+    const focused = document.activeElement;
+    const field = document.createElement('textarea');
+    field.value = text;
+    field.readOnly = true;
+    field.style.cssText = 'position: fixed; top: 0; left: -9999px;';
+    document.body.append(field);
+    field.focus({ preventScroll: true });
+    field.select();
+    try {
+      return document.execCommand('copy');
+    } catch {
+      return false;
+    } finally {
+      field.remove();
+      if (focused instanceof HTMLElement) focused.focus({ preventScroll: true });
+    }
+  }
+
   function addCopyButtons() {
     document.querySelectorAll('pre').forEach(pre => {
-      if (pre.querySelector('.copy-btn')) return; // already added
+      if (pre.querySelector('.copy-btn')) return;
 
+      const code = pre.querySelector('code');
+      const text = code?.innerText ?? pre.innerText;
       const btn = document.createElement('button');
+      btn.type = 'button';
       btn.className = 'copy-btn';
       btn.setAttribute('aria-label', 'Copy code');
-      btn.textContent = 'copy';
+      btn.textContent = 'Copy';
+      let reset: number | undefined;
 
       btn.addEventListener('click', async () => {
-        const code = pre.querySelector('code');
-        const text = code?.innerText ?? pre.innerText;
-        await navigator.clipboard.writeText(text);
-        btn.textContent = '✓';
-        btn.classList.add('copied');
-        setTimeout(() => {
-          btn.textContent = 'copy';
+        let copied = false;
+        if (navigator.clipboard) {
+          try {
+            await navigator.clipboard.writeText(text);
+            copied = true;
+          } catch {
+            copied = copyFromSelection(text);
+          }
+        } else {
+          copied = copyFromSelection(text);
+        }
+        btn.textContent = copied ? 'Copied' : 'Copy failed';
+        btn.setAttribute('aria-label', copied ? 'Code copied' : 'Copy failed');
+        btn.classList.toggle('copied', copied);
+        window.clearTimeout(reset);
+        reset = window.setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.setAttribute('aria-label', 'Copy code');
           btn.classList.remove('copied');
         }, 2000);
       });
 
-      pre.style.position = 'relative';
       pre.appendChild(btn);
     });
   }
 
   // astro:page-load fires on every navigation including first load
   document.addEventListener('astro:page-load', addCopyButtons);
-
-  // NavBar uses transition:persist so its server-rendered .active class
-  // never updates on client-side navigation — fix it here
-  document.addEventListener('astro:after-swap', () => {
-    const path = window.location.pathname;
-    document.querySelectorAll('.nav-link').forEach(link => {
-      const href = link.getAttribute('href') ?? '';
-      const active = href === '/'
-        ? path === '/'
-        : path === href || path.startsWith(href.replace(/\/$/, '') + '/');
-      link.classList.toggle('active', active);
-    });
-  });
 </script>
 
 <style is:global>
@@ -120,8 +141,8 @@ pre { position: relative; }
   top: 0.5rem;
   right: 0.5rem;
   background: transparent;
-  border: 1px solid var(--comment);
-  color: var(--comment);
+  border: 1px solid #85968b;
+  color: #cbd6cc;
   font-family: var(--font-mono);
   font-size: 0.7rem;
   padding: 0.2em 0.5em;
@@ -130,25 +151,27 @@ pre { position: relative; }
   opacity: 0;
   transition: opacity 0.15s, color 0.15s, border-color 0.15s;
 }
-pre:hover .copy-btn { opacity: 1; }
-.copy-btn:hover { color: var(--fg); border-color: var(--fg); }
-.copy-btn.copied { color: var(--green); border-color: var(--green); opacity: 1; }
+pre:hover .copy-btn, .copy-btn:focus-visible { opacity: 1; }
+.copy-btn:hover { color: white; border-color: white; }
+.copy-btn.copied { color: #a6e3b1; border-color: #a6e3b1; opacity: 1; }
 
-@keyframes nvim-out {
-  0%   { opacity: 1; }
-  100% { opacity: 0; filter: brightness(0.1); }
+.skip-link {
+  position: fixed;
+  z-index: 30;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  background: var(--surface);
+  transform: translateY(calc(-100% - 1rem));
 }
 
-@keyframes nvim-in {
-  0%   { opacity: 0; filter: brightness(0.1); }
-  100% { opacity: 1; filter: none; }
+.skip-link:focus { transform: none; }
+
+@media (hover: none) {
+  .copy-btn { opacity: 1; }
 }
 
-::view-transition-old(main-content) {
-  animation: nvim-out 0.12s ease-in forwards;
-}
-
-::view-transition-new(main-content) {
-  animation: nvim-in 0.18s ease-out forwards;
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 }
 </style>

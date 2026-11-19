@@ -1,110 +1,368 @@
 ---
-// astro/src/pages/index.astro
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import TypingAnimation from '../components/TypingAnimation.astro';
+import BoardScrap from '../components/BoardScrap.astro';
+import { projects } from '../data/projects';
+import { wallScraps } from '../data/scraps';
+
+const dateFormat = new Intl.DateTimeFormat('en', {
+  dateStyle: 'medium',
+  timeZone: 'UTC',
+});
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3)
+  .map(({ data, id }) => {
+    const slug = data.slug ?? id.replace(/\.mdx?$/, '');
+    return {
+      id: `post-${slug}`,
+      href: `/${slug}/`,
+      title: data.title,
+      date: data.date,
+    };
+  });
+
+const featuredProjects = ['homelab-as-code', 'pi-teach', 'black-relay'].flatMap(id => {
+  const project = projects.find(project => project.id === id);
+  return project ? [{ ...project, id: `project-${project.id}`, href: `/projects/#${project.id}` }] : [];
+});
+const destinations = new Map([...posts, ...featuredProjects].map(card => [card.id, card]));
 ---
 <BaseLayout title="Home">
-  <div class="container home">
-    <section class="hero">
-      <div class="hero-inner">
-        <div class="hero-animation-wrap">
-          <TypingAnimation />
-        </div>
-        <div class="gravatar-wrap">
-          <img
-            src="https://www.gravatar.com/avatar/d5377efce60675699a15b47511b8b451?s=400&d=mp"
-            alt="Josh"
-            class="gravatar-photo"
-            onerror="this.style.display='none'"
-          />
-        </div>
+  <div class="container wall">
+    <header class="wall-intro">
+      <h1>The Whiteboard<br class="title-break" /> Wall<span class="title-dot">.</span></h1>
+      <div class="about">
+        <p>I'm a former infantryman turned software engineer with a passion for solving hard problems with cool technology. Read my full story <a href="/my-story/">here</a>.</p>
+        <a class="resume-button" href="/resume/" data-astro-reload>cd ~/resume →</a>
       </div>
-      <div class="hero-links">
-        <a href="/blog/" class="hero-cta">cd ~/blog →</a>
-        <a href="/notes/" class="hero-cta">cd ~/notes →</a>
-        <a href="/projects/" class="hero-cta">cd ~/projects →</a>
-        <a href="/homelab/" class="hero-cta">cd ~/homelab →</a>
-        <a href="/resume/" class="hero-cta" data-astro-reload>cd ~/resume →</a>
-      </div>
-    </section>
+    </header>
 
-    <section class="about">
-      <h2 class="section-heading">// About Me</h2>
-      <p>
-        I'm a former infantryman turned software engineer with a passion for solving hard problems with cool technology.
-      </p>
-      <p>
-        Read my full story <a href="/my-story/">here</a>.
-      </p>
-    </section>
+    <whiteboard-wall>
+      <div class="rough-side">
+        <p class="rough-heading" aria-hidden="true">
+          <span>Working it out</span>
+          <svg viewBox="0 0 190 20" aria-hidden="true">
+            <path pathLength="1" d="M3 13Q39 6 94 7t91 1M19 16Q91 8 158 12" />
+          </svg>
+        </p>
+        <div class="scrap-grid">
+          {wallScraps.map((scrap, index) => {
+            const target = scrap.target ? destinations.get(scrap.target) : undefined;
+            return (
+              <div class="scrap-slot" aria-hidden={target ? undefined : 'true'}>
+                <BoardScrap scrap={scrap} target={target} delay={160 + index * 125} />
+              </div>
+            );
+          })}
+        </div>
+        <svg class="doodle" viewBox="0 0 280 115" aria-hidden="true">
+          <g class="doodle-blue">
+            <path pathLength="1" d="M18 87q20 3 50 0l7-42q-24-4-49-2zM22 85l45 3m-36-35 31 2m-32 9 30 2m-31 8 29 2M70 64q18 7 38 0m-8-7 10 7-10 7" />
+            <path pathLength="1" d="M116 77q-11-3-10-14 0-12 17-13 4-18 20-15 11 1 18 13 19-4 23 9 4 15-11 20-21 7-57 0zM183 67q16-2 36 5m-7-8 9 8-11 5" />
+            <path pathLength="1" d="M222 48q15-1 38 2l-1 48-35 1zM225 63l34 1m-34 12 34 1m-33 11h33m-27-31h1m-.5 13h1m0 13h1" />
+          </g>
+          <g class="doodle-red">
+            <path pathLength="1" d="M237 37l-2-11m12 11 3-12m6 15 9-7M29 34l-5-10m13 8 3-14" />
+          </g>
+        </svg>
+      </div>
+
+      <section class="shipped" aria-labelledby="shipped-title">
+        <h2 id="shipped-title">Shipped<span>.</span></h2>
+        <section class="shipped-group" aria-labelledby="writing-title">
+          <div class="group-heading"><h3 id="writing-title">Latest posts</h3><a href="/blog/">All posts →</a></div>
+          <ul>
+            {posts.map(post => (
+              <li id={post.id} class="shipped-card" tabindex="-1">
+                <a href={post.href}>
+                  <time datetime={post.date.toISOString()}>{dateFormat.format(post.date)}</time>
+                  <span class="card-title">{post.title}</span>
+                  <span class="card-arrow" aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+        <section class="shipped-group" aria-labelledby="projects-title">
+          <div class="group-heading"><h3 id="projects-title">Projects</h3><a href="/projects/">All projects →</a></div>
+          <ul>
+            {featuredProjects.map(project => (
+              <li id={project.id} class="shipped-card project-card" tabindex="-1">
+                <a href={project.href}>
+                  <span class="card-title">{project.title}</span>
+                  <span class="project-description">{project.description}</span>
+                  <span class="card-arrow" aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </section>
+      <svg class="thread-arrows" aria-hidden="true">
+        {wallScraps.filter(scrap => scrap.target && destinations.has(scrap.target)).map(scrap => (
+          <g data-arrow={scrap.target} class={`thread-${scrap.ink ?? 'black'}`}>
+            <path class="arrow-line" pathLength="1" />
+            <path class="arrow-echo" pathLength="1" />
+            <path class="arrow-head" pathLength="1" />
+          </g>
+        ))}
+      </svg>
+    </whiteboard-wall>
   </div>
 </BaseLayout>
 
-<style>
-.home { padding-top: 3rem; padding-bottom: 5rem; }
-.hero { margin-bottom: 3rem; }
-.hero-inner {
-  display: flex;
-  align-items: center;
-  gap: 3rem;
-}
-.hero-animation-wrap {
-  flex: 0 0 580px;
-}
-.gravatar-wrap {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.gravatar-photo {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  border: 2px solid var(--blue);
-  box-shadow: 0 0 20px rgba(122, 162, 247, 0.45), 0 0 50px rgba(122, 162, 247, 0.15);
-  flex-shrink: 0;
-  object-fit: cover;
-}
-.hero-links { margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }
-.hero-cta {
-  display: inline-block;
-  color: var(--green);
-  border: 1px solid var(--green);
-  padding: 0.4em 1em;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  transition: background 0.15s;
-}
-.hero-cta:hover {
-  background: color-mix(in srgb, var(--green) 15%, transparent);
-  text-decoration: none;
-  color: var(--green);
-}
-.about { max-width: 60ch; }
-.section-heading {
-  color: var(--comment);
-  font-size: 1rem;
-  margin-bottom: 1rem;
-}
-.about p { margin-bottom: 0.75rem; color: var(--fg); }
+<script>
+  class WhiteboardWall extends HTMLElement {
+    connectedCallback() {
+      const arrows = Array.from(this.querySelectorAll<SVGGElement>('[data-arrow]'));
+      const connections = Array.from(this.querySelectorAll<HTMLAnchorElement>('[data-thread]')).flatMap(source => {
+        const id = source.dataset.thread;
+        const target = id && document.getElementById(id);
+        const arrow = arrows.find(element => element.dataset.arrow === id);
+        const paths = arrow?.querySelectorAll('path');
+        if (!target || !arrow || !paths || paths.length !== 3) return [];
+        return [{ source, target, arrow, line: paths[0], echo: paths[1], head: paths[2] }];
+      });
 
-@media (max-width: 768px) {
-  .hero-inner {
-    flex-direction: column;
-    align-items: center;
+      const position = () => {
+        const board = this.getBoundingClientRect();
+        for (const { source, target, line, echo, head } of connections) {
+          const note = source.parentElement!.getBoundingClientRect();
+          const card = target.getBoundingClientRect();
+          const x = note.right - board.left - 8;
+          const y = note.top + note.height * .49 - board.top;
+          const endX = card.left - board.left - 7;
+          const endY = card.top + card.height * .51 - board.top;
+          const bend = (endX - x) * .54;
+          const d = `M ${x} ${y} C ${x + bend} ${y - 21}, ${endX - 19} ${endY - 13}, ${endX} ${endY}`;
+          line.setAttribute('d', d);
+          echo.setAttribute('d', `M ${x + 6} ${y + 4} C ${x + bend} ${y - 12}, ${endX - 31} ${endY - 14}, ${endX - 5} ${endY - 1}`);
+          head.setAttribute('d', `M ${endX - 9} ${endY - 13} Q ${endX - 6} ${endY - 6} ${endX} ${endY} l -15 1`);
+        }
+      };
+      const updateActive = () => {
+        for (const { target, arrow } of connections) {
+          arrow.classList.toggle('selected', location.hash === `#${target.id}`);
+        }
+      };
+      const observer = new IntersectionObserver(entries => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          connections.filter(({ target }) => target === entry.target).forEach(({ arrow }) => {
+            arrow.classList.add('drawn');
+          });
+          observer.unobserve(entry.target);
+        }
+      }, { threshold: .45 });
+      const resize = new ResizeObserver(position);
+      resize.observe(this);
+      for (const { source, target } of connections) {
+        resize.observe(source);
+        resize.observe(target);
+        observer.observe(target);
+      }
+      position();
+      updateActive();
+      addEventListener('hashchange', updateActive);
+      this.cleanup = () => {
+        removeEventListener('hashchange', updateActive);
+        resize.disconnect();
+        observer.disconnect();
+      };
+    }
+
+    private cleanup?: () => void;
+
+    disconnectedCallback() {
+      this.cleanup?.();
+    }
   }
-  .hero-animation-wrap {
-    flex: none;
-    width: 100%;
-    max-width: 580px;
+  if (!customElements.get('whiteboard-wall')) customElements.define('whiteboard-wall', WhiteboardWall);
+</script>
+
+<style>
+.wall {
+  max-width: 1320px;
+  padding-block: clamp(2.75rem, 5.5vw, 5rem) 5rem;
+}
+.wall-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(2rem, 5.3vw, 5.3rem);
+  padding-bottom: clamp(2.5rem, 5vw, 4.5rem);
+}
+.wall-intro h1 {
+  font-size: clamp(3.35rem, 6.5vw, 6.75rem);
+  line-height: .9;
+  letter-spacing: -.078em;
+  font-weight: 800;
+}
+.title-dot, .shipped h2 span { color: var(--green); }
+.about { max-width: 35ch; padding-bottom: .2rem; }
+.about p { color: var(--comment); font-size: 1.065rem; }
+.about p a { text-decoration: underline; text-underline-offset: .16em; }
+.resume-button {
+  display: inline-block;
+  margin-top: 1.15rem;
+  padding: .47rem .9rem;
+  border: 1px solid var(--green);
+  border-radius: 3px 6px 2px 5px;
+  color: var(--green);
+  background: #e8eee5;
+  font: 700 .83rem/1.45 var(--font-mono);
+}
+.resume-button:hover { background: #dce7db; color: var(--green); text-decoration: none; }
+whiteboard-wall {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.42fr) minmax(0, 1fr);
+  gap: clamp(2.4rem, 6vw, 5.9rem);
+  padding: 2rem clamp(1rem, 3vw, 2.8rem) 2.5rem;
+  background-color: #fdfefa;
+  background-image:
+    radial-gradient(ellipse at 24% 47%, #b4c1b31c, transparent 31%),
+    radial-gradient(ellipse at 14% 79%, #bdd3d21e, transparent 24%);
+  border: 1px solid #d2d9d3;
+  border-top: 4px solid #d9e0da;
+  border-bottom: 5px solid #c1ccc5;
+  border-radius: 5px 4px 5px 3px;
+  box-shadow: 0 10px 28px #31392e11, inset 0 1px 1px #61746824;
+}
+.rough-side { min-width: 0; }
+.rough-heading {
+  display: inline-grid;
+  color: var(--blue);
+  font: 700 clamp(1.6rem, 3vw, 2.45rem)/1.05 var(--font-marker);
+  transform: rotate(-4deg);
+  margin: .4rem 0 1.8rem .55rem;
+}
+.rough-heading svg {
+  width: 100%;
+  height: .6em;
+  margin-top: -.12em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+}
+.scrap-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: clamp(1.8rem, 3vw, 3rem) clamp(1.6rem, 4vw, 4.3rem);
+}
+.scrap-slot :global(.scrap) { --tilt: inherit; min-height: 8rem; }
+.scrap-slot:nth-child(6n + 1) { --tilt: -6deg; margin-left: 3%; }
+.scrap-slot:nth-child(6n + 2) { --tilt: 5deg; }
+.scrap-slot:nth-child(6n + 3) { --tilt: 4deg; margin-left: 9%; }
+.scrap-slot:nth-child(6n + 4) { --tilt: -7deg; margin-right: 10%; }
+.scrap-slot:nth-child(6n + 5) { --tilt: -9deg; }
+.scrap-slot:nth-child(6n + 6) { --tilt: 4deg; }
+.doodle {
+  display: block;
+  width: min(72%, 295px);
+  height: auto;
+  margin: 1.65rem auto 0;
+  transform: rotate(-5deg);
+  fill: none;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.doodle-blue { stroke: var(--blue); }
+.doodle-red { stroke: var(--red); }
+.shipped h2 {
+  font-size: clamp(2.2rem, 4vw, 3.65rem);
+  letter-spacing: -.085em;
+  line-height: 1;
+  margin-bottom: 1.25rem;
+}
+.shipped-group + .shipped-group { margin-top: 1.45rem; }
+.group-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: .55rem;
+  margin-bottom: .55rem;
+}
+.group-heading h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; }
+.group-heading a { font-size: .81rem; font-weight: 650; }
+.shipped ul { list-style: none; display: grid; gap: .48rem; }
+.shipped-card {
+  border: 1px solid #dce3db;
+  border-radius: 6px;
+  background: var(--surface, white);
+  box-shadow: 0 2px 3px #28362108;
+  scroll-margin-top: 7rem;
+}
+.shipped-card:target { border-color: var(--green); box-shadow: 0 0 0 3px #d8e8d8; }
+.shipped-card a {
+  position: relative;
+  display: grid;
+  gap: .12rem;
+  padding: .65rem 2.4rem .65rem .9rem;
+  color: var(--fg);
+}
+.shipped-card a:hover { color: var(--blue); text-decoration: none; }
+.shipped-card time, .project-description { color: var(--comment); font-size: .76rem; }
+.card-title { font-size: .97rem; font-weight: 750; line-height: 1.26; }
+.card-arrow { position: absolute; right: .9rem; top: calc(50% - .8em); color: var(--green); }
+.thread-arrows {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  pointer-events: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+}
+.thread-black { stroke: var(--fg); }
+.thread-blue { stroke: var(--blue); }
+.thread-green { stroke: var(--green); }
+.thread-red { stroke: var(--red); }
+.arrow-echo { opacity: .5; stroke-width: 1.25; }
+.selected { stroke-width: 4; }
+@media (prefers-reduced-motion: no-preference) {
+  .rough-heading span { animation: write-heading .55s steps(13) .06s both; }
+  .rough-heading path, .doodle path, .thread-arrows path { stroke-dasharray: 1; }
+  .rough-heading path { animation: draw-line .53s ease-out .54s backwards; }
+  .doodle path { animation: draw-line 1.4s ease-out 1.15s backwards; }
+  .doodle-blue path:nth-child(2) { animation-delay: 1.4s; }
+  .doodle-blue path:nth-child(3) { animation-delay: 1.62s; }
+  .doodle-red path { animation-delay: 1.85s; }
+  .thread-arrows g:not(.drawn) { visibility: hidden; }
+  .thread-arrows .drawn path { animation: draw-line .75s ease-out 1.05s backwards; }
+  .thread-arrows .drawn .arrow-head { animation-delay: 1.65s; animation-duration: .22s; }
+  .thread-arrows .drawn .arrow-echo { animation-delay: 1.18s; }
+}
+@keyframes write-heading {
+  from { clip-path: inset(-.2em 100% -.3em 0); }
+  to { clip-path: inset(-.2em 0 -.3em 0); }
+}
+@keyframes draw-line { from { stroke-dashoffset: 1; } }
+@media (max-width: 900px) {
+  .wall-intro { gap: 1.6rem; }
+  whiteboard-wall { gap: 2.6rem; }
+  .scrap-grid { gap: 1.7rem .7rem; }
+}
+@media (max-width: 760px) {
+  .wall-intro { grid-template-columns: 1fr; align-items: start; }
+  .wall-intro h1 { font-size: clamp(3.25rem, 11.5vw, 5.4rem); }
+  .title-break { display: none; }
+  .rough-side, .thread-arrows { display: none; }
+  whiteboard-wall {
+    display: block;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
   }
-  .gravatar-wrap {
-    flex: none;
-  }
-  .gravatar-photo {
-    width: 125px;
-    height: 125px;
-  }
+  .about { max-width: 45ch; }
+  .shipped { padding-top: 1.5rem; border-top: 1px solid var(--line); }
 }
 </style>
