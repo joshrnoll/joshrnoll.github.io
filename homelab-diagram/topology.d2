@@ -1,0 +1,103 @@
+# Homelab topology. Colors live in palettes/*.d2; render both with scripts/render.sh.
+
+direction: down
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+    sketch: true
+    pad: 40
+  }
+}
+
+network: {
+  class: zone-network
+  label: "Network · UniFi Dream Router"
+  grid-rows: 1
+  grid-gap: 20
+
+  vlan7: "VLAN 7\nManagement" {class: sticky-yellow}
+  vlan10: "VLAN 10\nHome" {class: sticky-blue}
+  vlan20: "VLAN 20\nIoT" {class: sticky-pink}
+  vlan30: "VLAN 30\nServers" {class: sticky-green}
+  vlan100: "VLAN 100\nGuest · isolated" {class: sticky-plain}
+}
+
+talos: {
+  class: zone-talos
+  label: "Talos Kubernetes · VLAN 30"
+
+  vip: "Kubernetes API\nVirtual IP" {class: [sticky-green; strong]}
+  mini1: "Mini PC 1\nControl plane · worker\netcd · local storage" {class: sticky-green}
+  mini2: "Mini PC 2\nControl plane · worker\netcd · local storage" {class: sticky-green}
+  mini3: "Mini PC 3\nControl plane · worker\netcd · local storage" {class: sticky-green}
+
+  vip -> mini1: {class: ink}
+  vip -> mini2: {class: ink}
+  vip -> mini3: {class: ink}
+}
+
+proxmox: {
+  class: zone-proxmox
+  label: "Proxmox · Standalone hosts\nManagement VLAN 7 · VLAN-aware bridges"
+
+  laptop: "Laptop · Proxmox" {
+    class: host
+    ha_vm: "Home Assistant OS\nVLAN 20 · local storage\nZigbee / Z-Wave USB passthrough" {class: sticky-pink}
+  }
+
+  gaming: "Gaming PC · Proxmox\nCore i7 · 32 GB RAM" {
+    class: host
+    gpu_worker: "Talos GPU worker VM\nVLAN 30 · GPU workloads\nRTX 2080 Super passthrough" {class: sticky-blue}
+  }
+}
+
+storage: {
+  class: zone-storage
+  label: "Storage · VLAN 30"
+
+  synology: "Synology NAS\n3 × 4 TB SSD · RAID 5\n~8 TB usable" {
+    shape: cylinder
+    class: host
+    fast: "SSD tier · NFS\nDefault StorageClass\nDatabases · application data" {class: sticky-blue}
+  }
+
+  truenas: "TrueNAS SCALE\nHDD storage · ZFS" {
+    shape: cylinder
+    class: host
+    bulk: "Bulk tier · NFS\nMedia · ISOs · templates" {class: sticky-yellow}
+    backups: "Backups\nProxmox · Kubernetes" {class: sticky-yellow}
+  }
+}
+
+standalone: {
+  class: zone-standalone
+  label: "Independent services · VLAN 30"
+
+  macmini: "Mac mini M1 · 16 GB\nmacOS · development / Xcode\nSSH · Tailscale" {class: sticky-pink}
+  rpi4: "Raspberry Pi 4 · 8 GB\nDNS server\nUDP/TCP 53 · all VLANs" {class: sticky-pink}
+}
+
+cold: {
+  class: zone-cold
+  label: "Spare hardware"
+  near: bottom-right
+
+  supermicro: "Supermicro tower\nXeon · 32 GB DDR3\nCold spare · powered off" {class: sticky-plain}
+  zero: "Raspberry Pi Zero 2 W\nSpare" {class: sticky-plain}
+}
+
+# Network connections
+network -> talos: {class: ink}
+network -> storage: {class: ink}
+network -> standalone: {class: ink}
+network -> proxmox: VLAN 7 management {class: ink}
+network -> proxmox.laptop.ha_vm: VLAN 20 {class: ink}
+network -> proxmox.laptop.ha_vm: "VLAN 10 · TCP 8123 / mDNS" {class: [ink; dashed]}
+
+# Cluster membership and storage
+proxmox.gaming.gpu_worker -> talos: Kubernetes worker {class: [blue; dashed]}
+storage.synology.fast -> talos: Persistent volumes {class: blue}
+storage.truenas.bulk -> proxmox: ISOs / templates {class: red}
+storage.truenas.backups -- proxmox: VM backups {class: [red; dashed]}
+storage.truenas.backups -- talos: Cluster backups {class: [blue; dashed]}

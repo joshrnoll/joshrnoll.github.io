@@ -7,34 +7,44 @@
   <title>My Homelab Diagram</title>
   <style>
     :root {
-      color-scheme: dark;
-      font-family: system-ui, sans-serif;
-      color: #cdd6f4;
-      background: #181825;
+      color-scheme: light dark;
+      --bg: light-dark(#f8f9f5, #1a2422);
+      --board: light-dark(#fbfcf8, #1a2422);
+      --surface: light-dark(#fff, #22302d);
+      --fg: light-dark(#202a28, #f1f0e5);
+      --muted: light-dark(#53615d, #bcc9c1);
+      --line: light-dark(#d7ded7, #485952);
+      --blue: light-dark(#2058a6, #a8cff5);
+      --sticky: light-dark(#fff1a6, #e8d98f);
+      font-family: Inter, system-ui, sans-serif;
+      color: var(--fg);
+      background: var(--bg);
     }
+    :root[data-theme="light"] { color-scheme: light; }
+    :root[data-theme="dark"] { color-scheme: dark; }
     * { box-sizing: border-box; }
     body { margin: 0; height: 100dvh; display: flex; flex-direction: column; }
     header {
       display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-      gap: 12px 24px; padding: 16px 20px; border-bottom: 1px solid #45475a;
+      gap: 12px 24px; padding: 14px 20px; border-bottom: 2px solid var(--line);
     }
-    h1 { margin: 0; font-size: 18px; font-weight: 650; letter-spacing: -.025em; }
-    .subtitle { margin: 4px 0 0; color: #a6adc8; font-size: 12px; }
+    h1 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -.02em; color: var(--blue); }
+    .subtitle { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
     .controls { display: flex; align-items: center; gap: 6px; }
     button {
       min-width: 40px; min-height: 40px; padding: 8px 12px;
-      color: #cdd6f4; background: #313244; border: 1px solid #585b70;
-      border-radius: 6px; font: inherit; font-size: 14px; cursor: pointer;
+      color: var(--fg); background: var(--surface); border: 1.5px solid var(--line);
+      border-radius: 7px 5px 8px 4px / 5px 8px 4px 7px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
     }
-    button:hover { background: #45475a; }
+    button:hover { border-color: var(--blue); color: var(--blue); }
     button:disabled { opacity: .45; cursor: default; }
-    button:focus-visible, #viewport:focus-visible { outline: 2px solid #89b4fa; outline-offset: -3px; }
-    #fit { color: #11111b; background: #89b4fa; border-color: #89b4fa; }
-    #fit:hover { background: #b4d4ff; }
-    #zoom-level { min-width: 55px; text-align: center; font: 13px ui-monospace, monospace; }
+    button:focus-visible, #viewport:focus-visible { outline: 2px solid var(--blue); outline-offset: -3px; }
+    #fit { color: #202a28; background: var(--sticky); border-color: color-mix(in srgb, var(--sticky) 70%, #202a28); box-shadow: 1px 2px 0 #0002; }
+    #fit:hover { transform: rotate(-1deg); }
+    #zoom-level { min-width: 55px; text-align: center; font: 600 13px ui-monospace, monospace; color: var(--muted); }
     #viewport {
       position: relative; flex: 1; min-height: 160px; overflow: hidden;
-      background: #1e1e2e; touch-action: none; cursor: grab; user-select: none;
+      background: var(--board); touch-action: none; cursor: grab; user-select: none;
     }
     #viewport.dragging { cursor: grabbing; }
     #diagram {
@@ -43,11 +53,11 @@
     }
     footer {
       display: flex; flex-wrap: wrap; justify-content: space-between;
-      gap: 6px 20px; padding: 10px 20px; color: #a6adc8;
-      border-top: 1px solid #45475a; font-size: 12px; line-height: 1.5;
+      gap: 6px 20px; padding: 10px 20px; color: var(--muted);
+      border-top: 2px solid var(--line); font-size: 12px; line-height: 1.5;
     }
     footer p { margin: 0; }
-    kbd { font: 12px ui-monospace, monospace; color: #cdd6f4; }
+    kbd { font: 12px ui-monospace, monospace; color: var(--fg); }
     @media (max-width: 520px) {
       header { padding: 12px; gap: 12px; }
       .controls { width: 100%; justify-content: space-between; }
@@ -72,10 +82,10 @@
     </nav>
   </header>
   <main id="viewport" tabindex="0" aria-label="Homelab diagram. Drag to pan, scroll or pinch to zoom. Use arrow keys to pan, plus or minus to zoom, F to fit, and 0 for actual size." aria-describedby="help">
-    <img id="diagram" src="__DIAGRAM_DATA_URL__" width="__DIAGRAM_WIDTH__" height="__DIAGRAM_HEIGHT__" draggable="false" alt="Homelab topology showing the UniFi network, Talos cluster, standalone Proxmox nodes, NAS storage, standalone infrastructure, and spare hardware.">
+    <img id="diagram" src="__DIAGRAM_LIGHT_URL__" width="__DIAGRAM_WIDTH__" height="__DIAGRAM_HEIGHT__" draggable="false" alt="Homelab topology showing the UniFi network, Talos cluster, standalone Proxmox nodes, NAS storage, standalone infrastructure, and spare hardware.">
   </main>
   <footer id="help">
-    <p>Drag to pan · Scroll or pinch to zoom · Double-click to zoom in</p>
+    <p>Drag to pan · Scroll or pinch to zoom · Double-click to zoom in · <strong>Fit diagram</strong> shows it all</p>
     <p>Keyboard: <kbd>← ↑ ↓ →</kbd> pan · <kbd>+ −</kbd> zoom · <kbd>F</kbd> fit · <kbd>0</kbd> actual size</p>
   </footer>
   <noscript>This viewer needs JavaScript enabled to zoom and pan.</noscript>
@@ -86,6 +96,23 @@
     const zoomLevel = document.getElementById('zoom-level');
     const zoomIn = document.getElementById('zoom-in');
     const zoomOut = document.getElementById('zoom-out');
+    const sources = { light: diagram.getAttribute('src'), dark: '__DIAGRAM_DARK_URL__' };
+    const darkQuery = matchMedia('(prefers-color-scheme: dark)');
+    // Follow ?theme=, then the embedding site's theme toggle, then the OS setting.
+    function hostTheme() {
+      try { return parent !== window ? parent.document.documentElement.dataset.theme : undefined; } catch { return undefined; }
+    }
+    function applyTheme() {
+      const requested = new URLSearchParams(location.search).get('theme') || hostTheme();
+      const theme = requested === 'light' || requested === 'dark' ? requested : darkQuery.matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = theme;
+      if (diagram.getAttribute('src') !== sources[theme]) diagram.src = sources[theme];
+    }
+    applyTheme();
+    darkQuery.addEventListener('change', applyTheme);
+    try {
+      if (parent !== window) new MutationObserver(applyTheme).observe(parent.document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    } catch {}
     const diagramWidth = __DIAGRAM_WIDTH__;
     const diagramHeight = __DIAGRAM_HEIGHT__;
     const minScale = .01;
@@ -221,7 +248,16 @@
       previousWidth = viewport.clientWidth;
       previousHeight = viewport.clientHeight;
     }).observe(viewport);
-    fit();
+    // On a phone the whole diagram fits only at ~15%, so open at a readable zoom at the top.
+    function start() {
+      if (viewport.clientWidth >= 600) return fit();
+      scale = .6;
+      x = (viewport.clientWidth - diagramWidth * scale) / 2;
+      y = 12;
+      fitted = false;
+      draw();
+    }
+    start();
   </script>
 </body>
 </html>

@@ -70,11 +70,13 @@ import '../../styles/prose.css';
 }
 .post-header { margin-bottom: 2rem; }
 iframe {
+  display: block;
   width: 100%;
   min-height: 420px;
   height: 70vh;
-  border: 1px solid var(--line);
-  border-radius: 0.7rem;
+  border: 2px solid var(--line);
+  border-radius: .9rem .6rem 1rem .5rem / .5rem .9rem .6rem 1rem;
+  box-shadow: 0 .35rem 1.1rem light-dark(#1a322512, #0003);
 }
 
 .prose :is(p, ol) { max-width: 72ch; }

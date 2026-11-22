@@ -10,13 +10,12 @@ Drag to pan, scroll or pinch to zoom, and use **Fit diagram** to see the whole t
 
 [![Homelab topology diagram](assets/homelab-diagram.svg)](assets/homelab-diagram.svg)
 
-Edit [homelab-diagram.d2](homelab-diagram.d2), then regenerate the SVG with [D2](https://d2lang.com/) (rendered with v0.9.0):
+The diagram is hand-drawn in D2's sketch mode, in two palettes that match joshrnoll.com: a light whiteboard and a dark chalkboard. Edit the topology in [topology.d2](topology.d2) and the colors in [palettes/](palettes/), then render both SVGs with [D2](https://d2lang.com/) v0.9.0:
 
 ```sh
-d2 --layout elk --theme 200 homelab-diagram.d2 assets/homelab-diagram.svg
-python3 scripts/build-viewer.py
+./scripts/render.sh   # or D2=/path/to/d2 ./scripts/render.sh
 ```
 
-The second command embeds the SVG in `viewer.html`. To change the viewer controls or layout, edit [scripts/viewer-template.html](scripts/viewer-template.html) and rebuild it.
+The script downloads the Kalam handwriting font into `.fonts/` on first run, renders `assets/homelab-diagram.svg` (light) and `assets/homelab-diagram-dark.svg` (dark), and rebuilds `viewer.html`. The viewer embeds both and follows `?theme=light|dark`, then the embedding page's theme toggle, then the OS setting. To change the viewer controls or layout, edit [scripts/viewer-template.html](scripts/viewer-template.html) and rebuild it.
 
 Created in [T3 Code](https://t3.codes).
