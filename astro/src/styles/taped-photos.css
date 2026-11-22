@@ -82,17 +82,10 @@ main :is(.prose, .projects) .taped-print img {
 
 .taped-print picture { min-width: 0; }
 
-.taped-caption,
 .taped-figure > figcaption {
   padding: .5rem .25rem 0;
   font: 700 1rem/1.25 var(--font-marker);
   overflow-wrap: anywhere;
-}
-
-.taped-caption {
-  /* Descriptive alt text can be long. The photo sets the width of the print. */
-  width: 100%;
-  contain: inline-size;
 }
 
 .taped-figure > figcaption {

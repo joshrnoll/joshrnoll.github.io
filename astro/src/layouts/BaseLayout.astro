@@ -89,7 +89,10 @@ const ogImageUrl = new URL(ogImage, Astro.site).href;
 </html>
 
 <script>
+  import { mountCodeFrames } from '../lib/code-frames';
   import { mountTapedPhotos } from '../lib/taped-photos';
+
+  document.addEventListener('astro:page-load', mountCodeFrames);
 
   mountTapedPhotos();
   document.addEventListener('astro:after-swap', mountTapedPhotos);

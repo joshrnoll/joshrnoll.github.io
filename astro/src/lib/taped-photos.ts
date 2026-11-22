@@ -40,13 +40,6 @@ export function mountTapedPhotos() {
     const figure = photo.closest('figure');
     if (figure?.querySelector(':scope > figcaption')) {
       figure.classList.add('taped-figure');
-    } else if (image.alt.trim()) {
-      const caption = document.createElement('span');
-      caption.className = 'taped-caption';
-      // The original alt text already gives assistive technology this caption.
-      caption.setAttribute('aria-hidden', 'true');
-      caption.textContent = image.alt;
-      print.append(caption);
     }
   }
 }
