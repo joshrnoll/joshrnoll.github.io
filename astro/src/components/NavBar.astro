@@ -15,7 +15,9 @@ const links = [
 ---
 <nav class="site-nav" aria-label="Primary navigation">
   <site-navigation class="container nav-inner">
-    <a href="/" class="site-brand">Josh Noll</a>
+    <a href="/" class="site-brand" aria-label="Josh Noll, home">
+      <img src="/favicon.svg" width="40" height="40" alt="" />
+    </a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-links" hidden>Menu</button>
     <ul class="nav-links" id="primary-links">
       {links.map(link => (
@@ -76,13 +78,8 @@ const links = [
   min-height: 4.35rem;
 }
 
-.site-brand {
-  flex: 0 0 auto;
-  color: var(--green);
-  font: 700 clamp(1.2rem, 1.9vw, 1.45rem)/1.2 var(--font-marker);
-}
-
-.site-brand:hover { color: var(--green); text-underline-offset: .15em; }
+.site-brand { flex: 0 0 auto; border-radius: 4px; }
+.site-brand img { display: block; }
 
 .nav-links {
   display: flex;
