@@ -1,7 +1,7 @@
 <hero-handwriting class="handwriting">
   <p class="handwriting-name">Josh Noll:</p>
   <p>
-    <span class="sr-only">Builder of things</span>
+    <span class="sr-only">Thinker of thoughts. Builder of things</span>
     <span class="writing-area" aria-hidden="true">
       <span class="first-line">
         <span class="first-word">Infantryman</span>
@@ -11,7 +11,10 @@
         <span class="second-word">Engineer</span>
       </span>
       <span class="eraser"></span>
-      <span class="final-line">Builder of things</span>
+      <span class="final-line">
+        <span class="final-first">Thinker of thoughts.</span>
+        <span class="final-second">Builder of things</span>
+      </span>
     </span>
   </p>
 </hero-handwriting>
@@ -68,7 +71,9 @@
 .writing-area { display: grid; position: relative; }
 .writing-area > span { grid-area: 1 / 1; }
 .first-line, .final-line { justify-self: start; }
+.final-line > span { display: block; width: fit-content; }
 .first-line {
+  align-self: start;
   display: flex;
   align-items: center;
   gap: .24em;
@@ -85,7 +90,7 @@
 }
 .eraser {
   position: absolute;
-  top: 8%;
+  top: .1em;
   left: 0;
   width: 1.5em;
   height: .8em;
@@ -114,8 +119,11 @@
     animation: draw-arrow .26s ease-out .75s both;
   }
   .eraser { animation: wipe var(--erase-time) linear var(--erase-start); }
-  .final-line {
-    animation: write-line .85s steps(17) calc(var(--erase-start) + var(--erase-time) + .1s) both;
+  .final-first {
+    animation: write-line .85s steps(19) calc(var(--erase-start) + var(--erase-time) + .1s) both;
+  }
+  .final-second {
+    animation: write-line .8s steps(17) calc(var(--erase-start) + var(--erase-time) + 1.05s) both;
   }
 }
 

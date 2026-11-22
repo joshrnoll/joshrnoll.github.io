@@ -109,16 +109,31 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
     </whiteboard-wall>
 
     <section class="about" aria-labelledby="about-title">
-      <h2 id="about-title">About me</h2>
-      <p>I'm a former infantryman turned software engineer with a passion for solving hard problems with cool technology. Read my full story <a href="/my-story/">here</a>.</p>
-      <a class="resume-link" href="/resume/" data-astro-reload>
-        view my resume
-        <svg class="chalk-stroke" viewBox="0 0 70 26" aria-hidden="true">
-          <path pathLength="1" d="M3 17Q25 10 44 12T65 13" />
-          <path pathLength="1" d="M55 4Q60 6 66 13q-8 2-13 9" />
-          <path class="resume-echo" pathLength="1" d="M9 18q25-7 44-4" />
-        </svg>
-      </a>
+      <div class="about-photo">
+        <span class="about-tape" aria-hidden="true"></span>
+        <img
+          src="https://www.gravatar.com/avatar/d5377efce60675699a15b47511b8b451?s=400&d=mp"
+          alt="Josh"
+          width="200"
+          height="200"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="about-text">
+        <h2 id="about-title">About me</h2>
+        <p>I'm a former infantryman turned software engineer with a passion for solving hard problems with cool technology.</p>
+        <p>I write about all kinds of stuff.</p>
+        <p>Read my full story <a href="/my-story/">here</a>.</p>
+        <a class="resume-link" href="/resume/" data-astro-reload>
+          view my resume
+          <svg class="chalk-stroke" viewBox="0 0 70 26" aria-hidden="true">
+            <path pathLength="1" d="M3 17Q25 10 44 12T65 13" />
+            <path pathLength="1" d="M55 4Q60 6 66 13q-8 2-13 9" />
+            <path class="resume-echo" pathLength="1" d="M9 18q25-7 44-4" />
+          </svg>
+        </a>
+      </div>
     </section>
   </div>
 </BaseLayout>
@@ -217,11 +232,44 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
 }
 .title-dot, .shipped h2 span { color: var(--green); }
 .about {
-  width: min(100%, 44rem);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(1.4rem, 4vw, 2.6rem);
+  width: min(100%, 48rem);
   margin-top: clamp(2rem, 5vw, 3.75rem);
-  padding-top: 1.1rem;
+  padding-top: 1.6rem;
   border-top: 1px solid var(--line);
 }
+/* The Gravatar is a print taped to the board. */
+.about-photo {
+  position: relative;
+  width: clamp(7.5rem, 16vw, 10rem);
+  margin-top: .6rem;
+  padding: .45rem .45rem .9rem;
+  background: light-dark(#fffdf7, #e7e1d4);
+  box-shadow: 0 .3rem .9rem light-dark(#152a2733, #0008);
+  transform: rotate(-3deg);
+}
+.about-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  background: light-dark(#eeefe9, #c9c3b6);
+}
+.about-tape {
+  position: absolute;
+  top: -.65rem;
+  left: 50%;
+  width: 4.2rem;
+  height: 1.3rem;
+  background: light-dark(#e6cf91b8, #c6ac778f);
+  clip-path: polygon(3% 8%, 97% 0, 100% 88%, 1% 100%);
+  transform: translateX(-50%) rotate(4deg);
+}
+.about p + p { margin-top: .55rem; }
 .about h2 {
   margin-bottom: .3rem;
   color: var(--blue);
@@ -393,8 +441,14 @@ whiteboard-wall {
   whiteboard-wall { gap: 2.6rem; }
   .scrap-grid { gap: 1.7rem .7rem; }
 }
+@media (max-width: 480px) {
+  .about { grid-template-columns: 1fr; gap: 1.4rem; }
+  .about-photo { width: 7.5rem; }
+}
 @media (max-width: 760px) {
   .wall-intro { grid-template-columns: 1fr; align-items: start; }
+  /* On phones the handwriting comes first, then the tagline. */
+  .wall-intro > :global(.handwriting) { order: -1; }
   .wall-intro h1 { font-size: clamp(2.05rem, 8.5vw, 3.85rem); }
   .rough-side, .thread-arrows { display: none; }
   whiteboard-wall {
