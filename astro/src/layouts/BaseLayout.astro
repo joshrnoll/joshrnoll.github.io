@@ -5,6 +5,7 @@ import NavBar from '../components/NavBar.astro';
 import MarkerTray from '../components/MarkerTray.astro';
 import '../styles/global.css';
 import '../styles/taped-photos.css';
+import '../styles/code-copy.css';
 
 interface Props {
   title: string;
@@ -89,99 +90,21 @@ const ogImageUrl = new URL(ogImage, Astro.site).href;
 </html>
 
 <script>
+  import { mountCodeCopy } from '../lib/code-copy';
   import { mountCodeFrames } from '../lib/code-frames';
   import { mountTapedPhotos } from '../lib/taped-photos';
 
-  document.addEventListener('astro:page-load', mountCodeFrames);
+  document.addEventListener('astro:page-load', () => {
+    mountCodeCopy();
+    void mountCodeFrames();
+  });
 
   mountTapedPhotos();
   document.addEventListener('astro:after-swap', mountTapedPhotos);
 
-  function copyFromSelection(text: string): boolean {
-    const focused = document.activeElement;
-    const field = document.createElement('textarea');
-    field.value = text;
-    field.readOnly = true;
-    field.style.cssText = 'position: fixed; top: 0; left: -9999px;';
-    document.body.append(field);
-    field.focus({ preventScroll: true });
-    field.select();
-    try {
-      return document.execCommand('copy');
-    } catch {
-      return false;
-    } finally {
-      field.remove();
-      if (focused instanceof HTMLElement) focused.focus({ preventScroll: true });
-    }
-  }
-
-  function addCopyButtons() {
-    document.querySelectorAll('pre').forEach(pre => {
-      if (pre.querySelector('.copy-btn')) return;
-
-      const code = pre.querySelector('code');
-      const text = code?.innerText ?? pre.innerText;
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'copy-btn';
-      btn.setAttribute('aria-label', 'Copy code');
-      btn.textContent = 'Copy';
-      let reset: number | undefined;
-
-      btn.addEventListener('click', async () => {
-        let copied = false;
-        if (navigator.clipboard) {
-          try {
-            await navigator.clipboard.writeText(text);
-            copied = true;
-          } catch {
-            copied = copyFromSelection(text);
-          }
-        } else {
-          copied = copyFromSelection(text);
-        }
-        btn.textContent = copied ? 'Copied' : 'Copy failed';
-        btn.setAttribute('aria-label', copied ? 'Code copied' : 'Copy failed');
-        btn.classList.toggle('copied', copied);
-        window.clearTimeout(reset);
-        reset = window.setTimeout(() => {
-          btn.textContent = 'Copy';
-          btn.setAttribute('aria-label', 'Copy code');
-          btn.classList.remove('copied');
-        }, 2000);
-      });
-
-      pre.appendChild(btn);
-    });
-  }
-
-  // astro:page-load fires on every navigation including first load
-  document.addEventListener('astro:page-load', addCopyButtons);
 </script>
 
 <style is:global>
-pre { position: relative; }
-
-.copy-btn {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background: transparent;
-  border: 1px solid #85968b;
-  color: #cbd6cc;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  padding: 0.2em 0.5em;
-  border-radius: 3px;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
-}
-pre:hover .copy-btn, .copy-btn:focus-visible { opacity: 1; }
-.copy-btn:hover { color: white; border-color: white; }
-.copy-btn.copied { color: #a6e3b1; border-color: #a6e3b1; opacity: 1; }
-
 .skip-link {
   position: fixed;
   z-index: 30;
@@ -193,10 +116,6 @@ pre:hover .copy-btn, .copy-btn:focus-visible { opacity: 1; }
 }
 
 .skip-link:focus { transform: none; }
-
-@media (hover: none) {
-  .copy-btn { opacity: 1; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }

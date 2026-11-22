@@ -3,14 +3,14 @@ const svgNamespace = 'http://www.w3.org/2000/svg';
 let stopObserving: (() => void) | undefined;
 
 export async function mountCodeFrames() {
-  if (!document.querySelector('.prose pre')) return;
+  if (!document.querySelector('.prose .code-block')) return;
 
   const { default: rough } = await import('roughjs');
   stopObserving?.();
-  const blocks = document.querySelectorAll<HTMLPreElement>('.prose pre');
+  const blocks = document.querySelectorAll<HTMLElement>('.prose .code-block');
   const root = document.documentElement;
 
-  function draw(block: HTMLPreElement) {
+  function draw(block: HTMLElement) {
     const width = block.clientWidth;
     const height = block.clientHeight;
     if (width < 16 || height < 16) return;
@@ -33,7 +33,7 @@ export async function mountCodeFrames() {
 
   const redraw = () => blocks.forEach(draw);
   const resize = new ResizeObserver(entries => {
-    for (const { target } of entries) draw(target as HTMLPreElement);
+    for (const { target } of entries) draw(target as HTMLElement);
   });
   blocks.forEach(block => resize.observe(block));
 
