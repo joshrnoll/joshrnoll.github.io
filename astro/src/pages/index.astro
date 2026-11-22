@@ -1,5 +1,6 @@
 ---
 import HeroHandwriting from '../components/HeroHandwriting.astro';
+import kalamBold from '@fontsource/kalam/files/kalam-latin-700-normal.woff2?url';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BoardScrap from '../components/BoardScrap.astro';
@@ -30,6 +31,7 @@ const featuredProjects = ['homelab-as-code', 'pi-teach', 'black-relay'].flatMap(
 const destinations = new Map([...posts, ...featuredProjects].map(card => [card.id, card]));
 ---
 <BaseLayout title="Home">
+  <link slot="head" rel="preload" href={kalamBold} as="font" type="font/woff2" crossorigin />
   <div class="container wall">
     <header class="wall-intro">
       <h1>Building things, breaking things, writing it down<span class="title-dot">.</span></h1>

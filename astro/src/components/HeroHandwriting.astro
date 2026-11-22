@@ -18,6 +18,7 @@
     </span>
   </p>
 </hero-handwriting>
+<noscript><style is:inline>.handwriting { visibility: visible !important; }</style></noscript>
 
 <script>
   class HeroHandwriting extends HTMLElement {
@@ -37,9 +38,21 @@
         name.style.setProperty('--name-end', `${(last.getBoundingClientRect().width - width) / 2}px`);
       };
 
-      centerName();
       this.resize = new ResizeObserver(centerName);
       for (const line of [name, first, last]) this.resize.observe(line);
+
+      // Start the animation only after the handwriting font loads, or after
+      // 3 seconds so a slow font never leaves the hero blank.
+      const start = () => {
+        if (!this.isConnected || 'ready' in this.dataset) return;
+        centerName();
+        this.dataset.ready = '';
+      };
+      if (!motion.matches) return start();
+      const { fontWeight, fontFamily } = getComputedStyle(last);
+      const fontLoaded = document.fonts.load(`${fontWeight} 1em ${fontFamily}`, last.textContent ?? '');
+      const timeout = new Promise(resolve => setTimeout(resolve, 3000));
+      Promise.race([fontLoaded, timeout]).then(start, start);
     }
 
     disconnectedCallback() {
@@ -107,22 +120,25 @@
   .final-line { justify-self: center; }
 }
 
+/* The script sets data-ready once Kalam has loaded, so the marker never
+   writes in a fallback font. Until then the hero stays blank. */
 @media (prefers-reduced-motion: no-preference) {
-  .handwriting-name {
+  .handwriting:not([data-ready]) { visibility: hidden; }
+  .handwriting[data-ready] .handwriting-name {
     animation: center-name .4s ease-in-out calc(var(--erase-start) + var(--erase-time)) both;
   }
-  .first-line { animation: erase-line var(--erase-time) linear var(--erase-start) both; }
-  .first-word { animation: write-line .64s steps(12) .12s both; }
-  .second-word { animation: write-line .52s steps(8) 1.02s both; }
-  .first-line path {
+  .handwriting[data-ready] .first-line { animation: erase-line var(--erase-time) linear var(--erase-start) both; }
+  .handwriting[data-ready] .first-word { animation: write-line .64s steps(12) .12s both; }
+  .handwriting[data-ready] .second-word { animation: write-line .52s steps(8) 1.02s both; }
+  .handwriting[data-ready] .first-line path {
     stroke-dasharray: 1;
     animation: draw-arrow .26s ease-out .75s both;
   }
-  .eraser { animation: wipe var(--erase-time) linear var(--erase-start); }
-  .final-first {
+  .handwriting[data-ready] .eraser { animation: wipe var(--erase-time) linear var(--erase-start); }
+  .handwriting[data-ready] .final-first {
     animation: write-line .85s steps(19) calc(var(--erase-start) + var(--erase-time) + .1s) both;
   }
-  .final-second {
+  .handwriting[data-ready] .final-second {
     animation: write-line .8s steps(18) calc(var(--erase-start) + var(--erase-time) + 1.05s) both;
   }
 }
