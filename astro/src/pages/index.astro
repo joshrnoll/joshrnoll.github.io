@@ -33,20 +33,8 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
   <div class="container wall">
     <header class="wall-intro">
       <h1>Building things, breaking things, writing it down<span class="title-dot">.</span></h1>
-      <div class="about">
-        <p>I'm a former infantryman turned software engineer with a passion for solving hard problems with cool technology. Read my full story <a href="/my-story/">here</a>.</p>
-        <a class="resume-link" href="/resume/" data-astro-reload>
-          view my resume
-          <svg class="chalk-stroke" viewBox="0 0 70 26" aria-hidden="true">
-            <path pathLength="1" d="M3 17Q25 10 44 12T65 13" />
-            <path pathLength="1" d="M55 4Q60 6 66 13q-8 2-13 9" />
-            <path class="resume-echo" pathLength="1" d="M9 18q25-7 44-4" />
-          </svg>
-        </a>
-      </div>
+      <HeroHandwriting />
     </header>
-
-    <HeroHandwriting />
 
     <whiteboard-wall>
       <div class="rough-side">
@@ -119,6 +107,19 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
         ))}
       </svg>
     </whiteboard-wall>
+
+    <section class="about" aria-labelledby="about-title">
+      <h2 id="about-title">About me</h2>
+      <p>I'm a former infantryman turned software engineer with a passion for solving hard problems with cool technology. Read my full story <a href="/my-story/">here</a>.</p>
+      <a class="resume-link" href="/resume/" data-astro-reload>
+        view my resume
+        <svg class="chalk-stroke" viewBox="0 0 70 26" aria-hidden="true">
+          <path pathLength="1" d="M3 17Q25 10 44 12T65 13" />
+          <path pathLength="1" d="M55 4Q60 6 66 13q-8 2-13 9" />
+          <path class="resume-echo" pathLength="1" d="M9 18q25-7 44-4" />
+        </svg>
+      </a>
+    </section>
   </div>
 </BaseLayout>
 
@@ -215,7 +216,17 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
   font-weight: 800;
 }
 .title-dot, .shipped h2 span { color: var(--green); }
-.about { max-width: 35ch; padding-bottom: .2rem; }
+.about {
+  width: min(100%, 44rem);
+  margin-top: clamp(2rem, 5vw, 3.75rem);
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line);
+}
+.about h2 {
+  margin-bottom: .3rem;
+  color: var(--blue);
+  font: 700 clamp(1.55rem, 3vw, 2.15rem)/1.2 var(--font-marker);
+}
 .about p { color: var(--comment); font-size: 1.065rem; }
 .about p a { text-decoration: underline; text-underline-offset: .16em; }
 .resume-link {
@@ -393,7 +404,6 @@ whiteboard-wall {
     border: 0;
     box-shadow: none;
   }
-  .about { max-width: 45ch; }
   .shipped { padding-top: 1.5rem; border-top: 1px solid var(--line); }
 }
 </style>
