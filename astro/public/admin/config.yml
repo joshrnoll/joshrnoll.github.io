@@ -1,0 +1,133 @@
+# Decap CMS config, served at https://joshrnoll.com/admin/config.yml.
+# Docs: https://decapcms.org/docs/configuration-options/
+# Fields mirror the Zod schemas in astro/src/content.config.ts.
+# A field Decap writes that the schema rejects fails the site build.
+# Fields the schema defaults (draft, tags, toc) are optional here, so older
+# posts that omit them still save.
+
+backend:
+  name: github
+  repo: joshrnoll/joshrnoll.github.io
+  branch: main
+  # The repo is public, so the token never needs private-repo access.
+  auth_scope: public_repo
+  # OAuth proxy from cms-oauth-worker/. Replace with the Worker's URL after
+  # deploying it (see docs/cms-setup.md). Until then, GitHub login fails.
+  base_url: https://joshrnoll-cms-oauth.REPLACE-ME.workers.dev
+  auth_endpoint: auth
+  # Fixed message shapes so a later publishing pipeline can match CMS commits.
+  # Publishing a draft merges its cms/<collection>/<slug> branch into main
+  # with the message "Automatically generated. Merged on Decap CMS."
+  commit_messages:
+    create: "cms({{collection}}): create {{slug}}"
+    update: "cms({{collection}}): update {{slug}}"
+    delete: "cms({{collection}}): delete {{slug}}"
+    uploadMedia: "cms(media): upload {{path}}"
+    deleteMedia: "cms(media): delete {{path}}"
+    openAuthoring: "cms: {{message}}"
+
+# Saves go to a cms/<collection>/<slug> branch and pull request, so saving a
+# half-written post from a phone does not rebuild the site. Publish merges it.
+publish_mode: editorial_workflow
+
+# Run `npx decap-server` from the repo root, then open /admin/ on localhost
+# to edit local files without GitHub. Other hosts ignore this setting.
+local_backend: true
+
+site_url: https://joshrnoll.com
+display_url: https://joshrnoll.com
+logo_url: /avatar.png
+show_preview_links: true
+
+# Default for media inserted outside a post. Posts override this below.
+media_folder: astro/public/uploads
+public_folder: /uploads
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: blog
+    label: Long reads
+    label_singular: Long read
+    description: Full blog posts. Each one is served at joshrnoll.com/<slug>/.
+    folder: astro/src/content/blog
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{slug}}"
+    # Images go next to the post page: astro/public/<slug>/ is served at /<slug>/.
+    # Use {{slug}}, not {{filename}}: {{filename}} is empty until a new post is saved,
+    # which writes image links as /photo.png instead of /<slug>/photo.png.
+    media_folder: /astro/public/{{slug}}
+    public_folder: /{{slug}}
+    preview_path: "{{slug}}/"
+    summary: "{{title}} ({{year}}-{{month}}-{{day}})"
+    sortable_fields: [date, title]
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: date
+        label: Date
+        widget: datetime
+        format: YYYY-MM-DDTHH:mm:ssZ
+      - name: draft
+        label: Hide from the site
+        widget: boolean
+        default: false
+        required: false
+        hint: Merged posts with this on stay out of the build.
+      - { name: author, label: Author, widget: hidden, default: Josh Noll }
+      - name: tags
+        label: Tags
+        widget: list
+        default: []
+        required: false
+        hint: Comma separated.
+      - { name: description, label: Description, widget: text, required: false }
+      - { name: toc, label: Table of contents, widget: boolean, default: false, required: false }
+      - { name: body, label: Body, widget: markdown }
+
+  - name: notes
+    label: Notes
+    label_singular: Note
+    description: Short notes. Each one is served at joshrnoll.com/notes/<slug>/.
+    folder: astro/src/content/notes
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{slug}}"
+    media_folder: /astro/public/notes/{{slug}}
+    public_folder: /notes/{{slug}}
+    preview_path: "notes/{{slug}}/"
+    summary: "{{title}} ({{year}}-{{month}}-{{day}})"
+    sortable_fields: [date, title]
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: date
+        label: Date
+        widget: datetime
+        format: YYYY-MM-DDTHH:mm:ssZ
+      - name: draft
+        label: Hide from the site
+        widget: boolean
+        default: false
+        required: false
+        hint: Merged notes with this on stay out of the build.
+      - name: tags
+        label: Tags
+        widget: list
+        default: []
+        required: false
+        hint: Comma separated.
+      - { name: description, label: Description, widget: text, required: false }
+      - { name: body, label: Body, widget: markdown }
