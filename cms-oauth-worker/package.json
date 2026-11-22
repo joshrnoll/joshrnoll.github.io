@@ -1,0 +1,14 @@
+{
+  "name": "joshrnoll-cms-oauth",
+  "private": true,
+  "type": "module",
+  "description": "GitHub OAuth proxy for Decap CMS on joshrnoll.com",
+  "scripts": {
+    "test": "node --test",
+    "dev": "npx wrangler dev",
+    "deploy": "npx wrangler deploy"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
