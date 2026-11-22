@@ -1,109 +1,37 @@
 ---
-// astro/src/pages/resume.astro
-// The resume body is generated from resume/templates/resume.html.jinja into
-// resume/src/index.html. This page supplies the site navbar and status bar;
-// the generated document no longer includes its own copies of those.
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import resumeHtml from '../../../resume/src/index.html?raw';
 
-// Resolved from astro/, which is the working directory for `npm run build`
-// and scripts/build-site.sh. import.meta.url is rewritten into the prerender
-// bundle, so a relative URL from this file does not survive the build.
-const resumeHtmlPath = join(process.cwd(), '../resume/src/index.html');
-if (!existsSync(resumeHtmlPath)) {
-  throw new Error(`Resume HTML not found at ${resumeHtmlPath}. Build from the astro/ directory.`);
-}
-const resumeHtml = readFileSync(resumeHtmlPath, 'utf8');
-const mainMatch = resumeHtml.match(/<main\b[^>]*>([\s\S]*)<\/main>/i);
-if (!mainMatch) {
-  throw new Error(`No <main> in ${resumeHtmlPath}`);
-}
-const resumeBody = mainMatch[1];
-if (resumeBody.includes('id="statusbar"')) {
-  throw new Error('Resume body still includes the page status bar');
+const resumeBody = resumeHtml.match(/<main\b[^>]*>([\s\S]*)<\/main>/i)?.[1];
+if (!resumeBody) {
+  throw new Error('The generated resume is missing its main content. Run resume/make.py.');
 }
 ---
 <BaseLayout title="Resume" description="Josh Noll's resume.">
   <link slot="head" rel="stylesheet" href="/resume/styles.css" />
-  <script slot="head" is:inline>
-    try {
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.documentElement.classList.add('nvim-intro');
-      }
-    } catch (e) {}
-  </script>
   <div class="container resume" set:html={resumeBody} />
 </BaseLayout>
 
 <script>
-  import { playNvimIntro } from '../lib/nvim-intro';
-
-  function mountResumeIntro() {
-    const root = document.documentElement;
-    const wrap = document.getElementById('nvim-wrap');
-    const content = document.getElementById('nvim-content');
-    const tpl = document.getElementById('resume-src');
-    const preview = document.getElementById('resume-preview');
-    if (!(tpl instanceof HTMLTemplateElement) || !wrap || !content || !preview) return;
-    if (!root.classList.contains('nvim-intro')) {
-      root.classList.remove('nvim-intro');
-      return;
-    }
-    if (content.childElementCount > 0) return;
-
-    const src = Array.from(tpl.content.querySelectorAll('div')).map((node) => ({
-      value: (node.textContent ?? '').replace(/\s+/g, ' ').trim(),
-      kind: node.dataset.k || '',
-      motion: node.dataset.type || '',
-    }));
-    const lines = src.map((item, i) => {
-      const row = document.createElement('div');
-      row.className = 'nvim-line';
-      const number = document.createElement('span');
-      number.className = 'ln';
-      number.textContent = String(i + 1);
-      const text = document.createElement('span');
-      text.className = 'lc' + (item.kind ? ' k-' + item.kind : '');
-      row.append(number, text);
-      return { row, text, ...item };
-    });
-
-    const typed = lines.filter((line) => line.motion);
-    if (typed.length === 0) return;
-    const lastTyped = typed[typed.length - 1];
-    const header = lines.slice(0, lines.indexOf(lastTyped) + 1);
-    header.forEach((line) => {
-      if (!line.motion) line.text.textContent = line.value;
-      content.appendChild(line.row);
-    });
-
-    const reveal = () => {
-      root.classList.remove('nvim-intro');
-      wrap.hidden = true;
-      preview.classList.add('visible');
-    };
-
-    playNvimIntro({
-      content,
-      top: lines[0].row,
-      bottom: lastTyped.row,
-      cues: typed.map((line) => ({
-        row: line.row,
-        text: line.text,
-        value: line.value,
-        motion: line.motion === 'ciw' ? 'change-word' : 'insert',
-        pace: line.kind === 'h1' ? 'heading' : 'body',
-      })),
-      paste: lines.slice(header.length).map((line) => {
-        line.text.textContent = line.value;
-        return line.row;
-      }),
-      fade: wrap,
-      reveal,
-      cancel: { button: document.getElementById('nvim-skip') },
-    });
+  // Section headings write themselves in as they scroll into view, like the masthead.
+  function drawResumeHeadings() {
+    const resume = document.querySelector<HTMLElement>('main .resume');
+    if (!resume || !matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
+    const headings = resume.querySelectorAll<HTMLElement>(':scope > section > h2');
+    // Headings are only hidden once the observer reports them off screen,
+    // so they stay visible if the observer never runs.
+    const observer = new IntersectionObserver(entries => {
+      for (const { target, isIntersecting } of entries) {
+        target.classList.toggle('is-pending', !isIntersecting);
+        if (!isIntersecting) continue;
+        target.classList.add('is-drawn');
+        observer.unobserve(target);
+      }
+    }, { rootMargin: '0px 0px -12% 0px' });
+    resume.classList.add('resume--drawing');
+    headings.forEach(heading => observer.observe(heading));
+    document.addEventListener('astro:before-swap', () => observer.disconnect(), { once: true });
   }
 
-  document.addEventListener('astro:page-load', mountResumeIntro);
+  document.addEventListener('astro:page-load', drawResumeHeadings);
 </script>
