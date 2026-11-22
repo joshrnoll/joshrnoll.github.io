@@ -43,7 +43,7 @@ export function mountCodeCopy() {
     button.setAttribute('aria-label', 'Copy code');
     button.innerHTML = `
       <svg class="chalk-stroke" viewBox="0 0 26 26" aria-hidden="true">
-        <path class="copy-clipboard" d="M9 5 5 6 5.6 22.3 21 22 20.7 5.6 17 5.5 M9.2 4.2Q13 3.5 16.8 4.1L17.1 8 8.8 8.2Z M9.1 12.6l7.3-.3 M9 16.4l7.1.2" />
+        <path class="copy-glyph" d="M7.5 18.4 3.8 18.2 4.1 4.1 17.9 3.8 18.2 7.7 M8.2 8.4Q15.4 8 22 8.3l.2 13.7q-6.7.4-14 .1Z M9.8 22.7l10.2-.3" />
         <path class="copy-check" d="M4.8 13.9q3.3 2.4 5.4 5.3Q16 12.8 22 6.3 M10.4 19.7q4.9-6 9.9-10.9" />
       </svg>`;
     const status = document.createElement('span');

@@ -55,7 +55,7 @@ main .code-block > pre {
 .copy-btn.copied { opacity: 1; }
 .copy-btn:focus-visible { outline-color: currentColor; outline-offset: 0; }
 
-.copy-check, .copy-btn.copied .copy-clipboard { display: none; }
+.copy-check, .copy-btn.copied .copy-glyph { display: none; }
 .copy-btn.copied .copy-check { display: inline; }
 
 .copy-status {

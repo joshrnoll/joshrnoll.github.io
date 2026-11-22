@@ -1,0 +1,90 @@
+<p class="handwriting">
+  <span class="sr-only">Builder of things</span>
+  <span class="writing-area" aria-hidden="true">
+    <span class="first-line">
+      <span class="first-word">Infantryman</span>
+      <svg class="chalk-stroke" viewBox="0 0 48 21">
+        <path pathLength="1" d="M2 12Q18 6 44 10M34 3l11 7-10 7M8 13q19-4 29-2" />
+      </svg>
+      <span class="second-word">Engineer</span>
+    </span>
+    <span class="eraser"></span>
+    <span class="final-line">Builder of things</span>
+  </span>
+</p>
+
+<style>
+.handwriting {
+  --erase-start: 1.85s;
+  --erase-time: .57s;
+  align-self: flex-start;
+  margin: 0 0 clamp(1.1rem, 3vw, 2rem) .12em;
+  color: var(--green);
+  font: 700 clamp(1.25rem, 3vw, 2.18rem)/1.25 var(--font-marker);
+}
+
+.writing-area { display: grid; position: relative; }
+.writing-area > span { grid-area: 1 / 1; }
+.first-line {
+  display: flex;
+  align-items: center;
+  gap: .24em;
+  visibility: hidden;
+}
+.first-line svg {
+  width: 1.3em;
+  height: .72em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.eraser {
+  position: absolute;
+  top: 8%;
+  left: 0;
+  width: 1.5em;
+  height: .8em;
+  border: 1px solid light-dark(#49544c, #7a8274);
+  border-bottom-width: .16em;
+  border-radius: .14em .21em .17em .12em;
+  background: repeating-linear-gradient(96deg, #34443b 0 2px, #2b3a33 2px 4px);
+  box-shadow: 0 .12em .25em #1019144d;
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .first-line { animation: erase-line var(--erase-time) linear var(--erase-start) both; }
+  .first-word { animation: write-line .64s steps(12) .12s both; }
+  .second-word { animation: write-line .52s steps(8) 1.02s both; }
+  .first-line path {
+    stroke-dasharray: 1;
+    animation: draw-arrow .26s ease-out .75s both;
+  }
+  .eraser { animation: wipe var(--erase-time) linear var(--erase-start); }
+  .final-line {
+    animation: write-line .85s steps(17) calc(var(--erase-start) + var(--erase-time) + .1s) both;
+  }
+}
+
+@keyframes write-line {
+  from { clip-path: inset(-.24em 100% -.24em 0); }
+  to { clip-path: inset(-.24em 0 -.24em 0); }
+}
+@keyframes draw-arrow {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes erase-line {
+  from { visibility: visible; clip-path: inset(-.24em 0 -.24em 0); }
+  99% { visibility: visible; }
+  to { visibility: hidden; clip-path: inset(-.24em 0 -.24em 100%); }
+}
+@keyframes wipe {
+  0% { visibility: visible; left: 0; transform: translateX(-60%) rotate(-8deg); }
+  55% { transform: translateX(-57%) rotate(6deg); }
+  95% { visibility: visible; }
+  100% { visibility: hidden; left: 100%; transform: translateX(-70%) rotate(-7deg); }
+}
+</style>

@@ -1,4 +1,5 @@
 ---
+import HeroHandwriting from '../components/HeroHandwriting.astro';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BoardScrap from '../components/BoardScrap.astro';
@@ -44,6 +45,8 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
         </a>
       </div>
     </header>
+
+    <HeroHandwriting />
 
     <whiteboard-wall>
       <div class="rough-side">
