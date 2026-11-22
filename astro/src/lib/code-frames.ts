@@ -3,8 +3,6 @@ const svgNamespace = 'http://www.w3.org/2000/svg';
 let stopObserving: (() => void) | undefined;
 
 export async function mountCodeFrames() {
-  stopObserving?.();
-  stopObserving = undefined;
   if (!document.querySelector('.prose pre')) return;
 
   const { default: rough } = await import('roughjs');
@@ -50,4 +48,7 @@ export async function mountCodeFrames() {
   };
 }
 
-document.addEventListener('astro:before-swap', () => stopObserving?.());
+document.addEventListener('astro:before-swap', () => {
+  stopObserving?.();
+  stopObserving = undefined;
+});
