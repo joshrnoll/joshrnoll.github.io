@@ -1,6 +1,27 @@
 /* astro/src/styles/prose.css */
 /* Styles markdown-rendered post content inside BlogPostLayout */
 
+@font-face {
+  font-family: 'Comic Mono';
+  src: url('/fonts/comic-mono/ComicMono.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Comic Mono';
+  src: url('/fonts/comic-mono/ComicMono-Bold.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+.prose code, .prose pre {
+  font-family: 'Comic Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-synthesis: none;
+}
+
 .prose { max-width: 100%; overflow-wrap: break-word; }
 
 .prose h1, .prose h2, .prose h3, .prose h4 {

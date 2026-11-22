@@ -40,11 +40,13 @@ export async function mountCodeFrames() {
   const theme = new MutationObserver(redraw);
   theme.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
   systemTheme.addEventListener('change', redraw);
+  document.fonts.addEventListener('loadingdone', redraw);
 
   stopObserving = () => {
     resize.disconnect();
     theme.disconnect();
     systemTheme.removeEventListener('change', redraw);
+    document.fonts.removeEventListener('loadingdone', redraw);
   };
 }
 
