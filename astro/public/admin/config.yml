@@ -15,16 +15,6 @@ backend:
   # deploying it (see docs/cms-setup.md). Until then, GitHub login fails.
   base_url: https://joshrnoll-cms-oauth.REPLACE-ME.workers.dev
   auth_endpoint: auth
-  # Fixed message shapes so a later publishing pipeline can match CMS commits.
-  # Publishing a draft merges its cms/<collection>/<slug> branch into main
-  # with the message "Automatically generated. Merged on Decap CMS."
-  commit_messages:
-    create: "cms({{collection}}): create {{slug}}"
-    update: "cms({{collection}}): update {{slug}}"
-    delete: "cms({{collection}}): delete {{slug}}"
-    uploadMedia: "cms(media): upload {{path}}"
-    deleteMedia: "cms(media): delete {{path}}"
-    openAuthoring: "cms: {{message}}"
 
 # Saves go to a cms/<collection>/<slug> branch and pull request, so saving a
 # half-written post from a phone does not rebuild the site. Publish merges it.
