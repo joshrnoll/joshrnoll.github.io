@@ -1,13 +1,12 @@
 ---
 interface Props {
   src?: string;
-  basePath?: string;
   placeholder?: string;
 }
 
-const { src = '/search-index.json', basePath = '', placeholder = 'Search posts' } = Astro.props;
+const { src = '/search-index.json', placeholder = 'Search posts' } = Astro.props;
 ---
-<div class="search-bar" id="search-bar" data-search-src={src} data-base-path={basePath}>
+<div class="search-bar" id="search-bar" data-search-src={src}>
   <label class="sr-only" for="search-input">{placeholder}</label>
   <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
     <circle cx="10.5" cy="10.5" r="5.5" />
@@ -29,11 +28,11 @@ const { src = '/search-index.json', basePath = '', placeholder = 'Search posts' 
   import Fuse from 'fuse.js';
 
   type PostEntry = {
-    slug: string;
+    href: string;
     title: string;
     description: string;
     tags: string[];
-    date: string;
+    kind: string;
   };
 
   document.addEventListener('astro:page-load', () => {
@@ -43,8 +42,7 @@ const { src = '/search-index.json', basePath = '', placeholder = 'Search posts' 
     const postList = document.getElementById('post-list');
     if (!searchBar || !input || !results || !postList) return;
 
-    const { searchSrc = '/search-index.json', basePath = '' } = searchBar.dataset;
-    const prefix = basePath ? `/${basePath}/` : '/';
+    const { searchSrc = '/search-index.json' } = searchBar.dataset;
     const navigation = new AbortController();
     let index: Promise<Fuse<PostEntry>> | undefined;
 
@@ -71,7 +69,7 @@ const { src = '/search-index.json', basePath = '', placeholder = 'Search posts' 
 
     function resultLink(post: PostEntry) {
       const link = document.createElement('a');
-      link.href = `${prefix}${post.slug}/`;
+      link.href = post.href;
       link.className = 'search-result-item';
 
       const title = document.createElement('span');
@@ -79,9 +77,9 @@ const { src = '/search-index.json', basePath = '', placeholder = 'Search posts' 
       title.className = 'sr-title';
       link.append(title);
 
-      if (post.tags.length > 0) {
+      if (post.kind || post.tags.length > 0) {
         const tags = document.createElement('span');
-        tags.textContent = post.tags.join(' · ');
+        tags.textContent = [post.kind, ...post.tags].join(' · ');
         tags.className = 'sr-tags';
         link.append(tags);
       }

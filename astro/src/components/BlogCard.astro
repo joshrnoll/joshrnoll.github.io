@@ -3,20 +3,24 @@ import TagBadge from './TagBadge.astro';
 
 interface Props {
   title: string;
-  slug: string;
+  href: string;
+  collection: 'blog' | 'notes';
   date: Date;
   description?: string;
   tags: string[];
 }
-const { title, slug, date, description, tags } = Astro.props;
+const { title, href, collection, date, description, tags } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('en-US', {
-  year: 'numeric', month: 'short', day: 'numeric',
+  year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC',
 });
 ---
-<article class="blog-card" data-tags={tags.map(tag => tag.toLowerCase()).join(',')}>
-  <time class="card-date" datetime={date.toISOString()}>{formattedDate}</time>
-  <h2 class="card-title"><a href={`/${slug}/`}>{title}</a></h2>
+<article class:list={['blog-card', { 'note-card': collection === 'notes' }]} data-tags={tags.map(tag => tag.toLowerCase()).join(',')}>
+  <div class="card-meta">
+    <span class="card-kind">{collection === 'notes' ? 'note' : 'long read'}</span>
+    <time class="card-date" datetime={date.toISOString()}>{formattedDate}</time>
+  </div>
+  <h2 class="card-title"><a href={href}>{title}</a></h2>
   {description && <p class="card-desc">{description}</p>}
   {tags.length > 0 && (
     <div class="card-tags">
@@ -27,6 +31,7 @@ const formattedDate = date.toLocaleDateString('en-US', {
 
 <style>
 .blog-card {
+  grid-column: 1 / -1;
   padding: clamp(1rem, 2.5vw, 1.6rem);
   border: 1px solid var(--line);
   border-radius: 0.7rem;
@@ -40,6 +45,20 @@ const formattedDate = date.toLocaleDateString('en-US', {
 .card-title a { color: var(--fg); }
 .card-title a:hover { color: var(--blue); }
 .card-desc { color: var(--comment); font-size: 0.91rem; margin-top: 0.4rem; }
-.card-date { display: block; margin-bottom: 0.45rem; color: var(--comment); font-size: 0.78rem; }
+.card-meta { display: flex; flex-wrap: wrap; gap: .25rem .75rem; align-items: baseline; margin-bottom: .45rem; }
+.card-kind { color: var(--blue); font: 700 1.03rem/1.2 var(--font-marker); }
+.card-date { color: var(--comment); font-size: .78rem; }
+.note-card {
+  --fg: light-dark(#263025, #f3ead4);
+  --comment: light-dark(#495444, #d7cfb9);
+  --blue: light-dark(#295b43, #f4d992);
+  --line: light-dark(#dfd2a0, #65563d);
+  --bg-dark: light-dark(#f0e4af, #4b4232);
+  grid-column: auto;
+  background: linear-gradient(164deg, light-dark(#fff2bf, #423725), light-dark(#fff8da, #332d22) 65%);
+  border-radius: 2px 5px 3px 6px;
+  box-shadow: 1px 4px 7px #151f1b22;
+}
+.note-card .card-title { font-size: 1.13rem; }
 .card-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.85rem; }
 </style>

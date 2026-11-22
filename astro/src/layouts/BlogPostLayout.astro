@@ -16,7 +16,6 @@ const { title, date, tags, description } = post.data;
 const hasToc = post.collection === 'blog' && post.data.toc && headings.some(heading => heading.depth === 2 || heading.depth === 3);
 const slug = (post.collection === 'blog' ? post.data.slug : undefined) ?? post.id.replace(/\.mdx?$/, '');
 const ogImage = `/og/${post.collection}/${slug}.png`;
-const listing = post.collection === 'blog' ? { href: '/blog/', label: 'All posts' } : { href: '/notes/', label: 'All notes' };
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric', month: 'long', day: 'numeric',
@@ -31,7 +30,7 @@ const formattedDate = date.toLocaleDateString('en-US', {
     )}
     <article class="post-content">
       <header class="post-header">
-        <a class="back-link" href={listing.href}><span aria-hidden="true">←</span> {listing.label}</a>
+        <a class="back-link" href="/posts/"><span aria-hidden="true">←</span> All posts</a>
         <h1 class="page-title post-title">{title}</h1>
         <svg class="title-underline chalk-stroke" viewBox="0 0 153 17" aria-hidden="true" fill="none">
           <path pathLength="1" d="M3 12 C20 8 25 7.4 39 7.6 C59 7.9 72 3.4 101 4.6 Q127 4.7 149 3" />

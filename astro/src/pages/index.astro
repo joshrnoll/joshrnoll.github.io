@@ -69,7 +69,7 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
       <section class="shipped" aria-labelledby="shipped-title">
         <h2 id="shipped-title">Shipped<span>.</span></h2>
         <section class="shipped-group" aria-labelledby="writing-title">
-          <div class="group-heading"><h3 id="writing-title">Latest posts</h3><a href="/blog/">All posts →</a></div>
+          <div class="group-heading"><h3 id="writing-title">Latest posts</h3><a href="/posts/">All posts →</a></div>
           <ul>
             {posts.map(post => (
               <li id={post.id} class="shipped-card" tabindex="-1">

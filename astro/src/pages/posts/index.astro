@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import TagFilter from '../../components/TagFilter.astro';
+import SearchBar from '../../components/SearchBar.astro';
+import { getWriting } from '../../lib/writing';
+import { getAllTags } from '../../utils/tags';
+
+const posts = await getWriting();
+---
+<BaseLayout title="Posts" description="Long reads and notes by Josh Noll.">
+  <link slot="head" rel="alternate" type="application/rss+xml" title="Josh Noll - Posts" href="/posts/index.xml" />
+  <div class="container archive-list">
+    <header class="posts-heading">
+      <h1 class="page-title">Posts</h1>
+      <a class="feed-link" href="/posts/index.xml">RSS</a>
+    </header>
+
+    <SearchBar />
+    <p class="search-hint">Press <kbd>/</kbd> to search, <kbd>Esc</kbd> to clear</p>
+    <TagFilter tags={getAllTags(posts)} />
+
+    <div class="post-list" id="post-list">
+      {posts.map(post => <BlogCard {...post} />)}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+.archive-list {
+  max-width: 64rem;
+  padding-block: clamp(2.4rem, 6vw, 5rem) 5rem;
+}
+.posts-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1.35rem;
+}
+.feed-link { font: 700 1.12rem/1.2 var(--font-marker); }
+.post-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
+.post-list :global(.blog-card[hidden]), .post-list :global(.search-miss) { display: none; }
+.search-hint { color: var(--comment); font-size: .75rem; margin-bottom: 1.25rem; }
+
+kbd {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: .08em .35em;
+  font-size: .75rem;
+}
+@media (max-width: 650px) {
+  .post-list { grid-template-columns: minmax(0, 1fr); }
+}
+</style>

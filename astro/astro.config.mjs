@@ -10,6 +10,8 @@ export default defineConfig({
     server: { allowedHosts: ['hermes.mink-pirate.ts.net'] },
   },
   redirects: {
+    '/blog/': { status: 301, destination: '/posts/' },
+    '/notes/': { status: 301, destination: '/posts/' },
     '/homelab/hardware': '/archives/homelab/hardware/',
     '/homelab/architecture': '/archives/homelab/architecture/',
   },

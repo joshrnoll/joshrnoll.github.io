@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('blog', ({ data }) => !data.draft);
+  const pageSize = 10;
+  return Array.from({ length: Math.max(1, Math.ceil(entries.length / pageSize)) }, (_, index) => ({
+    params: { page: String(index + 1) },
+  }));
+}
+
+return Astro.redirect('/posts/', 301);
+---
