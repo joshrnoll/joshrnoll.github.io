@@ -31,10 +31,7 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
 <BaseLayout title="Home">
   <div class="container wall">
     <header class="wall-intro">
-      <div>
-        <p class="hero-byline">Josh Noll</p>
-        <h1>Building things, breaking things, writing it down<span class="title-dot">.</span></h1>
-      </div>
+      <h1>Building things, breaking things, writing it down<span class="title-dot">.</span></h1>
       <div class="about">
         <p>I'm a former infantryman turned software engineer with a passion for solving hard problems with cool technology. Read my full story <a href="/my-story/">here</a>.</p>
         <a class="resume-link" href="/resume/" data-astro-reload>
@@ -206,11 +203,6 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
   align-items: center;
   gap: clamp(2rem, 5.3vw, 5.3rem);
   padding-bottom: clamp(2rem, 4vw, 3.2rem);
-}
-.hero-byline {
-  margin-bottom: .45rem;
-  color: var(--green);
-  font: 700 1.2rem/1.2 var(--font-marker);
 }
 .wall-intro h1 {
   font-size: clamp(2.5rem, 5.4vw, 5rem);
