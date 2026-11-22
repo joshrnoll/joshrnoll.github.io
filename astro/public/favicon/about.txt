@@ -1,6 +1,2 @@
-This favicon was generated using the following font:
-
-- Font Title: JetBrains Mono
-- Font Author: undefined
-- Font Source: https://fonts.gstatic.com/s/jetbrainsmono/v23/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8FqtjPVmUsaaDhw.ttf
-- Font License: undefined)
+Original JN marker drawing in ../favicon.svg. PNG variants were rendered from
+the SVG with resvg. Both ICO files package the same 16px and 32px PNGs.
