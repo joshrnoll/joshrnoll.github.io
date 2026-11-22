@@ -131,16 +131,18 @@
   from { transform: translateX(var(--name-start, 0px)); }
   to { transform: translateX(var(--name-end, 0px)); }
 }
+/* Kalam's glyphs draw past their advance width, so the finished clip leaves
+   room on both sides. A right inset of 0 cut the final "s" in Safari. */
 @keyframes write-line {
-  from { clip-path: inset(-.24em 100% -.24em 0); }
-  to { clip-path: inset(-.24em 0 -.24em 0); }
+  from { clip-path: inset(-.24em 100% -.24em -.12em); }
+  to { clip-path: inset(-.24em -.4em -.24em -.12em); }
 }
 @keyframes draw-arrow {
   from { stroke-dashoffset: 1; }
   to { stroke-dashoffset: 0; }
 }
 @keyframes erase-line {
-  from { visibility: visible; clip-path: inset(-.24em 0 -.24em 0); }
+  from { visibility: visible; clip-path: inset(-.24em -.4em -.24em -.12em); }
   99% { visibility: visible; }
   to { visibility: hidden; clip-path: inset(-.24em 0 -.24em 100%); }
 }
