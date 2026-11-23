@@ -461,5 +461,16 @@ whiteboard-wall {
     box-shadow: none;
   }
   .shipped { padding-top: 1.5rem; border-top: 1px solid var(--line); }
+  /* "Shipped." answers the scratch column, which phones don't show. Keep it
+     for screen readers, since it names the section. */
+  .shipped h2 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 </style>
