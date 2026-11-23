@@ -17,7 +17,7 @@ const formattedDate = date.toLocaleDateString('en-US', {
 ---
 <article class:list={['blog-card', { 'note-card': collection === 'notes' }]} data-tags={tags.map(tag => tag.toLowerCase()).join(',')}>
   <div class="card-meta">
-    <span class="card-kind">{collection === 'notes' ? 'note' : 'long read'}</span>
+    <span class="card-kind">{collection === 'notes' ? 'note' : 'article'}</span>
     <time class="card-date" datetime={date.toISOString()}>{formattedDate}</time>
   </div>
   <h2 class="card-title"><a href={href}>{title}</a></h2>
