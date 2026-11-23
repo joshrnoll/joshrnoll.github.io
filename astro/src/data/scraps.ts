@@ -34,7 +34,7 @@ export const scrapyardScraps: Scrap[] = [
   },
   {
     id: 'homelab-as-code',
-    text: 'Homelab as code\nGitOps for the lab. Flux works. Most of the roadmap does not.',
+    text: 'Homelab as code\nGot it 70% working, then tore down my entire homelab because I moved. Need to re-attack it once the lab is back up.',
     paper: 'blue',
     ink: 'green',
     target: 'project-homelab-as-code',
