@@ -36,17 +36,46 @@ let wordIndex = 0;
   </span>
   {target && (
     <svg class="scrap-mark ring chalk-stroke" viewBox="0 0 240 112" preserveAspectRatio="none" aria-hidden="true">
-      <path pathLength="1" d="M164 12C122 1 63 6 30 21 9 30 0 44 9 65c10 25 53 39 105 40 57 1 115-16 120-48 4-21-19-38-46-46-17-5-24-5-35-5" />
-      <path class="dry-ink" pathLength="1" d="M149 9C78 2 20 20 12 44 2 78 60 103 126 102c49-1 100-20 105-44 6-24-24-39-73-47" />
+      <path d="M164 12C122 1 63 6 30 21 9 30 0 44 9 65c10 25 53 39 105 40 57 1 115-16 120-48 4-21-19-38-46-46-17-5-24-5-35-5" />
+      <path class="dry-ink" d="M149 9C78 2 20 20 12 44 2 78 60 103 126 102c49-1 100-20 105-44 6-24-24-39-73-47" />
     </svg>
   )}
   {scrap.crossedOut && (
     <svg class="scrap-mark strike chalk-stroke" viewBox="0 0 240 112" preserveAspectRatio="none" aria-hidden="true">
-      <path pathLength="1" d="M17 61Q77 58 123 49T221 39" />
-      <path class="dry-ink" pathLength="1" d="M29 69Q81 65 141 53T228 41" />
+      <path d="M17 61Q77 58 123 49T221 39" />
+      <path class="dry-ink" d="M29 69Q81 65 141 53T228 41" />
     </svg>
   )}
 </Element>
+
+<script>
+  // Measure each mark's on-screen length. A stretched path with a non-scaling stroke
+  // is longer on screen than in its viewBox, so a pathLength="1" dash only drew part
+  // of the ring on tall notes.
+  function measureMarks() {
+    for (const path of document.querySelectorAll<SVGPathElement>('.scrap-mark path')) {
+      const ctm = path.getScreenCTM();
+      if (!ctm) continue;
+      const total = path.getTotalLength();
+      let length = 0;
+      let previous: DOMPoint | undefined;
+      for (let step = 0; step <= 96; step++) {
+        const point = path.getPointAtLength((total * step) / 96).matrixTransform(ctm);
+        if (previous) length += Math.hypot(point.x - previous.x, point.y - previous.y);
+        previous = point;
+      }
+      path.style.setProperty('--mark-length', `${Math.ceil(Math.max(length, total)) + 4}px`);
+    }
+  }
+
+  let resize: ResizeObserver | undefined;
+  document.addEventListener('astro:page-load', () => {
+    measureMarks();
+    resize?.disconnect();
+    resize = new ResizeObserver(measureMarks);
+    document.querySelectorAll('.scrap-mark').forEach(mark => resize?.observe(mark));
+  });
+</script>
 
 <style>
 .scrap {
@@ -65,7 +94,11 @@ let wordIndex = 0;
   transition: transform 180ms ease;
 }
 .scrap:hover, .scrap:focus-visible { color: var(--ink); text-decoration: none; }
-.scrap[data-thread] { padding-inline: 1.9rem; }
+/* Circled scraps keep their text inside the hand-drawn ellipse. */
+.scrap[data-thread] {
+  padding: 3.2rem 2.2rem;
+  font-size: clamp(1.1rem, 1.7vw, 1.44rem);
+}
 .scrap:not(.paper-ink)::before, .scrap:not(.paper-ink)::after {
   content: '';
   position: absolute;
@@ -114,6 +147,16 @@ let wordIndex = 0;
   stroke-linejoin: round;
 }
 .scrap-mark path { vector-effect: non-scaling-stroke; }
+/* The ring circles the whole note, so it sits just outside the paper, the way a
+   marker circle would on a whiteboard. That leaves the text room inside it. */
+.scrap-mark.ring {
+  inset: auto;
+  top: -1.3rem;
+  left: -1.2rem;
+  width: calc(100% + 2.4rem);
+  height: calc(100% + 2.6rem);
+  overflow: visible;
+}
 .dry-ink { opacity: .4; stroke-width: 1.25; }
 @media (prefers-reduced-motion: no-preference) {
   .scrap[data-thread]:hover, .scrap[data-thread]:focus-visible,
@@ -122,8 +165,11 @@ let wordIndex = 0;
     animation: write-word 220ms ease-out backwards;
     animation-delay: calc(var(--ink-delay) + var(--word-delay));
   }
-  .scrap-mark path {
-    stroke-dasharray: 1;
+  /* The marks stretch to fit each note but keep an even stroke width, so their
+     on-screen length varies by note shape. The script below measures it into
+     --mark-length; until it does, marks show fully drawn. */
+  .scrap-mark path[style*="--mark-length"] {
+    stroke-dasharray: var(--mark-length);
     animation: draw-mark 660ms ease-out backwards;
     animation-delay: calc(var(--ink-delay) + 430ms);
   }
@@ -133,7 +179,7 @@ let wordIndex = 0;
   from { clip-path: inset(-.2em 100% -.2em 0); }
   to { clip-path: inset(-.2em 0 -.2em 0); }
 }
-@keyframes draw-mark { from { stroke-dashoffset: 1; } }
+@keyframes draw-mark { from { stroke-dashoffset: var(--mark-length); } }
 @media (prefers-reduced-motion: reduce) {
   .scrap { transition: none; }
 }

@@ -1,6 +1,5 @@
 ---
 import HeroHandwriting from '../components/HeroHandwriting.astro';
-import kalamBold from '@fontsource/kalam/files/kalam-latin-700-normal.woff2?url';
 import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BoardScrap from '../components/BoardScrap.astro';
@@ -35,7 +34,7 @@ const featuredProjects = featured.flatMap(id => {
 const destinations = new Map([...posts, ...featuredProjects].map(card => [card.id, card]));
 ---
 <BaseLayout title={home.pageTitle}>
-  <link slot="head" rel="preload" href={kalamBold} as="font" type="font/woff2" crossorigin />
+  <link slot="head" rel="preload" href="/fonts/josh-noll-hand/josh-noll-hand.woff2" as="font" type="font/woff2" crossorigin />
   <div class="container wall">
     <header class="wall-intro">
       <h1>{home.tagline}<span class="title-dot">.</span></h1>
@@ -46,7 +45,7 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
       <div class="rough-side">
         <p class="rough-heading" aria-hidden="true">
           <span>{home.wall.scratchHeading}</span>
-          <svg class="chalk-stroke" viewBox="0 0 190 20" aria-hidden="true">
+          <svg class="chalk-stroke" viewBox="0 0 190 20" preserveAspectRatio="none" aria-hidden="true">
             <path pathLength="1" d="M3 13Q39 6 94 7t91 1M19 16Q91 8 158 12" />
           </svg>
         </p>
@@ -158,10 +157,27 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
       const position = () => {
         const board = this.getBoundingClientRect();
         for (const { source, target, line, echo, head } of connections) {
-          const note = source.parentElement!.getBoundingClientRect();
+          // Start on the drawn circle's rightmost point, so the arrow leaves from
+          // the ring instead of crossing it or floating beside a tilted note.
+          const ring = source.querySelector<SVGPathElement>('.ring path');
           const card = target.getBoundingClientRect();
-          const x = note.right - board.left - 8;
-          const y = note.top + note.height * .49 - board.top;
+          let x: number;
+          let y: number;
+          const ctm = ring?.getScreenCTM();
+          if (ring && ctm) {
+            const total = ring.getTotalLength();
+            let edge = new DOMPoint(-Infinity, 0);
+            for (let step = 0; step <= 96; step++) {
+              const point = ring.getPointAtLength((total * step) / 96).matrixTransform(ctm);
+              if (point.x > edge.x) edge = point;
+            }
+            x = edge.x - board.left - 1;
+            y = edge.y - board.top;
+          } else {
+            const note = source.parentElement!.getBoundingClientRect();
+            x = note.right - board.left - 8;
+            y = note.top + note.height * .49 - board.top;
+          }
           const endX = card.left - board.left - 7;
           const endY = card.top + card.height * .51 - board.top;
           const bend = (endX - x) * .54;

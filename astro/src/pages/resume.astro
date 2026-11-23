@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import resumeHtml from '../../../resume/src/index.html?raw';
-import kalamBold from '@fontsource/kalam/files/kalam-latin-700-normal.woff2?url';
 
 const resumeBody = resumeHtml.match(/<main\b[^>]*>([\s\S]*)<\/main>/i)?.[1];
 if (!resumeBody) {
@@ -10,7 +9,7 @@ if (!resumeBody) {
 ---
 <BaseLayout title="Resume" description="Josh Noll's resume.">
   <link slot="head" rel="stylesheet" href="/resume/styles.css" />
-  <link slot="head" rel="preload" href={kalamBold} as="font" type="font/woff2" crossorigin />
+  <link slot="head" rel="preload" href="/fonts/josh-noll-hand/josh-noll-hand.woff2" as="font" type="font/woff2" crossorigin />
   <noscript><style is:inline>.resume[data-intro] :is(.resume-title, .resume-actions) { visibility: visible !important; }</style></noscript>
   <div class="container resume" data-intro="waiting" set:html={resumeBody} />
 </BaseLayout>
@@ -44,10 +43,12 @@ if (!resumeBody) {
     if (!resume || !name) return;
     const start = () => { if (resume.isConnected) resume.dataset.intro = 'ready'; };
     if (!matchMedia('(prefers-reduced-motion: no-preference)').matches) return start();
+    // Load only the first family, so the Kalam fallback isn't fetched too.
     const { fontWeight, fontFamily } = getComputedStyle(name);
+    const [handwriting] = fontFamily.split(',');
     const text = `${resume.querySelector('.resume-draft-text')?.textContent ?? ''}${name.textContent ?? ''}`;
     const timeout = new Promise(resolve => setTimeout(resolve, 3000));
-    Promise.race([document.fonts.load(`${fontWeight} 1em ${fontFamily}`, text), timeout]).then(start, start);
+    Promise.race([document.fonts.load(`${fontWeight} 1em ${handwriting}`, text), timeout]).then(start, start);
   }
 
   document.addEventListener('astro:page-load', startResumeIntro);

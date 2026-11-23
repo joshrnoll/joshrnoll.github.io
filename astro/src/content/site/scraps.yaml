@@ -2,5 +2,47 @@ page:
   title: Scrapyard
   description: A place for half-baked ideas and loose ends.
   subtitle: Half-baked ideas and loose ends.
-wall: []
-yard: []
+wall:
+  - text: |-
+      Spurstack
+      Issue agents that open their own PRs. A prototype I walked away from.
+    paper: pink
+    ink: red
+    crossedOut: true
+  - text: |-
+      Codesplainer
+      A Neovim chat for reading code, not writing it. Parked when I left the terminal for agents.
+    paper: ruled
+  - text: |-
+      ClearMinder
+      A GTD app I documented and haven't built yet. I really want to.
+    paper: yellow
+    ink: blue
+  - text: |-
+      Homelab as code
+      Got it 70% working, then tore down my entire homelab because I moved. Need to re-attack it once the lab is back up.
+    paper: blue
+    ink: green
+    target: project-homelab-as-code
+yard:
+  - text: |-
+      Spurstack
+      Issue agents that open their own PRs. A prototype I walked away from.
+    paper: pink
+    ink: red
+    crossedOut: true
+  - text: |-
+      Codesplainer
+      A Neovim chat for reading code, not writing it. Parked when I left the terminal for agents.
+    paper: ruled
+  - text: |-
+      ClearMinder
+      A GTD app I documented and haven't built yet. I really want to.
+    paper: yellow
+    ink: blue
+  - text: |-
+      Homelab as code
+      Got it 70% working, then tore down my entire homelab because I moved. Need to re-attack it once the lab is back up.
+    paper: blue
+    ink: green
+    target: project-homelab-as-code

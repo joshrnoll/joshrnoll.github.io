@@ -8,7 +8,7 @@ export const GET: APIRoute = async () => {
     title: post.title,
     description: post.description ?? '',
     tags: post.tags,
-    kind: post.collection === 'notes' ? 'note' : 'long read',
+    kind: post.collection === 'notes' ? 'note' : 'article',
   }));
   return new Response(JSON.stringify(index), {
     headers: { 'Content-Type': 'application/json' },

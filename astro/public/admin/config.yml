@@ -40,8 +40,8 @@ slug:
 
 collections:
   - name: blog
-    label: Long reads
-    label_singular: Long read
+    label: Articles
+    label_singular: Article
     description: Full blog posts. Each one is served at joshrnoll.com/<slug>/.
     folder: astro/src/content/blog
     extension: md

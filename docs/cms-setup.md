@@ -66,9 +66,9 @@ Each step creates something outside this repository, so each one needs your appr
 
 ## How writing works
 
-- **Long reads** save to `astro/src/content/blog/<slug>.md` and publish at `/<slug>/`.
+- **Articles** save to `astro/src/content/blog/<slug>.md` and publish at `/<slug>/`.
 - **Notes** save to `astro/src/content/notes/<slug>.md` and publish at `/notes/<slug>/`.
-- Images you insert in a post go to `astro/public/<slug>/` for long reads and `astro/public/notes/<slug>/` for notes. Images uploaded from the **Media** tab go to `astro/public/uploads/`.
+- Images you insert in a post go to `astro/public/<slug>/` for articles and `astro/public/notes/<slug>/` for notes. Images uploaded from the **Media** tab go to `astro/public/uploads/`.
 - Decap names the slug from the title. Editing an older post whose title differs from its file name puts new images under the slugified title, not the file name. The links still work.
 - The editorial workflow is on. **Save** commits to a `cms/<collection>/<slug>` branch and opens a pull request, so drafts never rebuild the site. **Publish** merges that pull request into `main`, which starts the Pages build.
 - **Hide from the site** sets `draft: true`. A published post with it on stays out of the build.

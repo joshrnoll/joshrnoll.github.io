@@ -59,8 +59,11 @@ const { name, erasedFrom, erasedTo, finalFirst, finalSecond } = Astro.props;
         this.dataset.ready = '';
       };
       if (!motion.matches) return start();
+      // Load only the first family. Passing the whole list would also fetch the
+      // Kalam fallback, which this text doesn't need.
       const { fontWeight, fontFamily } = getComputedStyle(last);
-      const fontLoaded = document.fonts.load(`${fontWeight} 1em ${fontFamily}`, last.textContent ?? '');
+      const [handwriting] = fontFamily.split(',');
+      const fontLoaded = document.fonts.load(`${fontWeight} 1em ${handwriting}`, last.textContent ?? '');
       const timeout = new Promise(resolve => setTimeout(resolve, 3000));
       Promise.race([fontLoaded, timeout]).then(start, start);
     }
@@ -81,7 +84,13 @@ const { name, erasedFrom, erasedTo, finalFirst, finalSecond } = Astro.props;
   justify-self: start;
   margin-left: .12em;
   color: var(--green);
-  font: 700 clamp(1.25rem, 3vw, 2.18rem)/1.25 var(--font-marker);
+  /* The erased "Infantryman -> Engineer" line is about 13.6em wide in Josh's
+     handwriting. 2.15vw, capped at 1.95rem once the page stops widening, keeps that line
+     inside the hero column at every desktop width. Phones get a full-width column. */
+  font: 700 clamp(1.1rem, 2.15vw, 1.95rem)/1.25 var(--font-marker);
+}
+@media (max-width: 760px) {
+  .handwriting { font-size: 1.25rem; }
 }
 
 .handwriting-name {
@@ -130,7 +139,7 @@ const { name, erasedFrom, erasedTo, finalFirst, finalSecond } = Astro.props;
   .final-line { justify-self: center; }
 }
 
-/* The script sets data-ready once Kalam has loaded, so the marker never
+/* The script sets data-ready once the handwriting font has loaded, so the marker never
    writes in a fallback font. Until then the hero stays blank. */
 @media (prefers-reduced-motion: no-preference) {
   .handwriting:not([data-ready]) { visibility: hidden; }
@@ -157,7 +166,7 @@ const { name, erasedFrom, erasedTo, finalFirst, finalSecond } = Astro.props;
   from { transform: translateX(var(--name-start, 0px)); }
   to { transform: translateX(var(--name-end, 0px)); }
 }
-/* Kalam's glyphs draw past their advance width, so the finished clip leaves
+/* Handwriting glyphs can draw past their advance width, so the finished clip leaves
    room on both sides. A right inset of 0 cut the final "s" in Safari. */
 @keyframes write-line {
   from { clip-path: inset(-.24em 100% -.24em -.12em); }
