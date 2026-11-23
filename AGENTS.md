@@ -38,6 +38,7 @@ Content is managed via Astro's content collections, configured in `astro/src/con
 
 - **blog** — markdown posts in `src/content/blog/`, schema-validated with Zod (title, date, draft, author, tags, description, toc, image, slug)
 - **notes** — markdown snippets in `src/content/notes/`, lighter schema (title, date, draft, tags, description)
+- **home**, **scraps**, **homelab**, **projects** — page copy for the homepage, scraps (homepage wall and `/scrapyard/`), `/homelab/`, and the project list plus homepage featured picks, one YAML file each in `src/content/site/`. Decap CMS edits them, so keep `astro/public/admin/config.yml` fields in step with these schemas. Markdown fields render through `src/lib/markdown.ts`.
 
 Draft posts (`draft: true` in frontmatter) are excluded from production builds.
 
@@ -51,6 +52,8 @@ Draft posts (`draft: true` in frontmatter) are excluded from production builds.
 | `astro/src/styles/`     | `global.css` and `prose.css` (markdown content styling)                               |
 | `astro/src/utils/`      | Utility functions; `tags.ts` has unit tests in `tags.test.ts`                         |
 | `astro/public/`         | Static assets copied as-is to output                                                  |
+| `astro/public/admin/`   | Decap CMS admin page and `config.yml`, served at `/admin/`; fields must match `content.config.ts` |
+| `cms-oauth-worker/`     | Cloudflare Worker for the CMS GitHub login; setup in `docs/cms-setup.md`              |
 
 ### Build & Deployment
 

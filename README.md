@@ -5,3 +5,5 @@ The Astro website lives in `astro/` at the repository root; `resume/` contains t
 Build the complete site with `bash scripts/build-site.sh`. Set `SKIP_RESUME_BUILD=1` to use the committed resume output for a quick build. The output is in `astro/dist/`.
 
 GitHub Pages deploys from `main` using `.github/workflows/pages.yml`.
+
+Write posts in the browser at `/admin/` with Decap CMS. See `docs/cms-setup.md`.

@@ -1,19 +1,29 @@
+---
+interface Props {
+  name: string;
+  erasedFrom: string;
+  erasedTo: string;
+  finalFirst: string;
+  finalSecond: string;
+}
+const { name, erasedFrom, erasedTo, finalFirst, finalSecond } = Astro.props;
+---
 <hero-handwriting class="handwriting">
-  <p class="handwriting-name">Josh Noll:</p>
+  <p class="handwriting-name">{name}</p>
   <p>
-    <span class="sr-only">Thinker of thoughts. Builder of things.</span>
+    <span class="sr-only">{finalFirst} {finalSecond}</span>
     <span class="writing-area" aria-hidden="true">
       <span class="first-line">
-        <span class="first-word">Infantryman</span>
+        <span class="first-word">{erasedFrom}</span>
         <svg class="chalk-stroke" viewBox="0 0 48 21">
           <path pathLength="1" d="M2 12Q18 6 44 10M34 3l11 7-10 7M8 13q19-4 29-2" />
         </svg>
-        <span class="second-word">Engineer</span>
+        <span class="second-word">{erasedTo}</span>
       </span>
       <span class="eraser"></span>
       <span class="final-line">
-        <span class="final-first">Thinker of thoughts.</span>
-        <span class="final-second">Builder of things.</span>
+        <span class="final-first">{finalFirst}</span>
+        <span class="final-second">{finalSecond}</span>
       </span>
     </span>
   </p>

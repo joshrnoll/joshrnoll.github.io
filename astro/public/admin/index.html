@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- The site has no sitemap; this keeps crawlers that find /admin/ from indexing it. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Write | Josh Noll</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+  </head>
+  <body>
+    <script>
+      // Browsers expose crypto.randomUUID only over HTTPS. Decap needs it, so
+      // fill it in for plain-HTTP previews. joshrnoll.com never uses this.
+      if (window.crypto && !crypto.randomUUID) {
+        crypto.randomUUID = () =>
+          '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
+            (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16),
+          );
+      }
+    </script>
+    <!-- Decap reads config.yml from this folder. Bump the version and its hash together. -->
+    <script
+      src="https://unpkg.com/decap-cms@3.17.3/dist/decap-cms.js"
+      integrity="sha384-RWRzuHfiZSWCt3nEvG7B0v3cMgM1C2UuJmgBSL92GQh4uXmNSkbcthql/mNBqvjr"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

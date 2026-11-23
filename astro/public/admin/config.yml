@@ -1,0 +1,298 @@
+# Decap CMS config, served at https://joshrnoll.com/admin/config.yml.
+# Docs: https://decapcms.org/docs/configuration-options/
+# Fields mirror the Zod schemas in astro/src/content.config.ts.
+# A field Decap writes that the schema rejects fails the site build.
+# Fields the schema defaults (draft, tags, toc) are optional here, so older
+# posts that omit them still save.
+
+backend:
+  name: github
+  repo: joshrnoll/joshrnoll.github.io
+  branch: main
+  # The repo is public, so the token never needs private-repo access.
+  auth_scope: public_repo
+  # OAuth proxy from cms-oauth-worker/ (see docs/cms-setup.md).
+  base_url: https://cms-oauth.joshrnoll.workers.dev
+  auth_endpoint: auth
+
+# Saves go to a cms/<collection>/<slug> branch and pull request, so saving a
+# half-written post from a phone does not rebuild the site. Publish merges it.
+publish_mode: editorial_workflow
+
+# Run `npx decap-server` from the repo root, then open /admin/ on localhost
+# to edit local files without GitHub. Other hosts ignore this setting.
+local_backend: true
+
+site_url: https://joshrnoll.com
+display_url: https://joshrnoll.com
+logo_url: /avatar.png
+show_preview_links: true
+
+# Default for media inserted outside a post. Posts override this below.
+media_folder: astro/public/uploads
+public_folder: /uploads
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: blog
+    label: Articles
+    label_singular: Article
+    description: Full blog posts. Each one is served at joshrnoll.com/<slug>/.
+    folder: astro/src/content/blog
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{slug}}"
+    # Images go next to the post page: astro/public/<slug>/ is served at /<slug>/.
+    # Use {{slug}}, not {{filename}}: {{filename}} is empty until a new post is saved,
+    # which writes image links as /photo.png instead of /<slug>/photo.png.
+    media_folder: /astro/public/{{slug}}
+    public_folder: /{{slug}}
+    preview_path: "{{slug}}/"
+    summary: "{{title}} ({{year}}-{{month}}-{{day}})"
+    sortable_fields: [date, title]
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: date
+        label: Date
+        widget: datetime
+        format: YYYY-MM-DDTHH:mm:ssZ
+        default: "{{now}}"
+      - name: draft
+        label: Hide from the site
+        widget: boolean
+        default: false
+        required: false
+        hint: Merged posts with this on stay out of the build.
+      - { name: author, label: Author, widget: hidden, default: Josh Noll }
+      - name: tags
+        label: Tags
+        widget: list
+        default: []
+        required: false
+        hint: Comma separated.
+      - { name: description, label: Description, widget: text, required: false }
+      - { name: toc, label: Table of contents, widget: boolean, default: false, required: false }
+      - { name: body, label: Body, widget: markdown }
+
+  - name: notes
+    label: Notes
+    label_singular: Note
+    description: Short notes. Each one is served at joshrnoll.com/notes/<slug>/.
+    folder: astro/src/content/notes
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{slug}}"
+    media_folder: /astro/public/notes/{{slug}}
+    public_folder: /notes/{{slug}}
+    preview_path: "notes/{{slug}}/"
+    summary: "{{title}} ({{year}}-{{month}}-{{day}})"
+    sortable_fields: [date, title]
+    view_filters:
+      - label: Drafts
+        field: draft
+        pattern: true
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: date
+        label: Date
+        widget: datetime
+        format: YYYY-MM-DDTHH:mm:ssZ
+        default: "{{now}}"
+      - name: draft
+        label: Hide from the site
+        widget: boolean
+        default: false
+        required: false
+        hint: Merged notes with this on stay out of the build.
+      - name: tags
+        label: Tags
+        widget: list
+        default: []
+        required: false
+        hint: Comma separated.
+      - { name: description, label: Description, widget: text, required: false }
+      - { name: body, label: Body, widget: markdown }
+
+  # Page copy. Each file below is validated by a collection in
+  # astro/src/content.config.ts, so a field the schema rejects fails the build.
+  - name: home
+    label: Homepage
+    description: Text on the homepage. Posts and projects on the wall come from their own collections.
+    editor: { preview: false }
+    files:
+      - name: home
+        label: Homepage text
+        file: astro/src/content/site/home.yaml
+        fields:
+          - { name: pageTitle, label: Browser tab title, widget: string }
+          - { name: tagline, label: Tagline, widget: string, hint: The big headline. The green period is added for you. }
+          - name: hero
+            label: Handwritten hero
+            widget: object
+            hint: The marker writes the first line, erases it, then writes the two final lines. Animation timing is tuned for about this much text.
+            fields:
+              - { name: name, label: Name, widget: string }
+              - { name: erasedFrom, label: "Erased line: first word", widget: string }
+              - { name: erasedTo, label: "Erased line: word after the arrow", widget: string }
+              - { name: finalFirst, label: Final line 1, widget: string }
+              - { name: finalSecond, label: Final line 2, widget: string }
+          - name: wall
+            label: Whiteboard headings
+            widget: object
+            fields:
+              - { name: scratchHeading, label: Scratch column heading, widget: string }
+              - { name: shippedHeading, label: Shipped column heading, widget: string, hint: The green period is added for you. }
+              - { name: postsHeading, label: Posts heading, widget: string }
+              - { name: postsLink, label: Posts link text, widget: string }
+              - { name: projectsHeading, label: Projects heading, widget: string }
+              - { name: projectsLink, label: Projects link text, widget: string }
+          - name: about
+            label: About me
+            widget: object
+            fields:
+              - { name: heading, label: Heading, widget: string }
+              - { name: photoAlt, label: Photo description, widget: string }
+              - name: body
+                label: Paragraphs
+                widget: markdown
+                buttons: [bold, italic, link]
+                editor_components: []
+                hint: The full-story link is a normal link in the last paragraph.
+              - { name: resumeLink, label: Resume link text, widget: string }
+
+  - name: scraps
+    label: Scrapyard
+    description: Sticky-note scraps on the homepage wall and the Scrapyard page.
+    editor: { preview: false }
+    files:
+      - name: scraps
+        label: Scraps
+        file: astro/src/content/site/scraps.yaml
+        fields:
+          - name: page
+            label: Scrapyard page
+            widget: object
+            fields:
+              - { name: title, label: Title, widget: string }
+              - { name: description, label: Search and share description, widget: string }
+              - { name: subtitle, label: Subtitle, widget: string }
+              - { name: draftNote, label: Red marker note, widget: string, required: false, hint: Leave empty to hide it. }
+          - name: wall
+            label: Homepage wall scraps
+            label_singular: scrap
+            widget: list
+            summary: "{{fields.text}}"
+            collapsed: true
+            hint: Drag to reorder. The wall shows them two to a row.
+            fields: &scrap
+              - { name: text, label: Text, widget: text, hint: Each new line is a new line on the scrap. }
+              - { name: paper, label: Paper, widget: select, default: yellow, options: [yellow, pink, blue, ruled, ink] }
+              - { name: ink, label: Ink, widget: select, required: false, options: [black, blue, red, green], hint: Empty means black. }
+              - { name: crossedOut, label: Crossed out, widget: boolean, default: false, required: false }
+              - name: target
+                label: Arrow to
+                widget: string
+                required: false
+                pattern: ['^(post|project)-[a-z0-9-]+$', 'Use post-<slug> or project-<id>.']
+                hint: Homepage only. post-<slug> for one of the 3 latest posts, or project-<id> for a featured project.
+          - name: yard
+            label: Scrapyard page scraps
+            label_singular: scrap
+            widget: list
+            summary: "{{fields.text}}"
+            collapsed: true
+            hint: Drag to reorder.
+            fields: *scrap
+
+  - name: homelab
+    label: Homelab
+    description: Text on joshrnoll.com/homelab/. The diagram itself is in homelab-diagram/.
+    editor: { preview: false }
+    files:
+      - name: homelab
+        label: Homelab page
+        file: astro/src/content/site/homelab.yaml
+        fields:
+          - { name: title, label: Title, widget: string }
+          - { name: description, label: Search and share description, widget: string }
+          - name: diagram
+            label: Diagram section
+            widget: object
+            fields:
+              - { name: heading, label: Heading, widget: string }
+              - { name: frameTitle, label: Diagram frame title (screen readers), widget: string }
+              - { name: fullScreenLink, label: Full screen link text, widget: string }
+              - { name: rawSvgLink, label: Raw SVG link text, widget: string }
+          - name: sections
+            label: Sections
+            label_singular: section
+            widget: list
+            summary: "{{fields.heading}}"
+            collapsed: true
+            fields:
+              - { name: heading, label: Heading, widget: string }
+              - { name: level, label: Heading size, widget: select, default: h3, options: [{ label: Large (h2), value: h2 }, { label: Small (h3), value: h3 }] }
+              - name: id
+                label: Link anchor
+                widget: string
+                required: false
+                pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers, and dashes.']
+                hint: For links like /homelab/#what-counts. Leave empty to build it from the heading.
+              - { name: body, label: Body, widget: markdown, editor_components: [] }
+
+  - name: projects
+    label: Projects
+    description: The Projects page list and the projects featured on the homepage wall.
+    editor: { preview: false }
+    files:
+      - name: projects
+        label: Projects
+        file: astro/src/content/site/projects.yaml
+        fields:
+          - name: featured
+            label: Featured on the homepage
+            widget: relation
+            collection: projects
+            file: projects
+            value_field: projects.*.id
+            search_fields: [projects.*.title]
+            display_fields: [projects.*.title]
+            multiple: true
+            required: false
+            hint: Shown on the homepage wall in this order. Publish a new project before you can pick it here.
+          - name: projects
+            label: Projects
+            label_singular: project
+            widget: list
+            summary: "{{fields.title}}"
+            collapsed: true
+            hint: Drag to reorder. The Projects page shows them in this order.
+            fields:
+              - { name: title, label: Title, widget: string }
+              - name: id
+                label: Link anchor
+                widget: string
+                pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers, and dashes.']
+                hint: "For links like /projects/#homelab-as-code. Changing it breaks those links, a featured pick, and scrap arrows that use it."
+              - { name: description, label: Description, widget: text }
+              - { name: stack, label: Tech stack, widget: list, required: false, hint: Comma separated. }
+              - name: links
+                label: Links
+                label_singular: link
+                widget: list
+                required: false
+                summary: "{{fields.label}}"
+                fields:
+                  - { name: label, label: Label, widget: string }
+                  - { name: href, label: URL, widget: string }
+                  - { name: external, label: Opens in a new tab, widget: boolean, default: true, required: false }
