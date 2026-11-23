@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { projects } from '../../data/projects';
+import { getEntry } from 'astro:content';
+
+const { projects } = (await getEntry('projects', 'projects'))!.data;
 ---
 <BaseLayout title="Projects">
   <div class="container projects">

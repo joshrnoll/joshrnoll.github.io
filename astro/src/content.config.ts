@@ -86,8 +86,8 @@ const scraps = defineCollection({
       subtitle: z.string(),
       draftNote: optional(z.string()),
     }),
-    wall: z.array(scrapSchema),
-    yard: z.array(scrapSchema),
+    wall: z.array(scrapSchema).default([]),
+    yard: z.array(scrapSchema).default([]),
   }),
 });
 
@@ -113,4 +113,24 @@ const homelab = defineCollection({
   }),
 });
 
-export const collections = { blog, notes, home, scraps, homelab };
+const projects = defineCollection({
+  loader: site('projects'),
+  schema: z.object({
+    // Project ids shown on the homepage wall, in order. Unknown ids are skipped.
+    featured: z.array(z.string()).default([]),
+    projects: z.array(z.object({
+      // Anchor on /projects/ and the name used by featured and scrap arrows.
+      id: z.string().regex(/^[a-z0-9-]+$/),
+      title: z.string(),
+      description: z.string(),
+      stack: z.array(z.string()).default([]),
+      links: z.array(z.object({
+        label: z.string(),
+        href: z.string(),
+        external: optional(z.boolean()),
+      })).default([]),
+    })),
+  }),
+});
+
+export const collections = { blog, notes, home, scraps, homelab, projects };

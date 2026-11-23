@@ -250,3 +250,50 @@ collections:
                 pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers, and dashes.']
                 hint: For links like /homelab/#what-counts. Leave empty to build it from the heading.
               - { name: body, label: Body, widget: markdown, editor_components: [] }
+
+  - name: projects
+    label: Projects
+    description: The Projects page list and the projects featured on the homepage wall.
+    editor: { preview: false }
+    files:
+      - name: projects
+        label: Projects
+        file: astro/src/content/site/projects.yaml
+        fields:
+          - name: featured
+            label: Featured on the homepage
+            widget: relation
+            collection: projects
+            file: projects
+            value_field: projects.*.id
+            search_fields: [projects.*.title]
+            display_fields: [projects.*.title]
+            multiple: true
+            required: false
+            hint: Shown on the homepage wall in this order. Publish a new project before you can pick it here.
+          - name: projects
+            label: Projects
+            label_singular: project
+            widget: list
+            summary: "{{fields.title}}"
+            collapsed: true
+            hint: Drag to reorder. The Projects page shows them in this order.
+            fields:
+              - { name: title, label: Title, widget: string }
+              - name: id
+                label: Link anchor
+                widget: string
+                pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers, and dashes.']
+                hint: "For links like /projects/#homelab-as-code. Changing it breaks those links, a featured pick, and scrap arrows that use it."
+              - { name: description, label: Description, widget: text }
+              - { name: stack, label: Tech stack, widget: list, required: false, hint: Comma separated. }
+              - name: links
+                label: Links
+                label_singular: link
+                widget: list
+                required: false
+                summary: "{{fields.label}}"
+                fields:
+                  - { name: label, label: Label, widget: string }
+                  - { name: href, label: URL, widget: string }
+                  - { name: external, label: Opens in a new tab, widget: boolean, default: true, required: false }

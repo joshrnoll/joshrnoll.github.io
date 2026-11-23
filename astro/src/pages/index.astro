@@ -4,10 +4,10 @@ import kalamBold from '@fontsource/kalam/files/kalam-latin-700-normal.woff2?url'
 import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BoardScrap from '../components/BoardScrap.astro';
-import { projects } from '../data/projects';
 import { renderMarkdown } from '../lib/markdown';
 
 const home = (await getEntry('home', 'home'))!.data;
+const { featured, projects } = (await getEntry('projects', 'projects'))!.data;
 const wallScraps = (await getEntry('scraps', 'scraps'))!.data.wall;
 const aboutHtml = await renderMarkdown(home.about.body);
 
@@ -28,7 +28,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     };
   });
 
-const featuredProjects = ['homelab-as-code', 'pi-teach', 'black-relay'].flatMap(id => {
+const featuredProjects = featured.flatMap(id => {
   const project = projects.find(project => project.id === id);
   return project ? [{ ...project, id: `project-${project.id}`, href: `/projects/#${project.id}` }] : [];
 });

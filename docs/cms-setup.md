@@ -75,15 +75,17 @@ Each step creates something outside this repository, so each one needs your appr
 
 ## How page text works
 
-Three more collections edit page copy instead of posts. Each one is a single YAML file in `astro/src/content/site/`, checked by a schema in `astro/src/content.config.ts`. A value the schema rejects fails the build, so the Pages workflow stops before it deploys a broken page.
+Four more collections edit page content instead of posts. Each one is a single YAML file in `astro/src/content/site/`, checked by a schema in `astro/src/content.config.ts`. A value the schema rejects fails the build, so the Pages workflow stops before it deploys a broken page.
 
 | CMS collection | File | What it holds |
 | --- | --- | --- |
 | **Homepage** | `home.yaml` | Tagline, the handwritten hero lines, whiteboard headings and link text, and the About me text |
 | **Scrapyard** | `scraps.yaml` | Scrapyard page text, the homepage wall scraps, and the Scrapyard page scraps |
 | **Homelab** | `homelab.yaml` | Page title, diagram link text, and the text sections |
+| **Projects** | `projects.yaml` | The Projects page list, in page order, and which projects the homepage wall features |
 
 - About me paragraphs and Homelab section bodies are Markdown. Blank lines separate paragraphs. Smart quotes are off, so `'` stays straight.
 - The hero animation timing is set in CSS for the current line lengths. Much longer lines still write and erase, but the marker moves faster per letter.
 - A wall scrap's **Arrow to** must name a card on the wall: `post-<slug>` for one of the 3 latest posts, or `project-<id>` for a featured project. An arrow to anything else is dropped.
+- A project's **Link anchor** is its id. Featured picks and scrap arrows (`project-<id>`) use it, so renaming it drops the project from both until you pick it again.
 - Saving one of these files rewrites the whole YAML file in Decap's style. The values stay the same.
