@@ -1,0 +1,226 @@
+/* Whiteboard Wall theme for the Decap CMS admin chrome, served at
+   /admin/admin.css by src/pages/admin/admin.css.ts. The preview pane has its
+   own stylesheet (cms-preview.css).
+
+   These overrides target the pinned decap-cms@3.17.3 in public/admin/index.html.
+   Recheck them when you bump that version. Decap styles itself with Emotion,
+   so every rule starts with #nc-root to outrank Emotion's single-class rules.
+   Selectors use elements, ARIA, and data attributes first. Where Decap gives
+   nothing stabler, [class*="-Name"] matches the component label Emotion puts in
+   each class name, never the generated hash before it. */
+
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-500.css';
+@import '@fontsource/inter/latin-600.css';
+@import '@fontsource/inter/latin-700.css';
+@import '@fontsource/inter/latin-800.css';
+@import '@fontsource/kalam/latin-700.css';
+
+@font-face {
+  font-family: 'Josh Noll Hand';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/josh-noll-hand/josh-noll-hand.woff2') format('woff2');
+}
+
+/* The site's light palette (src/styles/global.css). Decap's UI is light only. */
+:root {
+  color-scheme: light;
+  --bg: #f8f9f5;
+  --bg-dark: #eeefe9;
+  --surface: #fff;
+  --fg: #202a28;
+  --comment: #53615d;
+  --line: #d7ded7;
+  --blue: #2058a6;
+  --cyan: #184583;
+  --green: #23634c;
+  --yellow: #f5dc79;
+  --red: #ad3e45;
+  --selected: color-mix(in srgb, var(--blue) 10%, var(--surface));
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-marker: 'Josh Noll Hand', 'Kalam', cursive;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --card-shadow: 0 2px 5px #202a2809;
+}
+
+html body { background: var(--bg); color: var(--fg); }
+#nc-root, #nc-root :is(button, input, select, textarea) { font-family: var(--font-body); }
+#nc-root { color: var(--fg); }
+#nc-root ::selection { background: color-mix(in srgb, var(--blue) 16%, transparent); }
+#nc-root :focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+/* ---- Login */
+#nc-root section:has(> button):has(> a[href]) { background: var(--bg); }
+#nc-root section:has(> button):has(> a[href]) img { transform: rotate(-4deg); }
+#nc-root section:has(> a[href]) > button { background: var(--green); color: #fff; border-radius: 6px; }
+#nc-root section:has(> a[href]) > button:hover { background: #1b4f3c; }
+#nc-root section:has(> button) > a[href] { color: var(--comment); }
+
+/* ---- Top bar */
+#nc-root header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  box-shadow: none;
+}
+#nc-root header nav :is(a, button) { color: var(--comment); font-weight: 600; }
+#nc-root header nav :is(a, button):hover,
+#nc-root header nav .header-link-active { color: var(--blue); }
+#nc-root header nav .header-link-active svg path,
+#nc-root header nav :is(a, button):hover svg path { fill: currentColor; }
+#nc-root header a[target='_blank'] { color: var(--comment); }
+#nc-root header a[target='_blank']:hover { color: var(--blue); }
+
+/* Quick add and other dark default buttons: marker green. */
+#nc-root :is(header [aria-haspopup='true'][class*='-gray'], a[aria-label^='Create entry']) {
+  background: var(--green);
+  color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px #23634c33;
+}
+#nc-root a[aria-label^='Create entry']:hover { background: #1b4f3c; color: #fff; }
+
+/* ---- Collection sidebar */
+#nc-root aside {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: .7rem;
+  box-shadow: var(--card-shadow);
+}
+#nc-root aside > h2 {
+  color: var(--blue);
+  font: 700 1.7rem/1.1 var(--font-marker);
+  transform: rotate(-2deg);
+  transform-origin: left;
+}
+#nc-root aside input[type='text'], #nc-root aside div:has(> input) { background: var(--bg-dark); color: var(--fg); }
+#nc-root aside input::placeholder { color: var(--comment); }
+#nc-root aside a[data-testid] { color: var(--comment); font-weight: 500; border-left-color: transparent; }
+#nc-root aside a[data-testid]:hover { color: var(--fg); background: var(--bg); }
+#nc-root aside a[data-testid].sidebar-active {
+  color: var(--blue);
+  background: var(--selected);
+  border-left-color: var(--green);
+  font-weight: 650;
+}
+#nc-root aside a[data-testid] svg path { fill: currentColor; }
+
+/* ---- Collection header and entry list */
+#nc-root main > div:first-child:has(h1) {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: .7rem;
+  box-shadow: var(--card-shadow);
+}
+#nc-root main h1 {
+  color: var(--fg);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -.045em;
+}
+#nc-root main h1 + a, #nc-root main h1 ~ * { flex-shrink: 0; }
+#nc-root main div:has(> h1) + p { color: var(--comment); }
+#nc-root main [role='button'][aria-haspopup='true'] { color: var(--comment); }
+#nc-root main button[aria-label$='view option'] svg path { fill: var(--line); }
+#nc-root main button[aria-label$='view option']:is(:hover, [class*='-viewControlsButtonActive']) svg path { fill: var(--blue); }
+
+#nc-root main ul > li:has(> a[href*='/entries/']) {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: .55rem;
+  box-shadow: var(--card-shadow);
+  transition: border-color .15s ease;
+}
+#nc-root main ul > li:has(> a[href*='/entries/']):hover { border-color: var(--blue); }
+#nc-root main a[href*='/entries/'] h2 { color: var(--fg); font-weight: 500; letter-spacing: -.005em; }
+#nc-root main a[href*='/entries/']:hover h2 { color: var(--blue); }
+
+/* ---- Editor toolbar */
+#nc-root [class*='-ToolbarContainer']:has(> a[href^='#/collections/']) {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  box-shadow: none;
+}
+#nc-root a[href^='#/collections/']:has(> [class*='-BackArrow']) { color: var(--fg); }
+#nc-root [class*='-BackArrow'] { color: var(--blue); }
+#nc-root [class*='-BackCollection'] { color: var(--comment); }
+
+/* ---- Editor: split panes */
+#nc-root .SplitPane { background: var(--bg); }
+#nc-root .Resizer { background: var(--line); }
+#nc-root #preview-pane { background: var(--bg); }
+#nc-root button[title='Toggle preview'], #nc-root button[title='Sync scrolling'] {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--card-shadow);
+}
+#nc-root button[title='Toggle preview'] svg path,
+#nc-root button[title='Sync scrolling'] svg path { fill: var(--blue); }
+
+/* ---- Fields. Each control is a div labeled "<widget> field". */
+#nc-root [aria-label$=' field'] > div > label {
+  color: var(--comment);
+  background: var(--bg-dark);
+  border-color: var(--line);
+  font-weight: 650;
+  letter-spacing: .01em;
+}
+/* Only the field being edited lights up, not the object or list around it. */
+#nc-root [aria-label$=' field']:not([aria-label='object field'], [aria-label='list field']):focus-within > div > label {
+  color: #fff;
+  background: var(--blue);
+  border-color: var(--blue);
+}
+#nc-root [aria-label$=' field'] :is(input[type='text'], input[type='datetime-local'], input:not([type]), textarea),
+#nc-root [aria-label$=' field'] > div:has(> [class*='-control']),
+#nc-root .cms-editor-visual, #nc-root .cms-editor-raw {
+  border-color: var(--line);
+  background: var(--surface);
+  color: var(--fg);
+}
+#nc-root [aria-label$=' field'] :is(input, textarea):focus,
+#nc-root :is(.cms-editor-visual, .cms-editor-raw):focus-within {
+  border-color: var(--blue);
+}
+/* The blue border marks focus in a field, so skip the second ring. */
+#nc-root [aria-label$=' field'] :is(input, textarea):focus-visible { outline: none; }
+#nc-root [aria-label$=' field'] > p { color: var(--comment); }
+#nc-root [aria-label$=' field'] input::placeholder { color: #7a8783; }
+
+/* Boolean switches: green when on. */
+#nc-root button[role='switch'] > span:first-child { background: #c5cec8; }
+#nc-root button[role='switch'][aria-checked='true'] > span:first-child { background: var(--green); }
+
+/* Markdown editor: the site's text styles and a quiet toolbar. */
+#nc-root [data-slate-editor] { color: var(--fg); line-height: 1.7; }
+#nc-root [data-slate-editor] :is(h1, h2, h3, h4) { letter-spacing: -.025em; }
+#nc-root [data-slate-editor] a { color: var(--blue); }
+#nc-root [data-slate-editor] code { color: var(--orange, #8b4c1c); background: var(--bg-dark); }
+#nc-root .cms-editor-visual > div > div:first-child,
+#nc-root .cms-editor-raw > div > div:first-child { background: var(--bg-dark); border-color: var(--line); }
+
+/* List and object widgets: the site's line and paper tones instead of Decap's grays. */
+#nc-root :is([aria-label='list field'], [aria-label='object field']) > div:not(:first-child),
+#nc-root [class*='-SortableListItem'] > div:last-child { border-color: var(--line); }
+#nc-root :is([class*='-TopBarContainer'], [class*='-StyledListItemTopBar'], [class*='-NestedObjectLabel']) {
+  background: var(--bg-dark);
+  color: var(--fg);
+}
+#nc-root [class*='-NestedObjectLabel'] { color: var(--comment); }
+#nc-root [class*='-TopBarContainer'] > button { background: var(--surface); color: var(--green); border: 1px solid var(--line); }
+
+/* ---- Dropdown menus and modals */
+#nc-root [role='menu'] {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: .5rem;
+  box-shadow: 0 8px 24px #202a281f;
+}
+#nc-root [role='menuitem'] { color: var(--fg); }
+#nc-root [role='menuitem']:is(:hover, :focus, :focus-visible) { background: var(--selected); color: var(--blue); }
+.ReactModal__Content { border: 1px solid var(--line) !important; border-radius: .7rem !important; }
+.ReactModal__Overlay { background: #202a2866 !important; }
+
+/* ---- Toasts */
+.Toastify__toast { font-family: var(--font-body); border-radius: .55rem; }

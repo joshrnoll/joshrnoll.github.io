@@ -53,6 +53,7 @@ Draft posts (`draft: true` in frontmatter) are excluded from production builds.
 | `astro/src/utils/`      | Utility functions; `tags.ts` has unit tests in `tags.test.ts`                         |
 | `astro/public/`         | Static assets copied as-is to output                                                  |
 | `astro/public/admin/`   | Decap CMS admin page and `config.yml`, served at `/admin/`; fields must match `content.config.ts` |
+| `astro/src/pages/admin/` | Builds `/admin/preview.css` and `/admin/admin.css` from `src/styles/cms-preview.css` and `cms-admin.css`; preview templates are in `public/admin/preview.js` |
 | `cms-oauth-worker/`     | Cloudflare Worker for the CMS GitHub login; setup in `docs/cms-setup.md`              |
 
 ### Build & Deployment
