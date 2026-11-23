@@ -12,7 +12,7 @@ backend:
   # The repo is public, so the token never needs private-repo access.
   auth_scope: public_repo
   # OAuth proxy from cms-oauth-worker/ (see docs/cms-setup.md).
-  base_url: https://joshrnoll-cms-oauth.joshrnoll.workers.dev
+  base_url: https://cms-oauth.joshrnoll.workers.dev
   auth_endpoint: auth
 
 # Saves go to a cms/<collection>/<slug> branch and pull request, so saving a

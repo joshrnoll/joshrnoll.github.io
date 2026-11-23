@@ -1,6 +1,6 @@
 # Cloudflare Worker that signs Decap CMS users in with GitHub.
 # Deploy steps and secrets: see README.md in this folder.
-name = "joshrnoll-cms-oauth"
+name = "cms-oauth"
 main = "src/index.js"
 compatibility_date = "2026-06-01"
 workers_dev = true

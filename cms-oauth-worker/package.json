@@ -1,5 +1,5 @@
 {
-  "name": "joshrnoll-cms-oauth",
+  "name": "cms-oauth",
   "private": true,
   "type": "module",
   "description": "GitHub OAuth proxy for Decap CMS on joshrnoll.com",
