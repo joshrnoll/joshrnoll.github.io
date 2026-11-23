@@ -8,7 +8,6 @@ import { scrapyardScraps } from '../../data/scraps';
     <header class="yard-header">
       <h1>Scrapyard<span>.</span></h1>
       <p>Half-baked ideas and loose ends.</p>
-      <p class="draft-note">Sample scraps for this draft</p>
     </header>
     <ul class="yard-scraps">
       {scrapyardScraps.map((scrap, index) => (
@@ -27,13 +26,14 @@ import { scrapyardScraps } from '../../data/scraps';
 }
 .yard-header h1 span { color: var(--green); }
 .yard-header p { margin-top: .75rem; }
-.draft-note { color: var(--red); font: 700 1.25rem var(--font-marker); }
+/* Two columns so the four scraps sit as a 2x2 board instead of 3 + 1. */
 .yard-scraps {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: center;
   gap: clamp(2rem, 4vw, 3.5rem);
-  padding: 2.5rem clamp(.35rem, 4vw, 3rem);
+  /* Keep the divider full width but cap the board at about 52rem. */
+  padding: 2.5rem max(clamp(.35rem, 4vw, 3rem), calc((100% - 52rem) / 2));
   margin-top: 1.35rem;
   border-top: 1px solid var(--line);
   list-style: none;
@@ -42,9 +42,6 @@ import { scrapyardScraps } from '../../data/scraps';
 .yard-scraps li:nth-child(4n + 2) { --tilt: 3deg; }
 .yard-scraps li:nth-child(4n + 4) { --tilt: 2deg; }
 .yard-scraps li :global(.scrap) { min-height: 10rem; --tilt: inherit; }
-@media (max-width: 720px) {
-  .yard-scraps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
 @media (max-width: 480px) {
   .yard-scraps { grid-template-columns: minmax(0, 1fr); gap: 1.15rem; padding-inline: .8rem; }
   .yard-scraps li :global(.scrap) { min-height: 6.5rem; --tilt: 0deg; }

@@ -10,32 +10,35 @@ export interface Scrap {
   target?: `post-${string}` | `project-${string}`;
 }
 
-// First-draft copy and example connections. Replace these with actual scraps.
-export const wallScraps: Scrap[] = [
-  { id: 'agent-handoff', text: 'What goes in a good agent handoff?', paper: 'yellow' },
+// Josh's real scraps. The homepage wall and the Scrapyard show the same four.
+// A target must name a card on the homepage, so only Homelab as code links out.
+// It goes last so it lands in the column beside its card and the arrow crosses no notes.
+export const scrapyardScraps: Scrap[] = [
   {
-    id: 'ai-native',
-    text: 'Am I still the engineer if the agent wrote it?',
-    paper: 'ink',
-    ink: 'blue',
-    target: 'post-impostor-syndrome-of-the-ai-native-engineer',
+    id: 'spurstack',
+    text: 'Spurstack\nIssue agents that open their own PRs. A prototype I walked away from.',
+    paper: 'pink',
+    ink: 'red',
+    crossedOut: true,
   },
-  { id: 'rebuild', text: 'Can I rebuild the lab from a blank disk?', paper: 'ruled' },
-  { id: 'dashboard', text: 'one dashboard\nfor everything', paper: 'pink', ink: 'red', crossedOut: true },
-  { id: 'someday', text: 'someday?\na field guide to things I broke', paper: 'ink', ink: 'green' },
   {
-    id: 'gitops',
-    text: 'What if Git ran the lab?',
+    id: 'codesplainer',
+    text: 'Codesplainer\nA Neovim chat for reading code, not writing it. Parked when I left the terminal for agents.',
+    paper: 'ruled',
+  },
+  {
+    id: 'clearminder',
+    text: "ClearMinder\nA GTD app I documented and haven't built yet. I really want to.",
+    paper: 'yellow',
+    ink: 'blue',
+  },
+  {
+    id: 'homelab-as-code',
+    text: 'Homelab as code\nGitOps for the lab. Flux works. Most of the roadmap does not.',
     paper: 'blue',
     ink: 'green',
     target: 'project-homelab-as-code',
   },
 ];
 
-export const scrapyardScraps: Scrap[] = [
-  { id: 'agent-receipts', text: 'Agent handoff receipts\nWhat changed, what failed, what needs a human?', paper: 'yellow' },
-  { id: 'second-lab', text: 'A homelab to monitor the homelab', paper: 'pink', ink: 'red', crossedOut: true },
-  { id: 'small-breakages', text: 'A field guide to small breakages\nOne mistake and one fix per entry.', paper: 'blue' },
-  { id: 'recovery-drill', text: 'Pull the plug on a spare box. Time the recovery.', paper: 'ruled' },
-  { id: 'packet-tour', text: 'someday?\nFollow one packet across the whole lab.', paper: 'ink', ink: 'green' },
-];
+export const wallScraps: Scrap[] = scrapyardScraps;
