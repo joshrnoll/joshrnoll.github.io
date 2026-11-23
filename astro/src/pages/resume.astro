@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import resumeHtml from '../../../resume/src/index.html?raw';
+import kalamBold from '@fontsource/kalam/files/kalam-latin-700-normal.woff2?url';
 
 const resumeBody = resumeHtml.match(/<main\b[^>]*>([\s\S]*)<\/main>/i)?.[1];
 if (!resumeBody) {
@@ -9,7 +10,9 @@ if (!resumeBody) {
 ---
 <BaseLayout title="Resume" description="Josh Noll's resume.">
   <link slot="head" rel="stylesheet" href="/resume/styles.css" />
-  <div class="container resume" set:html={resumeBody} />
+  <link slot="head" rel="preload" href={kalamBold} as="font" type="font/woff2" crossorigin />
+  <noscript><style is:inline>.resume[data-intro] :is(.resume-title, .resume-actions) { visibility: visible !important; }</style></noscript>
+  <div class="container resume" data-intro="waiting" set:html={resumeBody} />
 </BaseLayout>
 
 <script>
@@ -33,5 +36,20 @@ if (!resumeBody) {
     document.addEventListener('astro:before-swap', () => observer.disconnect(), { once: true });
   }
 
+  // Start the masthead intro only after the handwriting font loads, or after
+  // 3 seconds so a slow font never leaves the masthead blank.
+  function startResumeIntro() {
+    const resume = document.querySelector<HTMLElement>('main .resume[data-intro]');
+    const name = resume?.querySelector<HTMLElement>('.resume-title h1');
+    if (!resume || !name) return;
+    const start = () => { if (resume.isConnected) resume.dataset.intro = 'ready'; };
+    if (!matchMedia('(prefers-reduced-motion: no-preference)').matches) return start();
+    const { fontWeight, fontFamily } = getComputedStyle(name);
+    const text = `${resume.querySelector('.resume-draft-text')?.textContent ?? ''}${name.textContent ?? ''}`;
+    const timeout = new Promise(resolve => setTimeout(resolve, 3000));
+    Promise.race([document.fonts.load(`${fontWeight} 1em ${fontFamily}`, text), timeout]).then(start, start);
+  }
+
+  document.addEventListener('astro:page-load', startResumeIntro);
   document.addEventListener('astro:page-load', drawResumeHeadings);
 </script>

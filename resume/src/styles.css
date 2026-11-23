@@ -46,7 +46,7 @@ body > main.resume { padding-inline: clamp(1rem, 4vw, 3rem); }
   display: grid;
   min-width: 0;
 }
-.resume-title > h1, .resume-draft { grid-area: 1 / 1; }
+.resume-title > h1, .resume-note { grid-area: 1 / 1; }
 .resume-title h1 {
   width: fit-content;
   margin: 0;
@@ -55,14 +55,31 @@ body > main.resume { padding-inline: clamp(1rem, 4vw, 3rem); }
   text-wrap: balance;
 }
 
-/* The draft is only drawn by the intro animation. */
-.resume-draft {
+/* The whiteboard note before the name is only drawn by the intro animation.
+   The eraser sits outside the clipped note so the wipe isn't cut off. */
+.resume-note {
   position: relative;
   align-self: center;
   width: fit-content;
-  color: var(--resume-muted);
-  font: 700 clamp(1.9rem, 5vw, 3.6rem)/1.1 var(--resume-marker);
+  font: 700 clamp(1.6rem, 4.2vw, 3rem)/1.2 var(--resume-marker);
+}
+.resume-draft {
+  display: flex;
+  align-items: center;
+  gap: .2em;
+  color: var(--resume-blue);
+  white-space: nowrap;
   visibility: hidden;
+}
+.resume-draft-arrow {
+  width: 1.05em;
+  height: 1em;
+  margin-top: .35em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .resume-eraser {
   position: absolute;
@@ -108,28 +125,32 @@ body > main.resume { padding-inline: clamp(1rem, 4vw, 3rem); }
   mask: var(--resume-underline) center / 100% 100% no-repeat;
 }
 
-/* Intro: write a draft, erase it, write the name, then underline it.
-   resume.astro adds .resume--drawing so headings write in as they scroll into view.
-   The standalone resume document has no script, so its headings stay visible. */
+/* Intro: write "the short version:" and an arrow, erase them, write the name,
+   then underline it. resume.astro sets data-intro="ready" once the handwriting
+   font loads, so the marker never writes in a fallback font. The standalone
+   resume document has no data-intro, so it shows the finished masthead.
+   resume.astro also adds .resume--drawing so headings write in on scroll. */
 @media screen and (prefers-reduced-motion: no-preference) {
-  .resume-draft {
-    animation:
-      resume-write .5s steps(8) .1s both,
-      resume-erase .5s linear .95s both;
-  }
-  .resume-eraser { animation: resume-wipe .5s linear .95s; }
-  .resume-title h1 { animation: resume-write .8s steps(16) 1.5s both; }
-  .resume-title-stroke path {
+  .resume[data-intro]:not([data-intro="ready"]) :is(.resume-title, .resume-actions) { visibility: hidden; }
+  .resume[data-intro="ready"] .resume-draft-text { animation: resume-write .75s steps(18) .1s both; }
+  .resume[data-intro="ready"] .resume-draft-arrow path {
     stroke-dasharray: 1;
-    animation: resume-draw .5s ease-out 2.3s both;
+    animation: resume-draw .3s ease-out .9s both;
   }
-  .resume-title-stroke path + path { animation-delay: 2.5s; }
-  .resume-actions .cta { animation: resume-stick .35s ease-out both; }
-  .resume-actions .cta:nth-child(1) { animation-delay: 2.55s; }
-  .resume-actions .cta:nth-child(2) { animation-delay: 2.65s; }
-  .resume-actions .cta:nth-child(3) { animation-delay: 2.75s; }
-  .resume-actions .cta:nth-child(n + 4) { animation-delay: 2.85s; }
-  .resume-actions > .cta.cta--pdf { animation-delay: 2.95s; }
+  .resume[data-intro="ready"] .resume-draft { animation: resume-erase .55s linear 1.4s both; }
+  .resume[data-intro="ready"] .resume-eraser { animation: resume-wipe .55s linear 1.4s; }
+  .resume[data-intro="ready"] .resume-title h1 { animation: resume-write .8s steps(16) 2.05s both; }
+  .resume[data-intro="ready"] .resume-title-stroke path {
+    stroke-dasharray: 1;
+    animation: resume-draw .5s ease-out 2.85s both;
+  }
+  .resume[data-intro="ready"] .resume-title-stroke path + path { animation-delay: 3.05s; }
+  .resume[data-intro="ready"] .resume-actions .cta { animation: resume-stick .35s ease-out both; }
+  .resume[data-intro="ready"] .resume-actions .cta:nth-child(1) { animation-delay: 3.1s; }
+  .resume[data-intro="ready"] .resume-actions .cta:nth-child(2) { animation-delay: 3.2s; }
+  .resume[data-intro="ready"] .resume-actions .cta:nth-child(3) { animation-delay: 3.3s; }
+  .resume[data-intro="ready"] .resume-actions .cta:nth-child(n + 4) { animation-delay: 3.4s; }
+  .resume[data-intro="ready"] .resume-actions > .cta.cta--pdf { animation-delay: 3.5s; }
 
   .resume--drawing > section > h2.is-pending { clip-path: inset(-.25em 100% -.3em 0); }
   .resume--drawing > section > h2.is-pending::after { clip-path: inset(0 100% 0 0); }
@@ -152,9 +173,11 @@ body > main.resume { padding-inline: clamp(1rem, 4vw, 3rem); }
   95% { visibility: visible; }
   100% { visibility: hidden; left: 100%; transform: translateX(-70%) rotate(-7deg); }
 }
+/* Hidden until the stroke starts, so round line caps don't leave dots. */
 @keyframes resume-draw {
-  from { stroke-dashoffset: 1; }
-  to { stroke-dashoffset: 0; }
+  from { visibility: hidden; stroke-dashoffset: 1; }
+  1% { visibility: visible; }
+  to { visibility: visible; stroke-dashoffset: 0; }
 }
 @keyframes resume-underline {
   from { clip-path: inset(0 100% 0 0); }

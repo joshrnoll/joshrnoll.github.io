@@ -11,8 +11,14 @@
   <main class="container resume">
     <header class="resume-masthead" id="header">
       <div class="resume-title">
-        <!-- Decorative marker draft that is written, then erased, before the name. -->
-        <span class="resume-draft" aria-hidden="true">~/resume<span class="resume-eraser"></span></span>
+        <!-- Decorative whiteboard note that is written, then erased, before the name. -->
+        <span class="resume-note" aria-hidden="true">
+          <span class="resume-draft">
+            <span class="resume-draft-text">the short version:</span>
+            <svg class="resume-draft-arrow" viewBox="0 0 34 32"><path pathLength="1" d="M3 5Q9 19 28 25M17 27l11-2-4-10" /></svg>
+          </span>
+          <span class="resume-eraser"></span>
+        </span>
         <h1>{{ cv.name }}</h1>
         <svg class="resume-title-stroke chalk-stroke" viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true">
           <path pathLength="1" d="M4 14C39 8 88 5 136 5S227 5 296 8" />
