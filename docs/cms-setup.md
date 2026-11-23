@@ -72,3 +72,18 @@ Each step creates something outside this repository, so each one needs your appr
 - Decap names the slug from the title. Editing an older post whose title differs from its file name puts new images under the slugified title, not the file name. The links still work.
 - The editorial workflow is on. **Save** commits to a `cms/<collection>/<slug>` branch and opens a pull request, so drafts never rebuild the site. **Publish** merges that pull request into `main`, which starts the Pages build.
 - **Hide from the site** sets `draft: true`. A published post with it on stays out of the build.
+
+## How page text works
+
+Three more collections edit page copy instead of posts. Each one is a single YAML file in `astro/src/content/site/`, checked by a schema in `astro/src/content.config.ts`. A value the schema rejects fails the build, so the Pages workflow stops before it deploys a broken page.
+
+| CMS collection | File | What it holds |
+| --- | --- | --- |
+| **Homepage** | `home.yaml` | Tagline, the handwritten hero lines, whiteboard headings and link text, and the About me text |
+| **Scrapyard** | `scraps.yaml` | Scrapyard page text, the homepage wall scraps, and the Scrapyard page scraps |
+| **Homelab** | `homelab.yaml` | Page title, diagram link text, and the text sections |
+
+- About me paragraphs and Homelab section bodies are Markdown. Blank lines separate paragraphs. Smart quotes are off, so `'` stays straight.
+- The hero animation timing is set in CSS for the current line lengths. Much longer lines still write and erase, but the marker moves faster per letter.
+- A wall scrap's **Arrow to** must name a card on the wall: `post-<slug>` for one of the 3 latest posts, or `project-<id>` for a featured project. An arrow to anything else is dropped.
+- Saving one of these files rewrites the whole YAML file in Decap's style. The values stay the same.
