@@ -1,0 +1,123 @@
+main :is(.prose, .projects) img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Print treatment before the enhanced frame mounts, and without JavaScript. */
+main :is(.prose, .projects) img:not(.taped-print img) {
+  margin: 1.5rem auto;
+  border: .42rem solid #fff;
+  border-bottom-width: .72rem;
+  box-shadow: 0 .25rem .85rem #0e211e24;
+}
+
+.taped-photo {
+  --print-paper: #fffdf7;
+  --print-paper: light-dark(#fffdf7, #e7e1d4);
+  --print-shadow: light-dark(#152a2733, #0008);
+  --tape-color: light-dark(#e6cf91b8, #c6ac778f);
+  --print-gutter: clamp(.35rem, 1vw, .7rem);
+  --display-tilt: var(--photo-tilt);
+  display: inline-block;
+  max-width: 100%;
+  margin-block: 1rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.taped-photo-alone {
+  display: block;
+  width: fit-content;
+  margin-inline: auto;
+}
+
+.taped-print {
+  display: grid;
+  position: relative;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  padding: var(--print-gutter) var(--print-gutter) calc(var(--print-gutter) * 1.5);
+  background: var(--print-paper);
+  color: #34433d;
+  box-shadow: 0 1px 2px var(--print-shadow), 0 6px 18px var(--print-shadow);
+  transform: rotate(var(--display-tilt));
+}
+
+.taped-print::before,
+.taped-print::after {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+  top: -.32rem;
+  left: 50%;
+  width: min(35%, 5.1rem);
+  height: clamp(.7rem, 2.2vw, 1.17rem);
+  background:
+    repeating-linear-gradient(106deg, #fff2 0 1px, transparent 1px 4px),
+    var(--tape-color);
+  clip-path: polygon(0 9%, 28% 5%, 66% 10%, 100% 0, 95% 20%, 100% 34%, 96% 48%, 99% 69%, 95% 81%, 100% 97%, 69% 92%, 25% 99%, 0 92%, 4% 76%, 0 64%, 4% 43%, 0 29%, 4% 20%);
+  transform: translateX(-50%) rotate(-4deg);
+}
+
+.taped-print::after { display: none; }
+.taped-photo-double .taped-print::before {
+  left: 1%;
+  transform: rotate(-24deg);
+}
+.taped-photo-double .taped-print::after {
+  display: block;
+  left: auto;
+  right: 1%;
+  transform: rotate(19deg);
+}
+
+main :is(.prose, .projects) .taped-print img {
+  float: none !important;
+  margin: 0 !important;
+  max-height: var(--photo-height, none);
+  object-fit: contain;
+}
+
+.taped-print picture { min-width: 0; }
+
+.taped-figure > figcaption {
+  padding: .5rem .25rem 0;
+  font: 700 1rem/1.25 var(--font-marker);
+  overflow-wrap: anywhere;
+}
+
+.taped-figure > figcaption {
+  color: var(--comment);
+  text-align: center;
+}
+
+a:focus-visible .taped-print,
+.taped-photo:focus-within .taped-print {
+  z-index: 2;
+  transform: none;
+}
+
+@media (hover: hover) {
+  .taped-photo:hover .taped-print { z-index: 2; transform: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .taped-print { transition: transform .18s ease; }
+}
+
+@media (min-width: 741px) {
+  .taped-photo[data-align] { max-width: 57%; margin-block: .5rem .9rem; }
+  .taped-photo[data-align='left'] { float: left; margin-right: 1.55rem; margin-left: .1rem; }
+  .taped-photo[data-align='right'] { float: right; margin-left: 1.55rem; margin-right: .1rem; }
+}
+
+@media (max-width: 740px) {
+  .taped-photo {
+    --display-tilt: calc(var(--photo-tilt) * .28);
+    display: block;
+    width: fit-content;
+    margin-inline: auto;
+  }
+}

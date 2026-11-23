@@ -1,115 +1,132 @@
 ---
-// astro/src/components/SearchBar.astro
-
 interface Props {
   src?: string;
-  basePath?: string;
   placeholder?: string;
 }
 
-const { src = '/search-index.json', basePath = '', placeholder = 'search posts...' } = Astro.props;
+const { src = '/search-index.json', placeholder = 'Search posts' } = Astro.props;
 ---
-<div class="search-bar" id="search-bar" data-search-src={src} data-base-path={basePath}>
-  <label class="search-prompt" for="search-input">:</label>
+<div class="search-bar" id="search-bar" data-search-src={src}>
+  <label class="sr-only" for="search-input">{placeholder}</label>
+  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+    <circle cx="10.5" cy="10.5" r="5.5" />
+    <path d="m14.5 14.5 5 5" />
+  </svg>
   <input
     id="search-input"
-    type="text"
+    type="search"
     placeholder={placeholder}
     autocomplete="off"
     spellcheck="false"
+    aria-controls="search-results"
     class="search-input"
   />
 </div>
-<div class="search-results" id="search-results" hidden></div>
+<div class="search-results" id="search-results" aria-live="polite" hidden></div>
 
 <script>
   import Fuse from 'fuse.js';
 
-  const searchBar = document.getElementById('search-bar')!;
-  const src = (searchBar as HTMLElement).dataset.searchSrc ?? '/search-index.json';
-  const basePath = (searchBar as HTMLElement).dataset.basePath ?? '';
-
   type PostEntry = {
-    slug: string;
+    href: string;
     title: string;
     description: string;
     tags: string[];
-    date: string;
+    kind: string;
   };
 
-  let fuse: Fuse<PostEntry> | null = null;
-  let allPosts: PostEntry[] = [];
-
-  async function initFuse() {
-    if (fuse) return;
-    const res = await fetch(src);
-    allPosts = await res.json();
-    fuse = new Fuse(allPosts, {
-      keys: [
-        { name: 'title', weight: 2 },
-        { name: 'tags', weight: 1.5 },
-        { name: 'description', weight: 1 },
-      ],
-      threshold: 0.35,
-      includeScore: true,
-    });
-  }
-
-  function renderResults(posts: PostEntry[]) {
-    const container = document.getElementById('search-results')!;
-    if (posts.length === 0) {
-      container.innerHTML = '<p class="no-results">No results.</p>';
-    } else {
-      container.innerHTML = posts.map(p => `
-        <a href="/${basePath ? basePath + '/' : ''}${p.slug}/" class="search-result-item">
-          <span class="sr-title">${p.title}</span>
-          <span class="sr-tags">${p.tags.map(t => `[${t}]`).join(' ')}</span>
-        </a>
-      `).join('');
-    }
-    container.hidden = false;
-  }
-
-  function hideResults() {
-    const container = document.getElementById('search-results')!;
-    container.hidden = true;
-    container.innerHTML = '';
-  }
-
-  function toggleBlogCards(show: boolean) {
+  document.addEventListener('astro:page-load', () => {
+    const searchBar = document.querySelector<HTMLElement>('#search-bar');
+    const input = document.querySelector<HTMLInputElement>('#search-input');
+    const results = document.getElementById('search-results');
     const postList = document.getElementById('post-list');
-    if (postList) postList.style.display = show ? 'flex' : 'none';
-  }
+    if (!searchBar || !input || !results || !postList) return;
 
-  const input = document.getElementById('search-input') as HTMLInputElement;
+    const { searchSrc = '/search-index.json' } = searchBar.dataset;
+    const navigation = new AbortController();
+    let index: Promise<Fuse<PostEntry>> | undefined;
 
-  input.addEventListener('focus', initFuse);
-
-  input.addEventListener('input', async () => {
-    const query = input.value.trim();
-    if (!query) {
-      hideResults();
-      toggleBlogCards(true);
-      return;
+    function loadIndex() {
+      index ??= fetch(searchSrc, { signal: navigation.signal })
+        .then(response => {
+          if (!response.ok) throw new Error(`Search returned ${response.status}`);
+          return response.json() as Promise<PostEntry[]>;
+        })
+        .then(posts => new Fuse(posts, {
+          keys: [
+            { name: 'title', weight: 2 },
+            { name: 'tags', weight: 1.5 },
+            { name: 'description', weight: 1 },
+          ],
+          threshold: 0.35,
+        }))
+        .catch(error => {
+          index = undefined;
+          throw error;
+        });
+      return index;
     }
-    await initFuse();
-    const results = fuse!.search(query).map(r => r.item);
-    toggleBlogCards(false);
-    renderResults(results);
-  });
 
-  // Keyboard shortcut: '/' to focus search (like Vim)
-  document.addEventListener('keydown', (e) => {
-    if (e.key === '/' && document.activeElement !== input) {
-      e.preventDefault();
-      input.focus();
+    function resultLink(post: PostEntry) {
+      const link = document.createElement('a');
+      link.href = post.href;
+      link.className = 'search-result-item';
+
+      const title = document.createElement('span');
+      title.textContent = post.title;
+      title.className = 'sr-title';
+      link.append(title);
+
+      if (post.kind || post.tags.length > 0) {
+        const tags = document.createElement('span');
+        tags.textContent = [post.kind, ...post.tags].join(' · ');
+        tags.className = 'sr-tags';
+        link.append(tags);
+      }
+      return link;
     }
-    if (e.key === 'Escape' && document.activeElement === input) {
-      input.value = '';
-      hideResults();
-      toggleBlogCards(true);
-      input.blur();
-    }
+
+    const updateSearch = async () => {
+      const query = input.value.trim();
+      if (!query) {
+        results.hidden = true;
+        results.replaceChildren();
+        postList.hidden = false;
+        return;
+      }
+
+      let rows: Node[];
+      try {
+        const fuse = await loadIndex();
+        rows = fuse.search(query).map(result => resultLink(result.item));
+        if (rows.length === 0) rows.push(document.createTextNode('No results.'));
+      } catch {
+        rows = [document.createTextNode('Search is unavailable.')];
+      }
+
+      if (navigation.signal.aborted || input.value.trim() !== query) return;
+      results.replaceChildren(...rows);
+      results.hidden = false;
+      postList.hidden = true;
+    };
+
+    input.addEventListener('input', updateSearch);
+    document.addEventListener('astro:before-swap', () => navigation.abort(), { once: true });
+    document.addEventListener('keydown', event => {
+      const target = event.target;
+      if (
+        event.key === '/' && !event.metaKey && !event.ctrlKey && !event.altKey &&
+        !(target instanceof HTMLElement && target.closest('input, textarea, select, [contenteditable]'))
+      ) {
+        event.preventDefault();
+        input.focus();
+      }
+      if (event.key === 'Escape' && document.activeElement === input) {
+        input.value = '';
+        void updateSearch();
+        input.blur();
+      }
+    }, { signal: navigation.signal });
   });
 </script>
 
@@ -117,51 +134,38 @@ const { src = '/search-index.json', basePath = '', placeholder = 'search posts..
 .search-bar {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  border: 1px solid var(--comment);
-  border-radius: 4px;
-  background: var(--bg-dark);
-  padding: 0.4rem 0.75rem;
-  transition: border-color 0.15s;
+  gap: 0.55rem;
+  margin-bottom: 0.55rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  background: var(--surface);
 }
-.search-bar:focus-within { border-color: var(--blue); }
-.search-prompt {
-  color: var(--blue);
-  font-size: 1.1rem;
-  user-select: none;
-  flex-shrink: 0;
-}
-.search-input {
-  background: transparent;
-  border: none;
-  color: var(--fg);
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  outline: none;
-  width: 100%;
-}
+
+.search-bar:focus-within { outline: 2px solid var(--blue); outline-offset: 2px; }
+.search-bar svg { color: var(--blue); width: 1.22rem; flex: 0 0 auto; }
+.search-input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--fg); }
 .search-input::placeholder { color: var(--comment); }
 
 .search-results {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  display: grid;
+  gap: 0.6rem;
+  color: var(--comment);
+  font-size: 0.9rem;
 }
-.search-result-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--comment);
-  border-radius: 4px;
-  background: var(--bg-dark);
-  text-decoration: none;
-  transition: border-color 0.15s;
+
+.search-results[hidden] { display: none; }
+
+.search-results :global(.search-result-item) {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  background: var(--surface);
 }
-.search-result-item:hover { border-color: var(--blue); }
-.sr-title { color: var(--fg); font-size: 0.95rem; }
-.sr-tags { color: var(--comment); font-size: 0.8rem; }
-.no-results { color: var(--comment); font-size: 0.875rem; padding: 0.5rem 0; }
+
+.search-results :global(.search-result-item:hover) { border-color: var(--blue); text-decoration: none; }
+.search-results :global(.sr-title) { color: var(--fg); font-weight: 650; }
+.search-results :global(.sr-tags) { color: var(--comment); font-size: 0.76rem; }
 </style>

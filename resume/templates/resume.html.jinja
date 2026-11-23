@@ -4,82 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="/favicon/favicon.ico" sizes="any">
-  <link rel="preload" href="./fonts/jetbrains-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./print.css" media="print">
   <title>Josh Noll's Resume</title>
 </head>
 <body>
-  <!-- Navbar and the page status bar are the site layout's. This document is only the resume body. -->
   <main class="container resume">
-    <!-- Neovim buffer intro (mirrors the joshrnoll.com landing page). Decorative only:
-         the full resume below is always in the DOM for screen readers and crawlers. -->
-    <div class="nvim-wrap" id="nvim-wrap" aria-hidden="true">
-      <div class="nvim-frame" id="nvim-frame">
-        <div class="nvim-content" id="nvim-content"></div>
-      </div>
-      <button type="button" class="nvim-skip" id="nvim-skip" tabindex="-1">skip intro &rarr;</button>
-    </div>
-
-    <!-- Markdown source typed into the buffer, generated from resume.yaml -->
-    <template id="resume-src">
-      <div data-k="dim"># resume.md</div>
-      <div></div>
-      <div data-k="h1" data-type="ciw">## {{ cv.name }}</div>
-      <div></div>
-      <div data-k="links" data-type="i">{% for social in cv.social_networks %}[{{ social.network }}]  {% endfor %}[Website]  [PDF]</div>
-      <div></div>
-      <div data-k="h2">## Summary</div>
-      {%- for item in cv.sections.summary %}
-      <div>{{ item }}</div>
-      {%- endfor %}
-      <div></div>
-      <div data-k="h2">## Technologies</div>
-      {%- for skill in cv.sections.skills %}
-      <div>{{ skill }}</div>
-      {%- endfor %}
-      <div></div>
-      <div data-k="h2">## Certifications</div>
-      {%- for cert in cv.sections.certifications %}
-      <div>{{ cert }}</div>
-      {%- endfor %}
-      <div></div>
-      <div data-k="h2">## Experience</div>
-      {%- for exp in cv.sections.experience %}
-      <div></div>
-      <div data-k="h3">### {{ exp.position }}, {{ exp.company }}</div>
-      <div data-k="dim">_{{ exp.start_date }} - {{ exp.end_date }}_</div>
-      {%- for highlight in exp.highlights %}
-      <div data-k="li">- {{ highlight }}</div>
-      {%- endfor %}
-      {%- endfor %}
-      <div></div>
-      <div data-k="h2">## Volunteering</div>
-      {%- for vol in cv.sections.volunteering %}
-      <div></div>
-      <div data-k="h3">### {{ vol.position }}, {{ vol.company }}</div>
-      <div data-k="dim">_{{ vol.start_date }} - {{ vol.end_date }}_</div>
-      {%- for highlight in vol.highlights %}
-      <div data-k="li">- {{ highlight }}</div>
-      {%- endfor %}
-      {%- endfor %}
-      <div></div>
-      <div data-k="h2">## Technical Projects</div>
-      {%- for project in cv.sections.projects %}
-      <div data-k="li">- **{{ project.name }}** | {{ project.summary }}</div>
-      {%- endfor %}
-      <div></div>
-      <div data-k="h2">## Education</div>
-      {%- for edu in cv.sections.education %}
-      <div data-k="h3">### {{ edu.label }}</div>
-      <div>{{ edu.details }}</div>
-      {%- endfor %}
-    </template>
-
-    <div class="md-preview" id="resume-preview">
-    <header>
-      <section id="header">
+    <header class="resume-masthead" id="header">
+      <div class="resume-title">
+        <!-- Decorative whiteboard note that is written, then erased, before the name. -->
+        <span class="resume-note" aria-hidden="true">
+          <span class="resume-draft">
+            <span class="resume-draft-text">the short version:</span>
+            <svg class="resume-draft-arrow" viewBox="0 0 34 32"><path pathLength="1" d="M3 5Q9 19 28 25M17 27l11-2-4-10" /></svg>
+          </span>
+          <span class="resume-eraser"></span>
+        </span>
         <h1>{{ cv.name }}</h1>
+        <svg class="resume-title-stroke chalk-stroke" viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true">
+          <path pathLength="1" d="M4 14C39 8 88 5 136 5S227 5 296 8" />
+          <path pathLength="1" d="M30 17C91 11 140 10 192 11S252 13 273 12" />
+        </svg>
+      </div>
+      <div class="resume-actions">
         <div class="button-group">
           <a class="cta" href="{{ cv.website }}">My Website</a>
           {% for social in cv.social_networks %}
@@ -91,7 +37,7 @@
           {% endfor %}
         </div>
         <a id="pdfview" class="cta cta--pdf" href="resume.pdf">View this resume as a PDF</a>
-      </section>
+      </div>
     </header>
 
     <section id="summary">
@@ -177,7 +123,6 @@
         {% endfor %}
       </ul>
     </section>
-    </div>
   </main>
 </body>
 </html>

@@ -1,57 +1,118 @@
-/* astro/src/styles/global.css */
-@import '@fontsource/jetbrains-mono/400.css';
-@import '@fontsource/jetbrains-mono/700.css';
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-500.css';
+@import '@fontsource/inter/latin-600.css';
+@import '@fontsource/inter/latin-700.css';
+@import '@fontsource/inter/latin-800.css';
+@import '@fontsource/kalam/latin-400.css';
+@import '@fontsource/kalam/latin-700.css';
+@import '@fontsource/jetbrains-mono/latin-400.css';
+@import '@fontsource/jetbrains-mono/latin-700.css';
+
+/* Josh's own whiteboard handwriting. One file covers every weight we use, so
+   browsers don't fake a bold. Kalam fills in glyphs it doesn't have. */
+@font-face {
+  font-family: 'Josh Noll Hand';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/josh-noll-hand/josh-noll-hand.woff2') format('woff2');
+}
 
 :root {
-  --bg:        #1a1b26;
-  --bg-dark:   #16161e;
-  --bg-popup:  #15161e;
-  --fg:        #c0caf5;
-  --comment:   #565f89;
-  --blue:      #7aa2f7;
-  --cyan:      #7dcfff;
-  --green:     #9ece6a;
-  --yellow:    #e0af68;
-  --orange:    #ff9e64;
-  --red:       #f7768e;
-  --magenta:   #bb9af7;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  color-scheme: light dark;
+  --bg: light-dark(#f8f9f5, #1a2422);
+  --bg-dark: light-dark(#eeefe9, #232f2c);
+  --bg-popup: light-dark(#fff, #26332f);
+  --surface: light-dark(#fff, #22302d);
+  --fg: light-dark(#202a28, #f1f0e5);
+  --comment: light-dark(#53615d, #bcc9c1);
+  --line: light-dark(#d7ded7, #485952);
+  --blue: light-dark(#2058a6, #a8cff5);
+  --cyan: light-dark(#184583, #cee6ff);
+  --green: light-dark(#23634c, #e8db9f);
+  --yellow: light-dark(#f5dc79, #f4e3a8);
+  --orange: light-dark(#8b4c1c, #f0c99c);
+  --red: light-dark(#ad3e45, #f3b0bc);
+  --magenta: light-dark(#765283, #dfbfeb);
+  --selected: color-mix(in srgb, var(--blue) 13%, var(--surface));
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-marker: 'Josh Noll Hand', 'Kalam', cursive;
+  --font-mono: 'JetBrains Mono', monospace;
+  --page-gutter: clamp(1rem, 4vw, 3rem);
 }
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; --chalk-stroke: url(#chalk-grain); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) { --chalk-stroke: url(#chalk-grain); }
+}
+
+.chalk-stroke { filter: var(--chalk-stroke, none); }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
   background-color: var(--bg);
   color: var(--fg);
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.6;
   scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
 }
 
 body {
   min-height: 100vh;
-  padding-bottom: 4rem; /* room for fixed StatusBar (may grow taller on mobile) */
+  display: flex;
+  flex-direction: column;
+  background-image:
+    radial-gradient(ellipse at 24% 10rem, light-dark(transparent, #a2c6ae0c), transparent 42rem),
+    radial-gradient(ellipse at 76% 37rem, light-dark(transparent, #b5c8ad0b), transparent 31rem);
 }
+
+main {
+  flex: 1;
+  min-width: 0;
+}
+
+button, input { font: inherit; }
+code, kbd, pre { font-family: var(--font-mono); }
 
 a { color: var(--blue); text-decoration: none; }
 a:hover { color: var(--cyan); text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
 
-::selection { background: var(--blue); color: var(--bg); }
+::selection { background: var(--selected); color: var(--fg); }
 
 .sr-only {
   position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
   clip: rect(0,0,0,0);
   white-space: nowrap;
   border: 0;
 }
 
-/* Layout container */
 .container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+.page-title {
+  font-size: clamp(2.35rem, 5.4vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.065em;
+}
+
+@media (max-width: 720px) {
+  html { scroll-padding-top: 4.75rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }

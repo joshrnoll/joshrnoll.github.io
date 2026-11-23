@@ -1,6 +1,7 @@
-This favicon was generated using the following font:
+The JN sticky note in ../favicon.svg is drawn from the J and N glyphs of Josh
+Noll Hand (../fonts/josh-noll-hand/josh-noll-hand.woff2), converted to paths so
+the icon doesn't load the font. The glyph outlines were flattened, simplified to
+about 0.1 icon units, and stroked 2.4 units heavier so they read at small sizes.
 
-- Font Title: JetBrains Mono
-- Font Author: undefined
-- Font Source: https://fonts.gstatic.com/s/jetbrainsmono/v23/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8FqtjPVmUsaaDhw.ttf
-- Font License: undefined)
+PNGs were rendered from that SVG with resvg. favicon-16x16.png uses a 3.2-unit
+stroke for legibility at 16px. Both ICO files package the 16px and 32px PNGs.

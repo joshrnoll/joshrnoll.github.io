@@ -1,0 +1,74 @@
+.code-block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 3.6rem;
+  margin: 1.25rem 0;
+  border: 1px solid #0a0c10;
+  border-radius: 6px;
+  background: #0a0c10;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+main .code-block > pre {
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  background: transparent !important;
+  overflow-x: auto;
+}
+
+.code-copy-rail {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  padding-top: .25rem;
+}
+
+.copy-btn {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: light-dark(#a8cff5, #e8dbb2);
+  opacity: 0;
+  cursor: pointer;
+}
+
+.copy-btn svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.code-block:hover .copy-btn,
+.code-block:focus-within .copy-btn,
+.copy-btn:focus-visible,
+.copy-btn.copied { opacity: 1; }
+.copy-btn:focus-visible { outline-color: currentColor; outline-offset: 0; }
+
+.copy-check, .copy-btn.copied .copy-glyph { display: none; }
+.copy-btn.copied .copy-check { display: inline; }
+
+.copy-status {
+  position: absolute;
+  top: 2.12rem;
+  inset-inline: .15rem;
+  text-align: center;
+  color: light-dark(#a8cff5, #e8dbb2);
+  font: 700 .71rem/1.1 var(--font-marker);
+  transform: rotate(-4deg);
+  pointer-events: none;
+}
+
+@media (hover: none), (pointer: coarse), (max-width: 540px) {
+  .copy-btn { opacity: .68; }
+}

@@ -1,0 +1,180 @@
+<hero-handwriting class="handwriting">
+  <p class="handwriting-name">Josh Noll:</p>
+  <p>
+    <span class="sr-only">Thinker of thoughts. Builder of things.</span>
+    <span class="writing-area" aria-hidden="true">
+      <span class="first-line">
+        <span class="first-word">Infantryman</span>
+        <svg class="chalk-stroke" viewBox="0 0 48 21">
+          <path pathLength="1" d="M2 12Q18 6 44 10M34 3l11 7-10 7M8 13q19-4 29-2" />
+        </svg>
+        <span class="second-word">Engineer</span>
+      </span>
+      <span class="eraser"></span>
+      <span class="final-line">
+        <span class="final-first">Thinker of thoughts.</span>
+        <span class="final-second">Builder of things.</span>
+      </span>
+    </span>
+  </p>
+</hero-handwriting>
+<noscript><style is:inline>.handwriting { visibility: visible !important; }</style></noscript>
+
+<script>
+  class HeroHandwriting extends HTMLElement {
+    private resize?: ResizeObserver;
+
+    connectedCallback() {
+      const name = this.querySelector<HTMLElement>('.handwriting-name');
+      const first = this.querySelector<HTMLElement>('.first-line');
+      const last = this.querySelector<HTMLElement>('.final-line');
+      const motion = matchMedia('(prefers-reduced-motion: no-preference)');
+      if (!name || !first || !last) return;
+
+      const centerName = () => {
+        if (!motion.matches) return;
+        const width = name.getBoundingClientRect().width;
+        name.style.setProperty('--name-start', `${(first.getBoundingClientRect().width - width) / 2}px`);
+        name.style.setProperty('--name-end', `${(last.getBoundingClientRect().width - width) / 2}px`);
+      };
+
+      this.resize = new ResizeObserver(centerName);
+      for (const line of [name, first, last]) this.resize.observe(line);
+
+      // Start the animation only after the handwriting font loads, or after
+      // 3 seconds so a slow font never leaves the hero blank.
+      const start = () => {
+        if (!this.isConnected || 'ready' in this.dataset) return;
+        centerName();
+        this.dataset.ready = '';
+      };
+      if (!motion.matches) return start();
+      // Load only the first family. Passing the whole list would also fetch the
+      // Kalam fallback, which this text doesn't need.
+      const { fontWeight, fontFamily } = getComputedStyle(last);
+      const [handwriting] = fontFamily.split(',');
+      const fontLoaded = document.fonts.load(`${fontWeight} 1em ${handwriting}`, last.textContent ?? '');
+      const timeout = new Promise(resolve => setTimeout(resolve, 3000));
+      Promise.race([fontLoaded, timeout]).then(start, start);
+    }
+
+    disconnectedCallback() {
+      this.resize?.disconnect();
+    }
+  }
+
+  if (!customElements.get('hero-handwriting')) customElements.define('hero-handwriting', HeroHandwriting);
+</script>
+
+<style>
+.handwriting {
+  display: block;
+  --erase-start: 1.85s;
+  --erase-time: .57s;
+  justify-self: start;
+  margin-left: .12em;
+  color: var(--green);
+  /* The erased "Infantryman -> Engineer" line is about 13.6em wide in Josh's
+     handwriting. 2.15vw, capped at 1.95rem once the page stops widening, keeps that line
+     inside the hero column at every desktop width. Phones get a full-width column. */
+  font: 700 clamp(1.1rem, 2.15vw, 1.95rem)/1.25 var(--font-marker);
+}
+@media (max-width: 760px) {
+  .handwriting { font-size: 1.25rem; }
+}
+
+.handwriting-name {
+  margin-bottom: .08em;
+  color: var(--blue);
+  font-size: 1.55em;
+  line-height: 1.1;
+  text-align: center;
+}
+.writing-area { display: grid; position: relative; }
+.writing-area > span { grid-area: 1 / 1; }
+.first-line, .final-line { justify-self: start; }
+.final-line > span { display: block; width: fit-content; }
+.first-line {
+  align-self: start;
+  display: flex;
+  align-items: center;
+  gap: .24em;
+  visibility: hidden;
+}
+.first-line svg {
+  width: 1.3em;
+  height: .72em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.eraser {
+  position: absolute;
+  top: .1em;
+  left: 0;
+  width: 1.5em;
+  height: .8em;
+  border: 1px solid light-dark(#49544c, #7a8274);
+  border-bottom-width: .16em;
+  border-radius: .14em .21em .17em .12em;
+  background: repeating-linear-gradient(96deg, #34443b 0 2px, #2b3a33 2px 4px);
+  box-shadow: 0 .12em .25em #1019144d;
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .first-line { display: none; }
+  .final-line { justify-self: center; }
+}
+
+/* The script sets data-ready once the handwriting font has loaded, so the marker never
+   writes in a fallback font. Until then the hero stays blank. */
+@media (prefers-reduced-motion: no-preference) {
+  .handwriting:not([data-ready]) { visibility: hidden; }
+  .handwriting[data-ready] .handwriting-name {
+    animation: center-name .4s ease-in-out calc(var(--erase-start) + var(--erase-time)) both;
+  }
+  .handwriting[data-ready] .first-line { animation: erase-line var(--erase-time) linear var(--erase-start) both; }
+  .handwriting[data-ready] .first-word { animation: write-line .64s steps(12) .12s both; }
+  .handwriting[data-ready] .second-word { animation: write-line .52s steps(8) 1.02s both; }
+  .handwriting[data-ready] .first-line path {
+    stroke-dasharray: 1;
+    animation: draw-arrow .26s ease-out .75s both;
+  }
+  .handwriting[data-ready] .eraser { animation: wipe var(--erase-time) linear var(--erase-start); }
+  .handwriting[data-ready] .final-first {
+    animation: write-line .85s steps(19) calc(var(--erase-start) + var(--erase-time) + .1s) both;
+  }
+  .handwriting[data-ready] .final-second {
+    animation: write-line .8s steps(18) calc(var(--erase-start) + var(--erase-time) + 1.05s) both;
+  }
+}
+
+@keyframes center-name {
+  from { transform: translateX(var(--name-start, 0px)); }
+  to { transform: translateX(var(--name-end, 0px)); }
+}
+/* Handwriting glyphs can draw past their advance width, so the finished clip leaves
+   room on both sides. A right inset of 0 cut the final "s" in Safari. */
+@keyframes write-line {
+  from { clip-path: inset(-.24em 100% -.24em -.12em); }
+  to { clip-path: inset(-.24em -.4em -.24em -.12em); }
+}
+@keyframes draw-arrow {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes erase-line {
+  from { visibility: visible; clip-path: inset(-.24em -.4em -.24em -.12em); }
+  99% { visibility: visible; }
+  to { visibility: hidden; clip-path: inset(-.24em 0 -.24em 100%); }
+}
+@keyframes wipe {
+  0% { visibility: visible; left: 0; transform: translateX(-60%) rotate(-8deg); }
+  55% { transform: translateX(-57%) rotate(6deg); }
+  95% { visibility: visible; }
+  100% { visibility: hidden; left: 100%; transform: translateX(-70%) rotate(-7deg); }
+}
+</style>
