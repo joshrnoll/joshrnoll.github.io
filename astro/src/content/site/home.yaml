@@ -1,0 +1,28 @@
+pageTitle: Home
+tagline: Building things, breaking things, writing it down
+hero:
+  name: "Josh Noll:"
+  erasedFrom: Infantryman
+  erasedTo: Engineer
+  finalFirst: Thinker of thoughts.
+  finalSecond: Builder of things.
+wall:
+  scratchHeading: Scratch work
+  shippedHeading: Shipped
+  postsHeading: Latest posts
+  postsLink: All posts →
+  projectsHeading: Projects
+  projectsLink: All projects →
+about:
+  heading: About me
+  photoAlt: Josh
+  body: >-
+    I'm a former infantryman turned software engineer with a passion for solving
+    hard problems with cool technology.
+
+
+    I write about all kinds of stuff.
+
+
+    Read my full story [here](/my-story/).
+  resumeLink: view my resume

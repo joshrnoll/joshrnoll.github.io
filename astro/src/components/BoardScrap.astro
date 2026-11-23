@@ -1,5 +1,7 @@
 ---
-import type { Scrap } from '../data/scraps';
+import type { CollectionEntry } from 'astro:content';
+
+type Scrap = CollectionEntry<'scraps'>['data']['wall'][number];
 
 interface Props {
   scrap: Scrap;

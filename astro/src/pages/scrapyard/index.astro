@@ -1,17 +1,19 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BoardScrap from '../../components/BoardScrap.astro';
-import { scrapyardScraps } from '../../data/scraps';
+import { getEntry } from 'astro:content';
+
+const { page, yard } = (await getEntry('scraps', 'scraps'))!.data;
 ---
-<BaseLayout title="Scrapyard" description="A place for half-baked ideas and loose ends.">
+<BaseLayout title={page.title} description={page.description}>
   <div class="container yard">
     <header class="yard-header">
-      <h1>Scrapyard<span>.</span></h1>
-      <p>Half-baked ideas and loose ends.</p>
-      <p class="draft-note">Sample scraps for this draft</p>
+      <h1>{page.title}<span>.</span></h1>
+      <p>{page.subtitle}</p>
+      {page.draftNote && <p class="draft-note">{page.draftNote}</p>}
     </header>
     <ul class="yard-scraps">
-      {scrapyardScraps.map((scrap, index) => (
+      {yard.map((scrap, index) => (
         <li><BoardScrap scrap={scrap} delay={100 + index * 135} /></li>
       ))}
     </ul>

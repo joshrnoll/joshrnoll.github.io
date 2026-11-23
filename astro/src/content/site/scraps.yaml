@@ -1,0 +1,49 @@
+page:
+  title: Scrapyard
+  description: A place for half-baked ideas and loose ends.
+  subtitle: Half-baked ideas and loose ends.
+  draftNote: Sample scraps for this draft
+wall:
+  - text: What goes in a good agent handoff?
+    paper: yellow
+  - text: Am I still the engineer if the agent wrote it?
+    paper: ink
+    ink: blue
+    target: post-impostor-syndrome-of-the-ai-native-engineer
+  - text: Can I rebuild the lab from a blank disk?
+    paper: ruled
+  - text: |-
+      one dashboard
+      for everything
+    paper: pink
+    ink: red
+    crossedOut: true
+  - text: |-
+      someday?
+      a field guide to things I broke
+    paper: ink
+    ink: green
+  - text: What if Git ran the lab?
+    paper: blue
+    ink: green
+    target: project-homelab-as-code
+yard:
+  - text: |-
+      Agent handoff receipts
+      What changed, what failed, what needs a human?
+    paper: yellow
+  - text: A homelab to monitor the homelab
+    paper: pink
+    ink: red
+    crossedOut: true
+  - text: |-
+      A field guide to small breakages
+      One mistake and one fix per entry.
+    paper: blue
+  - text: Pull the plug on a spare box. Time the recovery.
+    paper: ruled
+  - text: |-
+      someday?
+      Follow one packet across the whole lab.
+    paper: ink
+    ink: green

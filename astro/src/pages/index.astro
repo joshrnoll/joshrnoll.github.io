@@ -1,11 +1,15 @@
 ---
 import HeroHandwriting from '../components/HeroHandwriting.astro';
 import kalamBold from '@fontsource/kalam/files/kalam-latin-700-normal.woff2?url';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BoardScrap from '../components/BoardScrap.astro';
 import { projects } from '../data/projects';
-import { wallScraps } from '../data/scraps';
+import { renderMarkdown } from '../lib/markdown';
+
+const home = (await getEntry('home', 'home'))!.data;
+const wallScraps = (await getEntry('scraps', 'scraps'))!.data.wall;
+const aboutHtml = await renderMarkdown(home.about.body);
 
 const dateFormat = new Intl.DateTimeFormat('en', {
   dateStyle: 'medium',
@@ -30,18 +34,18 @@ const featuredProjects = ['homelab-as-code', 'pi-teach', 'black-relay'].flatMap(
 });
 const destinations = new Map([...posts, ...featuredProjects].map(card => [card.id, card]));
 ---
-<BaseLayout title="Home">
+<BaseLayout title={home.pageTitle}>
   <link slot="head" rel="preload" href={kalamBold} as="font" type="font/woff2" crossorigin />
   <div class="container wall">
     <header class="wall-intro">
-      <h1>Building things, breaking things, writing it down<span class="title-dot">.</span></h1>
-      <HeroHandwriting />
+      <h1>{home.tagline}<span class="title-dot">.</span></h1>
+      <HeroHandwriting {...home.hero} />
     </header>
 
     <whiteboard-wall>
       <div class="rough-side">
         <p class="rough-heading" aria-hidden="true">
-          <span>Scratch work</span>
+          <span>{home.wall.scratchHeading}</span>
           <svg class="chalk-stroke" viewBox="0 0 190 20" aria-hidden="true">
             <path pathLength="1" d="M3 13Q39 6 94 7t91 1M19 16Q91 8 158 12" />
           </svg>
@@ -69,9 +73,9 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
       </div>
 
       <section class="shipped" aria-labelledby="shipped-title">
-        <h2 id="shipped-title">Shipped<span>.</span></h2>
+        <h2 id="shipped-title">{home.wall.shippedHeading}<span>.</span></h2>
         <section class="shipped-group" aria-labelledby="writing-title">
-          <div class="group-heading"><h3 id="writing-title">Latest posts</h3><a href="/posts/">All posts →</a></div>
+          <div class="group-heading"><h3 id="writing-title">{home.wall.postsHeading}</h3><a href="/posts/">{home.wall.postsLink}</a></div>
           <ul>
             {posts.map(post => (
               <li id={post.id} class="shipped-card" tabindex="-1">
@@ -85,7 +89,7 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
           </ul>
         </section>
         <section class="shipped-group" aria-labelledby="projects-title">
-          <div class="group-heading"><h3 id="projects-title">Projects</h3><a href="/projects/">All projects →</a></div>
+          <div class="group-heading"><h3 id="projects-title">{home.wall.projectsHeading}</h3><a href="/projects/">{home.wall.projectsLink}</a></div>
           <ul>
             {featuredProjects.map(project => (
               <li id={project.id} class="shipped-card project-card" tabindex="-1">
@@ -115,7 +119,7 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
         <span class="about-tape" aria-hidden="true"></span>
         <img
           src="https://www.gravatar.com/avatar/d5377efce60675699a15b47511b8b451?s=400&d=mp"
-          alt="Josh"
+          alt={home.about.photoAlt}
           width="200"
           height="200"
           loading="lazy"
@@ -123,12 +127,10 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
         />
       </div>
       <div class="about-text">
-        <h2 id="about-title">About me</h2>
-        <p>I'm a former infantryman turned software engineer with a passion for solving hard problems with cool technology.</p>
-        <p>I write about all kinds of stuff.</p>
-        <p>Read my full story <a href="/my-story/">here</a>.</p>
+        <h2 id="about-title">{home.about.heading}</h2>
+        <Fragment set:html={aboutHtml} />
         <a class="resume-link" href="/resume/" data-astro-reload>
-          view my resume
+          {home.about.resumeLink}
           <svg class="chalk-stroke" viewBox="0 0 70 26" aria-hidden="true">
             <path pathLength="1" d="M3 17Q25 10 44 12T65 13" />
             <path pathLength="1" d="M55 4Q60 6 66 13q-8 2-13 9" />
@@ -271,14 +273,15 @@ const destinations = new Map([...posts, ...featuredProjects].map(card => [card.i
   clip-path: polygon(3% 8%, 97% 0, 100% 88%, 1% 100%);
   transform: translateX(-50%) rotate(4deg);
 }
-.about p + p { margin-top: .55rem; }
+/* The paragraphs come from Markdown, which has no scoped-style attribute. */
+.about-text :global(p + p) { margin-top: .55rem; }
 .about h2 {
   margin-bottom: .3rem;
   color: var(--blue);
   font: 700 clamp(1.55rem, 3vw, 2.15rem)/1.2 var(--font-marker);
 }
-.about p { color: var(--comment); font-size: 1.065rem; }
-.about p a { text-decoration: underline; text-underline-offset: .16em; }
+.about-text :global(p) { color: var(--comment); font-size: 1.065rem; }
+.about-text :global(p a) { text-decoration: underline; text-underline-offset: .16em; }
 .resume-link {
   display: inline-flex;
   align-items: center;
