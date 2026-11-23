@@ -25,7 +25,8 @@ local_backend: true
 
 site_url: https://joshrnoll.com
 display_url: https://joshrnoll.com
-logo_url: /avatar.png
+# The JN sticky note from the favicon, shown on the login screen.
+logo_url: /favicon.svg
 show_preview_links: true
 
 # Default for media inserted outside a post. Posts override this below.
@@ -128,7 +129,6 @@ collections:
   - name: home
     label: Homepage
     description: Text on the homepage. Posts and projects on the wall come from their own collections.
-    editor: { preview: false }
     files:
       - name: home
         label: Homepage text
@@ -173,7 +173,6 @@ collections:
   - name: scraps
     label: Scrapyard
     description: Sticky-note scraps on the homepage wall and the Scrapyard page.
-    editor: { preview: false }
     files:
       - name: scraps
         label: Scraps
@@ -217,7 +216,6 @@ collections:
   - name: homelab
     label: Homelab
     description: Text on joshrnoll.com/homelab/. The diagram itself is in homelab-diagram/.
-    editor: { preview: false }
     files:
       - name: homelab
         label: Homelab page
@@ -253,7 +251,6 @@ collections:
   - name: projects
     label: Projects
     description: The Projects page list and the projects featured on the homepage wall.
-    editor: { preview: false }
     files:
       - name: projects
         label: Projects
