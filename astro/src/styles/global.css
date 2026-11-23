@@ -8,6 +8,16 @@
 @import '@fontsource/jetbrains-mono/latin-400.css';
 @import '@fontsource/jetbrains-mono/latin-700.css';
 
+/* Josh's own whiteboard handwriting. One file covers every weight we use, so
+   browsers don't fake a bold. Kalam fills in glyphs it doesn't have. */
+@font-face {
+  font-family: 'Josh Noll Hand';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/josh-noll-hand/josh-noll-hand.woff2') format('woff2');
+}
+
 :root {
   color-scheme: light dark;
   --bg: light-dark(#f8f9f5, #1a2422);
@@ -26,7 +36,7 @@
   --magenta: light-dark(#765283, #dfbfeb);
   --selected: color-mix(in srgb, var(--blue) 13%, var(--surface));
   --font-body: 'Inter', system-ui, sans-serif;
-  --font-marker: 'Kalam', cursive;
+  --font-marker: 'Josh Noll Hand', 'Kalam', cursive;
   --font-mono: 'JetBrains Mono', monospace;
   --page-gutter: clamp(1rem, 4vw, 3rem);
 }

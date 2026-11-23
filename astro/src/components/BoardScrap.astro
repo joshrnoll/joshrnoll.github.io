@@ -63,7 +63,8 @@ let wordIndex = 0;
   transition: transform 180ms ease;
 }
 .scrap:hover, .scrap:focus-visible { color: var(--ink); text-decoration: none; }
-.scrap[data-thread] { padding-inline: 1.9rem; }
+/* Circled scraps keep their text inside the hand-drawn ellipse. */
+.scrap[data-thread] { padding-inline: 2.6rem; }
 .scrap:not(.paper-ink)::before, .scrap:not(.paper-ink)::after {
   content: '';
   position: absolute;

@@ -49,8 +49,11 @@
         this.dataset.ready = '';
       };
       if (!motion.matches) return start();
+      // Load only the first family. Passing the whole list would also fetch the
+      // Kalam fallback, which this text doesn't need.
       const { fontWeight, fontFamily } = getComputedStyle(last);
-      const fontLoaded = document.fonts.load(`${fontWeight} 1em ${fontFamily}`, last.textContent ?? '');
+      const [handwriting] = fontFamily.split(',');
+      const fontLoaded = document.fonts.load(`${fontWeight} 1em ${handwriting}`, last.textContent ?? '');
       const timeout = new Promise(resolve => setTimeout(resolve, 3000));
       Promise.race([fontLoaded, timeout]).then(start, start);
     }
@@ -120,7 +123,7 @@
   .final-line { justify-self: center; }
 }
 
-/* The script sets data-ready once Kalam has loaded, so the marker never
+/* The script sets data-ready once the handwriting font has loaded, so the marker never
    writes in a fallback font. Until then the hero stays blank. */
 @media (prefers-reduced-motion: no-preference) {
   .handwriting:not([data-ready]) { visibility: hidden; }
@@ -147,7 +150,7 @@
   from { transform: translateX(var(--name-start, 0px)); }
   to { transform: translateX(var(--name-end, 0px)); }
 }
-/* Kalam's glyphs draw past their advance width, so the finished clip leaves
+/* Handwriting glyphs can draw past their advance width, so the finished clip leaves
    room on both sides. A right inset of 0 cut the final "s" in Safari. */
 @keyframes write-line {
   from { clip-path: inset(-.24em 100% -.24em -.12em); }

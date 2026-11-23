@@ -1,3 +1,13 @@
+/* The standalone document has no site stylesheet, so it loads Josh's handwriting
+   font itself. On joshrnoll.com, --font-marker wins and this face is never fetched. */
+@font-face {
+  font-family: 'Josh Noll Hand Standalone';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('./fonts/josh-noll-hand.woff2') format('woff2');
+}
+
 /* The standalone document uses the same palette as the site layout. */
 html:has(body > main.resume) {
   color-scheme: light dark;
@@ -13,7 +23,7 @@ html:has(body > main.resume) {
   --resume-underline: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M3 9C38 5 78 4 118 6S176 9 197 4M22 12C70 9 120 9 170 10' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
   --resume-line: var(--line, light-dark(#d7ded7, #485952));
   --resume-board: var(--surface, light-dark(#fff, #22302d));
-  --resume-marker: var(--font-marker, "Segoe Print", "Bradley Hand", cursive);
+  --resume-marker: var(--font-marker, "Josh Noll Hand Standalone", "Segoe Print", "Bradley Hand", cursive);
   color: var(--resume-ink);
   font: 1rem/1.65 var(--font-body, system-ui, sans-serif);
 }
