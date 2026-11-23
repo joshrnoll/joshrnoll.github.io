@@ -13,7 +13,7 @@ phone or laptop
 main branch push                GitHub Pages workflow rebuilds the site
 ```
 
-Until you finish the steps below, `/admin/` loads but **Login with GitHub** fails, because `base_url` in `config.yml` is a placeholder.
+The Worker is deployed at `https://joshrnoll-cms-oauth.joshrnoll.workers.dev`, and `base_url` in `config.yml` points at it. Until the GitHub OAuth App exists and its client ID and secret are Worker secrets (steps 2 and 3), **Login with GitHub** fails and the Worker answers `/auth` with `GITHUB_CLIENT_ID is not set`.
 
 ## Do these once
 
@@ -47,14 +47,7 @@ Each step creates something outside this repository, so each one needs your appr
    npx wrangler secret put GITHUB_CLIENT_SECRET
    ```
 
-4. In `astro/public/admin/config.yml`, set `backend.base_url` to the Worker URL with no trailing slash:
-
-   ```diff
-   -  base_url: https://joshrnoll-cms-oauth.REPLACE-ME.workers.dev
-   +  base_url: https://joshrnoll-cms-oauth.<account>.workers.dev
-   ```
-
-   Merge that change to `main`. The Pages workflow deploys it.
+4. Done: `backend.base_url` in `astro/public/admin/config.yml` is `https://joshrnoll-cms-oauth.joshrnoll.workers.dev`. If the Worker URL changes, update it there with no trailing slash. It goes live on joshrnoll.com when this branch merges to `main` and the Pages workflow deploys.
 
 5. Open <https://joshrnoll.com/admin/>, click **Login with GitHub**, and approve the app. On a phone, add the page to the home screen.
 
