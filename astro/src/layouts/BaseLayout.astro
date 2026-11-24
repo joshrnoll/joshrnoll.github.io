@@ -3,6 +3,8 @@
 import { ClientRouter } from 'astro:transitions';
 import NavBar from '../components/NavBar.astro';
 import MarkerTray from '../components/MarkerTray.astro';
+import { ogImageFor } from '../lib/og-cards';
+import { OG_HEIGHT, OG_WIDTH } from '../utils/og-image';
 import '../styles/global.css';
 import '../styles/taped-photos.css';
 import '../styles/code-copy.css';
@@ -10,19 +12,17 @@ import '../styles/code-copy.css';
 interface Props {
   title: string;
   description?: string;
-  ogImage?: string;
   ogType?: string;
 }
 
 const {
   title,
-description = 'A blog by Josh Noll: Software, Homelabbing and life.',
-  ogImage = '/og/default.png',
+  description = 'A blog by Josh Noll: Software, Homelabbing and life.',
   ogType = 'website',
 } = Astro.props;
 const pageTitle = title === 'Home' ? 'Josh Noll' : `${title} — Josh Noll`;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
-const ogImageUrl = new URL(ogImage, Astro.site).href;
+const ogImageUrl = new URL(await ogImageFor(Astro.url.pathname), Astro.site).href;
 ---
 <!doctype html>
 <html lang="en">
@@ -46,12 +46,16 @@ const ogImageUrl = new URL(ogImage, Astro.site).href;
   <meta property="og:type" content={ogType} />
   <meta property="og:url" content={canonicalUrl} />
   <meta property="og:image" content={ogImageUrl} />
+  <meta property="og:image:width" content={String(OG_WIDTH)} />
+  <meta property="og:image:height" content={String(OG_HEIGHT)} />
+  <meta property="og:image:alt" content={pageTitle} />
   <meta property="og:site_name" content="Josh Noll" />
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImageUrl} />
+  <meta name="twitter:image:alt" content={pageTitle} />
   <link rel="icon" href="/favicon/favicon.ico" sizes="16x16 32x32" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />

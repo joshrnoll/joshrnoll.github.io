@@ -14,14 +14,12 @@ interface Props {
 const { post, headings } = Astro.props;
 const { title, date, tags, description } = post.data;
 const hasToc = post.collection === 'blog' && post.data.toc && headings.some(heading => heading.depth === 2 || heading.depth === 3);
-const slug = (post.collection === 'blog' ? post.data.slug : undefined) ?? post.id.replace(/\.mdx?$/, '');
-const ogImage = `/og/${post.collection}/${slug}.png`;
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric', month: 'long', day: 'numeric',
 });
 ---
-<BaseLayout title={title} description={description} ogImage={ogImage} ogType="article">
+<BaseLayout title={title} description={description} ogType="article">
   <div class:list={['post-layout', 'container', { 'has-toc': hasToc }]}>
     {hasToc && (
       <aside class="post-toc">
