@@ -76,10 +76,10 @@ collections:
       - { name: author, label: Author, widget: hidden, default: Josh Noll }
       - name: tags
         label: Tags
-        widget: list
+        widget: tags
         default: []
         required: false
-        hint: Comma separated.
+        hint: Comma separated, for example Career, Problem Solving.
       - { name: description, label: Description, widget: text, required: false }
       - { name: toc, label: Table of contents, widget: boolean, default: false, required: false }
       - { name: body, label: Body, widget: markdown }
@@ -117,10 +117,10 @@ collections:
         hint: Merged notes with this on stay out of the build.
       - name: tags
         label: Tags
-        widget: list
+        widget: tags
         default: []
         required: false
-        hint: Comma separated.
+        hint: Comma separated, for example Career, Problem Solving.
       - { name: description, label: Description, widget: text, required: false }
       - { name: body, label: Body, widget: markdown }
 
@@ -282,7 +282,7 @@ collections:
                 pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers, and dashes.']
                 hint: "For links like /projects/#homelab-as-code. Changing it breaks those links, a featured pick, and scrap arrows that use it."
               - { name: description, label: Description, widget: text }
-              - { name: stack, label: Tech stack, widget: list, required: false, hint: Comma separated. }
+              - { name: stack, label: Tech stack, widget: tags, required: false, hint: Comma separated. }
               - name: links
                 label: Links
                 label_singular: link
