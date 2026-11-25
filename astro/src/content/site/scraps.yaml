@@ -5,22 +5,23 @@ page:
 wall:
   - text: |-
       Spurstack
-      Issue agents that open their own PRs. A prototype I walked away from.
+      A github issue opens, an agent opens a PR. Written in Go.
     paper: pink
     ink: red
     crossedOut: true
   - text: |-
       Codesplainer
-      A Neovim chat for reading code, not writing it. Parked when I left the terminal for agents.
+      A Neovim plugin for reading code, not writing it.
     paper: ruled
+    ink: black
   - text: |-
       ClearMinder
-      A GTD app I documented and haven't built yet. I really want to.
+      My all-in-one productivity app idea based on GTD principles.
     paper: yellow
     ink: blue
   - text: |-
       Homelab as code
-      Got it 70% working, then tore down my entire homelab because I moved. Need to re-attack it once the lab is back up.
+      Change my homelab through PRs instead of SSH.
     paper: blue
     ink: green
     target: project-homelab-as-code
@@ -31,8 +32,9 @@ yard:
     paper: pink
     ink: red
     crossedOut: true
-  - text: |-
+  - text: >-
       Codesplainer
+
       A Neovim chat for reading code, not writing it. Parked when I left the terminal for agents.
     paper: ruled
   - text: |-
@@ -40,8 +42,9 @@ yard:
       A GTD app I documented and haven't built yet. I really want to.
     paper: yellow
     ink: blue
-  - text: |-
+  - text: >-
       Homelab as code
+
       Got it 70% working, then tore down my entire homelab because I moved. Need to re-attack it once the lab is back up.
     paper: blue
     ink: green
