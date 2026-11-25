@@ -3,9 +3,10 @@ date: 2025-05-12T05:27:50-04:00
 draft: false
 title: Ephemeral Tailscale Nodes on Talos Linux
 tags:
-  - kubernetes
-  - talos
-  - tailscale
+  - Kubernetes
+  - Talos
+  - Tailscale
+  - Homelab
 ---
 Recently, we had an internet outage that lasted most of the day.
 

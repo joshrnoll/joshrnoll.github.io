@@ -3,7 +3,7 @@ date: 2025-06-15T05:22:21-04:00
 draft: false
 title: kubectl
 tags:
-  - kubernetes
+  - Kubernetes
 ---
 ### Working with multiple clusters
 - Check the name of the cluster in your kubeconfig file (default path ~/.kube/config)

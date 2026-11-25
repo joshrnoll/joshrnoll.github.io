@@ -7,8 +7,7 @@ tags:
   - Kubernetes
   - Traefik
   - Tailscale
-  - Ingress
-  - VPN
+  - Homelab
 image: /using-traefik-on-kubernetes-over-tailscale/traefik-k8s-tailscale.png
 description: How I use Traefik as an ingress controller alongside tailscale in my homelab Kubernetes cluster.
 toc: true

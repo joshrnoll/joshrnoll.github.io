@@ -3,9 +3,8 @@ date: 2025-06-07T14:00:18-04:00
 draft: false
 title: HTML Notes
 tags:
-  - "html"
-  - "programming"
-  - "webdevelopment"
+  - HTML
+  - Programming
 ---
 ### Indenting
 A good rule of thumb to follow for HTML is that you **enter down a line and indent whenever you are nesting a new tag**

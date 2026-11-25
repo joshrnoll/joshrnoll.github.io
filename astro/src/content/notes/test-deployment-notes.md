@@ -3,7 +3,7 @@ date: 2025-05-11T07:10:17-04:00
 draft: false
 title: Test Deployment Notes
 tags:
-  - kubernetes
+  - Kubernetes
 ---
 
 ***What follows is my, potentially slightly incoherent, stream of consciousness as I try to teach myself Kubernetes***

@@ -3,9 +3,8 @@ date: 2025-05-11T07:10:17-04:00
 draft: false
 title: Using SOPS for Secrets with Flux
 tags:
-  - fluxcd
-  - gitops
-  - secretsmanagement
+  - Flux
+  - GitOps
 ---
 
 - **Age is used for encryption in the following examples**

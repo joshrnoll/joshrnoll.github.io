@@ -6,8 +6,7 @@ author: "Josh Noll"
 image: /avatar.png
 slug: my-story
 tags:
-  - About
-  - My Story
+  - Career
 decription: My full "about me" post
 ---
 

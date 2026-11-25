@@ -3,9 +3,9 @@ date: 2025-05-25T15:02:32-04:00
 draft: false
 title: Creating a systemd service with a systemd timer
 tags:
-  - linux
+  - Linux
   - systemd
-  - automation
+  - Automation
 ---
 # Creating a systemd service for a regular user using a systemd timer
 A regular user's systemd service files will be located in the ```~/.config/systemd/user``` directory, which may not exist already (so you'll have to create it with ```mkdir```)

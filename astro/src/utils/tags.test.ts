@@ -35,4 +35,8 @@ describe('getAllTags', () => {
     expect(new Set(normalized).size).toBe(normalized.length);
     expect(result).toHaveLength(4);
   });
+  it('sorts tags alphabetically, ignoring case', () => {
+    const posts = [{ tags: ['Linux', 'systemd', 'AI'] }, { tags: ['Ansible', 'Bash'] }];
+    expect(getAllTags(posts)).toEqual(['AI', 'Ansible', 'Bash', 'Linux', 'systemd']);
+  });
 });

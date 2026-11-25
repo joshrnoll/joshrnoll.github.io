@@ -5,8 +5,6 @@ draft: false
 author: Josh Noll
 tags:
   - Career
-  - Hedgehog Concept
-  - Passion
 image: /achievement-vs-alignment/hedgehog-concept-small.png
 toc: true
 ---

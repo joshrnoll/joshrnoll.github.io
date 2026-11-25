@@ -7,8 +7,8 @@ tags:
   - Kubernetes
   - Longhorn
   - Storage
-  - Helm
   - Automation
+  - Homelab
 image: /installing-longhorn-on-talos-with-helm/longhorn-helm.png
 description: How I installed Longhorn for persistent storage on my Talos cluster using Helm.
 toc: true

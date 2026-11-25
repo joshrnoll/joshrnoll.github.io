@@ -4,14 +4,11 @@ date: 2025-11-19T13:45:13-05:00
 draft: false
 author: Josh Noll
 tags:
-  - Hackathon
-  - MQTT
-  - MongoDB
-  - Software Development
-  - React
-  - Express
   - IoT
-  - DevOps
+  - MongoDB
+  - Programming
+  - React
+  - JavaScript
 image: /black-relay-2025/ahrbrlogo.png
 description: How we built a real-time sensor intelligence platform for first responders during a 100-day engineering sprint with Arrowhead Research
 toc: true

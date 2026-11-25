@@ -3,9 +3,9 @@ date: 2025-07-13T07:19:12-04:00
 draft: false
 title: Change Configured DNS with resolvectl
 tags:
-  - linux
-  - dns
-  - fedora
+  - Linux
+  - DNS
+  - Fedora
 ---
 Check the interface you want to set DNS on:
 

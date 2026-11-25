@@ -2,7 +2,8 @@
 date: 2025-06-17T05:23:04-04:00
 draft: false
 title: CSS Notes
-tags: []
+tags:
+  - HTML
 ---
 > Fun game for practicing learning CSS: https://flukeout.github.io/
 

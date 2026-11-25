@@ -3,9 +3,9 @@ date: 2025-05-11T07:10:17-04:00
 draft: false
 title: Flux CD
 tags:
-  - kubernetes
-  - fluxcd
-  - gitops
+  - Kubernetes
+  - Flux
+  - GitOps
 ---
 ### Installation
 1. Create a PAT in Gitea with the following permissions:

@@ -4,8 +4,7 @@ date: 2026-02-25T05:44:27-05:00
 draft: false
 author: Josh Noll
 tags:
-  - kubernetes
-  - kubeconfig
+  - Kubernetes
 image: /k8s.svg.png
 toc: true
 ---

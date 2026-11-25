@@ -3,9 +3,8 @@ date: 2025-07-10T16:11:15-04:00
 draft: false
 title: Example POST Request using JavaScript
 tags:
-  - javascript
-  - programming
-  - http
+  - JavaScript
+  - Programming
 ---
 
 ```JavaScript

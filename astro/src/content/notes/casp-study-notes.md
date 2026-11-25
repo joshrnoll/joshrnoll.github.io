@@ -3,9 +3,8 @@ date: 2025-06-09T14:08:31-04:00
 draft: false
 title: CASP Study Notes
 tags:
-  - "cybersecurity"
-  - "casp"
-  - "comptia"
+  - Cybersecurity
+  - CASP
 ---
 ### Acronyms
 - BCP - Business Continuity Plan

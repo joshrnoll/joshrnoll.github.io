@@ -3,9 +3,7 @@ date: 2025-07-11T07:00:50-04:00
 draft: false
 title: Backing up dotfiles with chezmoi
 tags:
-  - dotfiles
-  - chezmoi
-  - github
+  - Dotfiles
 ---
 On Bluefin, chezmoi is installed by default. But it can be installed using ```brew```
 

@@ -4,11 +4,8 @@ date: 2025-06-17T20:10:56-04:00
 draft: false
 author: Josh Noll
 tags:
-  - Continuous Delivery
-  - DevOps
+  - CI/CD
   - Gitea
-  - Gitea Actions
-  - Notes
 image: /automating-my-notes.png
 description: How I automated the publishing of my notes to https://notes.joshrnoll.com with Gitea actions.
 toc: true

@@ -3,10 +3,10 @@ date: 2025-09-15T07:41:40-04:00
 draft: false
 title: Seeding a MongoDB Collection Idempotently
 tags:
-  - mongodb
-  - javascript
-  - databases
-  - programming
+  - MongoDB
+  - JavaScript
+  - Database
+  - Programming
 ---
 MongoDB by default does not have a way to deduplicate entries. Two entries with identical fields can be created and MongoDB will create a unique ObjectId for them
 

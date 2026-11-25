@@ -3,9 +3,7 @@ date: 2025-09-17T06:14:23-04:00
 draft: false
 title: Promises vs Thenables in JavaScript
 tags:
-  - javascript
-  - promise
-  - async
+  - JavaScript
 ---
 A ***Promise object*** in JavaScript is an object that is returned when conducting an asynchronous operation (such as an API call using ```fetch```). It represents the eventual completion of the task. It will always have an initial state of ```pending```, but will eventually *resolve* to a status of either ```fulfilled``` or ```rejected```.
 

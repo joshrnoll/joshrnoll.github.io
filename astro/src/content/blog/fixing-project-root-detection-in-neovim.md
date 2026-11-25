@@ -4,7 +4,7 @@ date: 2026-02-27T20:04:53-05:00
 draft: false
 author: Josh Noll
 tags:
-  - NeoVim
+  - Neovim
 image: /neovim.svg
 toc: true
 ---

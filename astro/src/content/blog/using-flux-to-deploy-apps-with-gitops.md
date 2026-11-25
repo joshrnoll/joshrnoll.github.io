@@ -9,6 +9,7 @@ tags:
   - Flux
   - Git
   - Infrastructure as Code
+  - Homelab
 description: How I use FluxCD to deploy apps to my Kubernetes clusters.
 toc: true
 ---

@@ -3,10 +3,8 @@ date: 2025-07-14T10:41:55-04:00
 draft: false
 title: Install Tailscale on LibreELEC
 tags:
-  - tailscale
-  - raspberrypi
-  - libreelec
-  - kodi
+  - Tailscale
+  - Raspberry Pi
 ---
 1. SSH Into LibreElec
 2. cd into the ```/storage``` directory and download the latest release of tailscale from the URL that corresponds with your CPU architecture https://pkgs.tailscale.com/stable/#static
