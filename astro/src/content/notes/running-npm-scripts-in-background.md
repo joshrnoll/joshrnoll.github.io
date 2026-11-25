@@ -3,9 +3,7 @@ date: 2025-09-09T06:21:50-04:00
 draft: false
 title: Running NPM Scripts in Background
 tags:
-  - npm
-  - node
-  - javascript
+  - JavaScript
 ---
 > **BOTTOM LINE:** NPM scripts cannot interpret the & character in order to run a process in the background. You need to execute your start script using the shell directly as in the following example:
 

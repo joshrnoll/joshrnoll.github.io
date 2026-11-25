@@ -8,7 +8,7 @@ tags:
   - Linux
   - Fedora
   - Proxmox
-  - Cloud Init
+  - Homelab
 image: /proxmox-logo.png
 description: A walkthrough of how to create a Fedora VM template with Cloud Init on Proxmox
 toc: true

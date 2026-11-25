@@ -3,9 +3,7 @@ date: 2025-06-01T12:35:25-04:00
 draft: false
 title: Set up Wyze v3 camera with wyze_mini_hacks firmware
 tags:
-  - homeassistant
-  - cameras
-  - wyze
+  - Home Assistant
 ---
 The purpose of this setup is to set up a wyze v3 camera without using Wyze's cloud services and to adopt the stream into home assistant
 

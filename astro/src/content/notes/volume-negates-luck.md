@@ -2,7 +2,8 @@
 date: 2025-05-22T17:25:32-04:00
 draft: false
 title: Volume Negates Luck
-tags: []
+tags:
+  - Career
 ---
 > "Volume negates luck"
 > 	- Alex Hormozi

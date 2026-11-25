@@ -3,8 +3,9 @@ date: 2025-06-17T11:12:37-04:00
 draft: false
 title: Proxmox Initial Setup
 tags:
-  - linux
-  - proxmox
+  - Linux
+  - Proxmox
+  - Homelab
 ---
 ## Disable enterprise and enable no-subscription repo
 

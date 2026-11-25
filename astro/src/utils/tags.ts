@@ -13,8 +13,10 @@ export function deduplicateTags(tags: string[]): string[] {
   });
 }
 
-/** Collects all unique tags from an array of objects with a `tags` field */
+/** Collects all unique tags from an array of objects with a `tags` field, sorted A–Z ignoring case */
 export function getAllTags(posts: Array<{ tags: string[] }>): string[] {
   const all = posts.flatMap(p => p.tags);
-  return deduplicateTags(all);
+  return deduplicateTags(all).sort((a, b) =>
+    a.localeCompare(b, 'en', { sensitivity: 'base' }),
+  );
 }

@@ -7,9 +7,7 @@ tags:
   - Tailscale
   - Kubernetes
   - Automation
-  - VPN
-  - Ingress
-  - LoadBalancer
+  - Homelab
 image: /securely-exposing-applications-on-kubernetes-with-tailscale/tailscale-kubernetes.png
 description: Installing the Tailscale Kubernetes operator and using it to securely expose applications to my Tailnet.
 toc: true

@@ -3,8 +3,7 @@ date: 2025-10-10T15:36:23-04:00
 draft: false
 title: ImageMagick
 tags:
-  - tools
-  - cli
+  - Linux
 ---
 ImageMagick is a command line tool for converting and manipulating image files and pdfs.
 

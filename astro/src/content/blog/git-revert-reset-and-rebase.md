@@ -4,7 +4,7 @@ date: 2026-02-21T08:13:15-05:00
 draft: false
 author: Josh Noll
 tags:
-  - git
+  - Git
 image: /Git-Icon.png
 toc: true
 ---

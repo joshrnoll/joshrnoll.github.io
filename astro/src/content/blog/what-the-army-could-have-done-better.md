@@ -3,7 +3,8 @@ title: "What the Army Could Have Done Better"
 date: 2026-04-02T06:12:47-05:00
 draft: false
 author: Josh Noll
-tags: []
+tags:
+  - Career
 image: /what-the-army-could-have-done-better/image.jpg
 toc: true
 ---

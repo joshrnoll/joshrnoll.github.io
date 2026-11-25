@@ -6,7 +6,6 @@ author: Josh Noll
 tags:
   - Automation
   - Ansible
-  - Jinja
 image: /ansiblelogo.png
 description: How to use dynamically named variables in ansible
 toc: true

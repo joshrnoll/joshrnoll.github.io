@@ -6,9 +6,7 @@ author: Josh Noll
 tags:
   - Proxmox
   - Storage
-  - Ceph
-  - ZFS
-  - Virtualization
+  - Homelab
 image: /ceph-logo.png
 description: How I recouped disks from my Ceph pool on Proxmox and migrated my VMs to faster storage.
 toc: true

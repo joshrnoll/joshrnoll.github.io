@@ -6,10 +6,9 @@ author: Josh Noll
 tags:
   - AI
   - LLM
-  - Ollama
-  - OpenWebUI
   - Docker
   - Ansible
+  - Homelab
 image: /running-llms-from-my-garage/robots-in-garage_resized.png
 toc: true
 ---

@@ -5,7 +5,6 @@ draft: false
 author: Josh Noll
 tags:
   - Git
-  - DevOps
   - Automation
 image: /Git-Icon.png
 description: A quick lesson on how to get started with git.

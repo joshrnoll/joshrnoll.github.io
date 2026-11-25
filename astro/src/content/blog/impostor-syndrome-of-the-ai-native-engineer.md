@@ -2,10 +2,9 @@
 id: impostor-syndrome-of-the-ai-native-engineer
 aliases: []
 tags:
-  - Artificial Intelligence
-  - Impostor Syndrome
+  - AI
   - Career
-  - Software Engineering
+  - Programming
 author: Josh Noll
 date: 2026-06-25T06:14:57-0500
 draft: false

@@ -9,7 +9,7 @@ tags:
   - Tailscale
   - Automation
   - GitOps
-  - Containers
+  - Homelab
 image: /creating-a-kubernetes-cluster-with-talos-linux-on-tailscale/talos-tailscale.png
 description: Creating Kubernetes clusters in my homelab using Talos linux and connecting them to Tailscale.
 toc: true

@@ -6,8 +6,8 @@ author: Josh Noll
 tags:
   - Tailscale
   - DNS
-  - VPN
   - Linux
+  - Homelab
 image: /tailscale.jpg
 description: My frustrations with Tailscale's MagicDNS in Docker
 toc: true

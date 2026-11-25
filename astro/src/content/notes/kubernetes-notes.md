@@ -3,7 +3,7 @@ date: 2025-05-11T07:10:17-04:00
 draft: false
 title: Kubernetes Notes
 tags:
-  - kubernetes
+  - Kubernetes
 ---
 
 ## Questions

@@ -9,8 +9,8 @@ tags:
   - Kubernetes
   - Linux
   - Ansible
-  - Terraform
   - Talos
+  - Homelab
 image: /my-plan-for-homelab-as-code/homelab-as-code.png
 toc: true
 ---

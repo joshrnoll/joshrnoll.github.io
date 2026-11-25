@@ -3,8 +3,8 @@ date: 2025-05-22T05:16:21-04:00
 draft: false
 title: Publish Notes Script
 tags:
-  - python
-  - automation
+  - Python
+  - Automation
 ---
 Since deploying a dedicated website for publishing my notes, I'm seeking to reduce the friction in actually publishing the notes. Ideally, I want to be able to check a box and have a note published to the site. 
 

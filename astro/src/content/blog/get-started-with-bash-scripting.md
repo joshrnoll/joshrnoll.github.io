@@ -6,7 +6,6 @@ draft: false
 tags:
   - Automation
   - Bash
-  - How-To
   - Linux
 description: A tutorial on the basics of bash scripting
 toc: true

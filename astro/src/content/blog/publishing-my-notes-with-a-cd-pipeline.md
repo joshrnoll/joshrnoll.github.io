@@ -5,8 +5,7 @@ draft: true
 author: Josh Noll
 tags:
   - Automation
-  - Gitea Actions
-  - Hugo
+  - CI/CD
 description: How I built an automated CD pipeline for publishing Obsidian notes to my Hugo site
 toc: true
 ---

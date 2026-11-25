@@ -5,10 +5,7 @@ draft: false
 author: Josh Noll
 tags:
   - Homelab
-  - Permissions
   - Database
-  - Media
-  - SQL
 image: /jellyfin.png
 description: How I restored my jellyfin admin account permissions after breaking them.
 toc: true

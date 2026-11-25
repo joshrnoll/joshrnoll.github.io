@@ -4,7 +4,6 @@ date: 2024-12-27T06:03:54-05:00
 draft: false
 author: Josh Noll
 tags:
-  - Productivity
   - GTD
   - Books
 image: /checklists.jpg

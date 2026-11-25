@@ -6,7 +6,6 @@ author: Josh Noll
 tags:
   - React
   - Linux
-  - sed
 image: /containerizing-a-react-app/react-logo.png
 toc: true
 ---

@@ -6,7 +6,6 @@ author: Josh Noll
 tags:
   - AI
   - RAG
-  - Neural Networks
 image: /understanding-rag/featured.png
 toc: true
 ---

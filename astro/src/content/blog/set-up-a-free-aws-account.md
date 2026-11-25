@@ -6,8 +6,6 @@ draft: false
 image: /wp-content/uploads/2023/08/Amazon-Web-Services-AWS-Logo.png
 tags:
   - AWS
-  - Cloud
-  - How-To
 description: How to set up a free tier AWS account for learning and labbing
 ---
 

@@ -4,8 +4,6 @@ date: 2024-07-18T07:20:14-04:00
 draft: false
 author: Josh Noll
 tags:
-  - Cloud
-  - How-To
   - Azure
 image: /azure.png
 description: How I migrated my website from a hosted WordPress to a Hugo site running on Azure

@@ -6,8 +6,6 @@ author: Josh Noll
 tags:
   - Vibe Coding
   - AI
-  - Claude Code
-  - OpenCode
   - Goose
 image: /how-i-vibe-code/featured.jpg
 toc: true

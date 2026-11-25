@@ -3,9 +3,7 @@ date: 2025-10-05T06:52:41-04:00
 draft: false
 title: NeoVim Auto Change Dir
 tags:
-  - neovim
-  - config
-  - editor
+  - Neovim
 ---
 Add to ``` ~/.config/nvim/lua/config/autocmds.lua``` to ensure NeoVim changes directory when running ```nvim /path/to/dir```
 

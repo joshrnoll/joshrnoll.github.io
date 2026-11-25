@@ -3,9 +3,8 @@ date: 2025-06-07T14:00:18-04:00
 draft: false
 title: JavaScript Notes
 tags:
-  - "programming"
-  - "webdevelopment"
-  - "javascript"
+  - Programming
+  - JavaScript
 ---
 #### Ways to define a variable
 ```JavaScript

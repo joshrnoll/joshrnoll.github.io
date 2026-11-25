@@ -3,12 +3,12 @@ date: 2025-05-11T07:10:17-04:00
 draft: false
 title: Deploy Talos Linux with Local VIP, Tailscale, Longhorn, MetalLB and Traefik
 tags:
-  - kubernetes
-  - talos
-  - tailscale
-  - traefik
-  - longhorn
-  - metallb
+  - Kubernetes
+  - Talos
+  - Tailscale
+  - Traefik
+  - Longhorn
+  - Homelab
 ---
 
 ***I wrote a dumb little script that does most of this:***

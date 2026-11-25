@@ -5,7 +5,7 @@ draft: false
 author: Josh Noll
 tags:
   - Automation
-  - Github Actions
+  - CI/CD
   - Learn Out Loud
 image: /my-websites-github-actions-workflow/github-actions.png
 toc: true

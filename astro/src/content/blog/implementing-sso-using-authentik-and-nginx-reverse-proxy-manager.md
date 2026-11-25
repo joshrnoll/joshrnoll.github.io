@@ -5,9 +5,7 @@ draft: false
 author: Josh Noll
 tags:
   - SSO
-  - Zero Trust
   - Cybersecurity
-  - Nginx
   - Authentik
 image: /authentik-and-npm.drawio.png
 description: How I implemented SSO in my homelab using Authentik and Nginx Reverse Proxy Manager

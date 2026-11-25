@@ -5,7 +5,7 @@ draft: false
 author: Josh Noll
 tags:
   - Linux
-  - Software Development
+  - Programming
 image: /bluefin-linux-a-just-works-distro-for-devs/bluefin.svg
 toc: true
 ---

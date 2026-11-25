@@ -3,8 +3,7 @@ date: 2025-05-11T07:10:17-04:00
 draft: false
 title: From-Scratch Rebuild Process
 tags:
-  - homelab
-  - disasterrecovery
+  - Homelab
 ---
 
 In the event of a disaster, rebuilding the entire homelab once homelab-as-code is complete should look like this:

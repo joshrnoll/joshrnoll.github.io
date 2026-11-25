@@ -3,8 +3,8 @@ date: 2025-10-05T07:19:16-04:00
 draft: false
 title: Docker Compose Setup for a Dev Environment
 tags:
-  - docker
-  - programming
+  - Docker
+  - Programming
 ---
 An example of how to set up a development environment in Docker using docker compose. These are NOT builds for production, and therefore use a Docker build stage identified as ```DEV```. (You can call this whatever you want really). Using Docker build stages allows you to cleanly add on to the Dockerfile later for a production build. 
 

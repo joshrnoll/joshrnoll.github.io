@@ -3,10 +3,10 @@ date: 2025-10-24T13:33:21-04:00
 draft: false
 title: Docker build arguments vs environment variables
 tags:
-  - typescript
-  - javascript
-  - programming
-  - docker
+  - TypeScript
+  - JavaScript
+  - Programming
+  - Docker
 ---
 # ARG
 Build arguments are only available during build time. They can be provided in a Dockerfile with the ```ARG``` keyword.

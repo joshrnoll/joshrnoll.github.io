@@ -3,9 +3,8 @@ date: 2025-08-19T06:24:57-04:00
 draft: false
 title: Hyprland Hot-Fixes
 tags:
-  - hyprland
-  - linux
-  - archlinux
+  - Hyprland
+  - Linux
 ---
 ## Pop-ups disappear immediately when moving mouse in zoom
 

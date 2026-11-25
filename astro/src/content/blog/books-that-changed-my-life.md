@@ -4,9 +4,7 @@ date: 2024-12-28T05:50:28-05:00
 draft: false
 author: Josh Noll
 tags:
-  - Reading
   - Books
-  - Professional Development
 image: /books-that-changed-my-life/books-small.png
 description: A list of books that have made a lasting impact on my outlook on life. 
 toc: true

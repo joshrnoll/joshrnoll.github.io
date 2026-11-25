@@ -3,10 +3,9 @@ date: 2025-05-24T05:34:51-04:00
 draft: false
 title: CI-CD Pipeline for Obsidian Notes
 tags:
-  - CI-CD
-  - automation
+  - CI/CD
+  - Automation
   - Gitea
-  - Hugo
 ---
 ### 1. Write a python script to move files from Obsidian vault to Hugo content path
 
