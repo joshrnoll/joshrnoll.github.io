@@ -14,13 +14,11 @@ What I didn’t realize was that the firehose I would be drinking from wasn’t 
 
 It was a firehose of learning how to run agents that write IaC for you.
 
-<!-- TODO: confirm this Unstructured mention is okay to publish, and whether to name/credit the co-worker -->
-
 It started like this. Fire up claude code. Give it a prompt like “We need to create a github actions workflow that automatically bumps the version on our umbrella charts”. Then… wait… watch claude’s silly filler words pass across the screen. “Combobulating” “Whatchamacalliting” “Whatevering”
 
 Eventually, it stops. And I flip back to my super sick neovim setup to review the code it wrote. Then, I give it another prompt and the cycle repeats until I feel it’s good enough to open a PR with the work.
 
-<!-- TODO: insert loop 1 diagram from the raw idea (prompt → wait → review) -->
+![Hand-drawn loop diagram: Prompt, then Wait, then Review, then Repeat, back to Prompt.](/orchestrating-agents-with-symphony/prompt-wait-review-loop.png)
 
 In another version of this loop, I design the change with claude first. I ask questions and scope out the change before letting claude loose. A lot of back and forth questions like “How does this part work?” and “Explain how we’re guarding against this edge case.” until we land somewhere where I feel comfortable saying “okay, do it like that.”
 
@@ -32,7 +30,7 @@ After a few, I can usually go back to the first one and start the review on its 
 
 Or, you know, my ADHD takes over and that claude gets abandoned until Thursday.
 
-<!-- TODO: insert loop 2 diagram from the raw idea (multiple Claudes, ADHD until Thursday) -->
+![Hand-drawn diagram of four overlapping Prompt-Wait-Review-Repeat loops, with arrows from one Wait starting the next Prompt, showing several Claudes running at once.](/orchestrating-agents-with-symphony/multiple-claude-loops.png)
 
 Eventually, a co-worker shared his setup with me. And he explains that he built an agent orchestrator that essentially runs this process itself using openai’s [symphony spec](https://github.com/openai/symphony/blob/main/SPEC.md).
 
